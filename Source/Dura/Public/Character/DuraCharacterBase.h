@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "DuraCharacterBase.generated.h"
 
+class USkeletalMeshComponent;
+
 UCLASS(Abstract)
 class DURA_API ADuraCharacterBase : public ACharacter
 {
@@ -16,4 +18,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+protected:
+
+	UPROPERTY(VisibleAnywhere, Category="Combat")
+	TObjectPtr<USkeletalMeshComponent> Weapon;
 };
