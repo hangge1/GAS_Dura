@@ -14,4 +14,6 @@ class DURA_API ADuraCharacter : public ADuraCharacterBase
 {
 	GENERATED_BODY()
 	
+public:
+	ADuraCharacter();
 };

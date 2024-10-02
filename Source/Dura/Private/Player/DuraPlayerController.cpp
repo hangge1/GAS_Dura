@@ -49,8 +49,8 @@ void ADuraPlayerController::Move(const FInputActionValue& InputValue)
 	CtlRotation.Pitch = 0.0f;
 	CtlRotation.Roll = 0.0f;
 
-	FVector ForwardVector = FRotationMatrix(CtlRotation).GetUnitAxis(EAxis::Y);
-	FVector RightVector = FRotationMatrix(CtlRotation).GetUnitAxis(EAxis::X);
+	FVector ForwardVector = FRotationMatrix(CtlRotation).GetUnitAxis(EAxis::X);
+	FVector RightVector = FRotationMatrix(CtlRotation).GetUnitAxis(EAxis::Y);
 
 	if (APawn* ControlPawn = GetPawn())
 	{
