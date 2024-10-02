@@ -9,6 +9,8 @@
 class UInputMappingContext;
 struct FInputActionValue;
 class UInputAction;
+class IEnemyInterface;
+
 
 /**
  * 
@@ -26,9 +28,11 @@ protected:
 
 	virtual void SetupInputComponent() override;
 
+	virtual void PlayerTick(float DeltaTime) override;
 private:
 	void Move(const FInputActionValue& InputValue);
 
+	void MouseTrace();
 private:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputMappingContext> DuraContext;
@@ -37,4 +41,6 @@ private:
 	TObjectPtr<UInputAction> MoveAction;
 
 
+	TObjectPtr<IEnemyInterface> lastActor;
+	TObjectPtr<IEnemyInterface> thisActor;
 };

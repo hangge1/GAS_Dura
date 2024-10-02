@@ -4,7 +4,7 @@
 #include "Player/DuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-
+#include "Interaction/EnemyInterface.h"
 
 
 ADuraPlayerController::ADuraPlayerController()
@@ -41,6 +41,13 @@ void ADuraPlayerController::SetupInputComponent()
 	inputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADuraPlayerController::Move);
 }
 
+void ADuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	MouseTrace();
+}
+
 void ADuraPlayerController::Move(const FInputActionValue& InputValue)
 {
 	FVector2d AxisValue = InputValue.Get<FVector2d>();
@@ -56,5 +63,69 @@ void ADuraPlayerController::Move(const FInputActionValue& InputValue)
 	{
 		ControlPawn->AddMovementInput(ForwardVector, AxisValue.Y);
 		ControlPawn->AddMovementInput(RightVector, AxisValue.X);
+	}
+}
+
+void ADuraPlayerController::MouseTrace()
+{
+	FHitResult hitResult;
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, hitResult);
+
+	if (!hitResult.bBlockingHit) return;
+
+	lastActor = thisActor;
+	thisActor = Cast<IEnemyInterface>(hitResult.GetActor());
+
+	/*
+	* We Can Do sth by condition of whether lastActor is null and thisActor is null
+	* 
+	* if lastActor == null && thisActor == null
+	*	- Do nothing
+	* 
+	* if lastActor == null && thisActor != null
+	*	- thisActor->Highlight
+	* 
+	* if lastActor != null && thisActor == null
+	*   - lastActor->UnHighlight
+	* 
+	* if lastActor != null && thisActor != null
+	* 
+	*	- if lastActor == thisActor
+	*		- do nothing
+	* 
+	*   - if lastActor != thisActor
+	*		- lastActor->UnHighlight && thisActor->Highlight 
+	*/
+
+	if (lastActor == nullptr)
+	{
+		if (thisActor == nullptr)
+		{
+			//do nothing
+		}
+		else
+		{
+			thisActor->HighlightActor();
+		}
+	}
+	else
+	{
+		if (thisActor == nullptr)
+		{
+			lastActor->UnHighlightActor();
+		}
+		else
+		{
+			if (lastActor == thisActor)
+			{
+				//do nothing
+			}
+			else
+			{
+				lastActor->UnHighlightActor();
+				thisActor->HighlightActor();
+			}
+			
+		}
 	}
 }
