@@ -16,13 +16,11 @@ class DURA_API ADuraEnemy : public ADuraCharacterBase, public IEnemyInterface
 	GENERATED_BODY()
 	
 public:
+
+	ADuraEnemy();
+
 	// Inherited via IEnemyInterface
 	void HighlightActor() override;
 
 	void UnHighlightActor() override;
-
-
-protected:
-	UPROPERTY(BlueprintReadOnly)
-	bool bIsHighlight;
 };
