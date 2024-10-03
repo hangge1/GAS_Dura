@@ -19,8 +19,11 @@ public:
 
 	ADuraEnemy();
 
-	// Inherited via IEnemyInterface
+	//~ Imp From IEnemyInterface
 	void HighlightActor() override;
-
 	void UnHighlightActor() override;
+	//~ end Imp From IEnemyInterface
+
+protected:
+	virtual void BeginPlay() override;
 };

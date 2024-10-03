@@ -3,6 +3,8 @@
 
 #include "Character/DuraCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/DuraPlayerState.h"
+#include "AbilitySystemComponent.h"
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -15,4 +17,26 @@ ADuraCharacter::ADuraCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = true;
+}
+
+void ADuraCharacter::PossessedBy(AController* NewController)
+{
+	InitAbilityActorInfo();
+}
+
+void ADuraCharacter::OnRep_PlayerState()
+{
+	InitAbilityActorInfo();
+}
+
+void ADuraCharacter::InitAbilityActorInfo()
+{
+	ADuraPlayerState* playerState = GetPlayerState<ADuraPlayerState>();
+	check(playerState);
+
+	AbilitiesSystemComponent = playerState->GetAbilitySystemComponent();
+	AttributeSet = playerState->GetAttributeSet();
+
+	check(AbilitiesSystemComponent);
+	AbilitiesSystemComponent->InitAbilityActorInfo(playerState, this);
 }

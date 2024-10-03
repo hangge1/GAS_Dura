@@ -13,6 +13,7 @@ ADuraEnemy::ADuraEnemy()
 
 	AbilitiesSystemComponent = CreateDefaultSubobject<UDuraAbilitySystemComponent>("AbilitiesSystemComponent");
 	AbilitiesSystemComponent->SetIsReplicated(true);
+	AbilitiesSystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	AttributeSet = CreateDefaultSubobject<UDuraAttributeSet>("AttributeSet");
 }
@@ -30,4 +31,11 @@ void ADuraEnemy::UnHighlightActor()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
+}
+
+void ADuraEnemy::BeginPlay()
+{
+	check(AbilitiesSystemComponent);
+
+	AbilitiesSystemComponent->InitAbilityActorInfo(this, this);
 }

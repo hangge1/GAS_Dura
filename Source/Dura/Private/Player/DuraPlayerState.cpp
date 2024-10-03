@@ -10,6 +10,7 @@ ADuraPlayerState::ADuraPlayerState()
 {
 	AbilitiesSystemComponent = CreateDefaultSubobject<UDuraAbilitySystemComponent>("AbilitiesSystemComponent");
 	AbilitiesSystemComponent->SetIsReplicated(true);
+	AbilitiesSystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	AttributeSet = CreateDefaultSubobject<UDuraAttributeSet>("AttributeSet");
 
