@@ -2,6 +2,7 @@
 
 
 #include "Character/DuraEnemy.h"
+#include "../Dura.h"
 
 ADuraEnemy::ADuraEnemy()
 {
@@ -11,10 +12,10 @@ ADuraEnemy::ADuraEnemy()
 void ADuraEnemy::HighlightActor()
 {
 	GetMesh()->SetRenderCustomDepth(true);
-	GetMesh()->SetCustomDepthStencilValue(250);
+	GetMesh()->SetCustomDepthStencilValue(HIGHLIGHT_COLOR_RED);
 
 	Weapon->SetRenderCustomDepth(true);
-	Weapon->SetCustomDepthStencilValue(250);
+	Weapon->SetCustomDepthStencilValue(HIGHLIGHT_COLOR_RED);
 }
 
 void ADuraEnemy::UnHighlightActor()
