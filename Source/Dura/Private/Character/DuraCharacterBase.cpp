@@ -21,3 +21,8 @@ void ADuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
+UAbilitySystemComponent* ADuraCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitiesSystemComponent;
+}
+

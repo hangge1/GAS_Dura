@@ -4,9 +4,17 @@
 #include "Character/DuraEnemy.h"
 #include "../Dura.h"
 
+#include "AbilitySystem/DuraAbilitySystemComponent.h"
+#include "AbilitySystem/DuraAttributeSet.h"
+
 ADuraEnemy::ADuraEnemy()
 {
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
+	AbilitiesSystemComponent = CreateDefaultSubobject<UDuraAbilitySystemComponent>("AbilitiesSystemComponent");
+	AbilitiesSystemComponent->SetIsReplicated(true);
+
+	AttributeSet = CreateDefaultSubobject<UDuraAttributeSet>("AttributeSet");
 }
 
 void ADuraEnemy::HighlightActor()
