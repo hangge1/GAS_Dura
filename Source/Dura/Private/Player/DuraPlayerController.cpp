@@ -18,9 +18,10 @@ void ADuraPlayerController::BeginPlay()
 	check(DuraContext);
 	
 	UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(SubSystem);
-
-	SubSystem->AddMappingContext(DuraContext, 0);
+	if (SubSystem)
+	{
+		SubSystem->AddMappingContext(DuraContext, 0);
+	}
 
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;

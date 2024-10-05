@@ -5,6 +5,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/DuraPlayerState.h"
 #include "AbilitySystemComponent.h"
+#include "Player/DuraPlayerController.h"
+#include "UI/HUD/DuraHUD.h"
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -43,4 +45,14 @@ void ADuraCharacter::InitAbilityActorInfo()
 
 	check(AbilitiesSystemComponent);
 	AbilitiesSystemComponent->InitAbilityActorInfo(playerState, this);
+
+	if (ADuraPlayerController* PayerController = Cast<ADuraPlayerController>(GetController()))
+	{
+		if (ADuraHUD* HUD = Cast<ADuraHUD>(PayerController->GetHUD()))
+		{
+			HUD->InitOverlay(PayerController, playerState, AbilitiesSystemComponent, AttributeSet);
+		}
+	}
+
+	
 }
