@@ -41,6 +41,7 @@ void ADuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 
 	UDuraAttributeSet* MutableDuraAttributeSet = const_cast<UDuraAttributeSet*>(DuraAttributeSet);
 	MutableDuraAttributeSet->SetHealth(MutableDuraAttributeSet->GetHealth() + 25.0f);
+	MutableDuraAttributeSet->SetMana(MutableDuraAttributeSet->GetMana() + 10.0f);
 
 	Destroy();
 }
