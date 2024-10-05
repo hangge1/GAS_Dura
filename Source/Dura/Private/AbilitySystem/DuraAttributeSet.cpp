@@ -2,12 +2,15 @@
 
 
 #include "AbilitySystem/DuraAttributeSet.h"
-#include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 
 UDuraAttributeSet::UDuraAttributeSet()
 {
+	InitHealth(100.0f);
+	InitMaxHealth(100.0f);
 
+	InitMana(50.0f);
+	InitMaxMana(50.0f);
 }
 
 void UDuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const

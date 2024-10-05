@@ -21,11 +21,15 @@ ADuraCharacter::ADuraCharacter()
 
 void ADuraCharacter::PossessedBy(AController* NewController)
 {
+	Super::PossessedBy(NewController);
+
 	InitAbilityActorInfo();
 }
 
 void ADuraCharacter::OnRep_PlayerState()
 {
+	Super::OnRep_PlayerState();
+
 	InitAbilityActorInfo();
 }
 
