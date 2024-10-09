@@ -24,16 +24,16 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 	UDuraAttributeSet* AS = CastChecked<UDuraAttributeSet>(AttributeSet);
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).
-		AddUObject(this, &UDuraOverlayWidgetController::HealthChanged);
+		AddLambda([this](const FOnAttributeChangeData& Data){ OnHealthChanged.Broadcast(Data.NewValue);});
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetMaxHealthAttribute()).
-		AddUObject(this, &UDuraOverlayWidgetController::MaxHealthChanged);
+		AddLambda([this](const FOnAttributeChangeData& Data) { OnMaxHealthChanged.Broadcast(Data.NewValue); });
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetManaAttribute()).
-		AddUObject(this, &UDuraOverlayWidgetController::ManaChanged);
+		AddLambda([this](const FOnAttributeChangeData& Data) { OnManaChanged.Broadcast(Data.NewValue); });
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetMaxManaAttribute()).
-		AddUObject(this, &UDuraOverlayWidgetController::MaxManaChanged);
+		AddLambda([this](const FOnAttributeChangeData& Data) { OnMaxManaChanged.Broadcast(Data.NewValue); });
 
 	Cast<UDuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
@@ -54,24 +54,4 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 			}
 		}
 	);
-}
-
-void UDuraOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data)
-{
-	OnHealthChanged.Broadcast(Data.NewValue);
-}
-
-void UDuraOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data)
-{
-	OnMaxHealthChanged.Broadcast(Data.NewValue);
-}
-
-void UDuraOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data)
-{
-	OnManaChanged.Broadcast(Data.NewValue);
-}
-
-void UDuraOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data)
-{
-	OnMaxManaChanged.Broadcast(Data.NewValue);
 }
