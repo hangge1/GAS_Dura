@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/DuraOverlayWidgetController.h"
 #include <AbilitySystem/DuraAttributeSet.h>
+#include "AbilitySystem/DuraAbilitySystemComponent.h"
 
 
 
@@ -33,6 +34,17 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetMaxManaAttribute()).
 		AddUObject(this, &UDuraOverlayWidgetController::MaxManaChanged);
+
+	Cast<UDuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+		[](const FGameplayTagContainer& AssetTags)
+		{
+			for (const FGameplayTag& Tag : AssetTags)
+			{
+				const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
+				GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Blue, Msg);
+			}
+		}
+	);
 }
 
 void UDuraOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data)

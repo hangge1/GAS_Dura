@@ -16,9 +16,5 @@ void UDuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* Ability
 
 	FGameplayTagContainer TagContainer;
 	EffectSpec.GetAllAssetTags(TagContainer);
-	for (const auto& tag: TagContainer)
-	{
-		const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *tag.ToString());
-		GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Blue, Msg);
-	}
+	EffectAssetTags.Broadcast(TagContainer);
 }

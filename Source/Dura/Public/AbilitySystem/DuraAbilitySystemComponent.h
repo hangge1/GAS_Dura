@@ -7,6 +7,9 @@
 #include "ActiveGameplayEffectHandle.h"
 #include "DuraAbilitySystemComponent.generated.h"
 
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/);
+
 /**
  * 
  */
@@ -18,6 +21,7 @@ class DURA_API UDuraAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	void AbilityActorInfoSet();
 
+	FEffectAssetTags EffectAssetTags;
 protected:
 
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
