@@ -38,4 +38,9 @@ void ADuraEnemy::BeginPlay()
 	check(AbilitiesSystemComponent);
 
 	AbilitiesSystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UDuraAbilitySystemComponent>(AbilitiesSystemComponent)->AbilityActorInfoSet();
+}
+
+void ADuraEnemy::InitAbilityActorInfo()
+{
 }

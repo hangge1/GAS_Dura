@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "Player/DuraPlayerController.h"
 #include "UI/HUD/DuraHUD.h"
+#include "AbilitySystem/DuraAbilitySystemComponent.h"
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -45,6 +46,8 @@ void ADuraCharacter::InitAbilityActorInfo()
 
 	check(AbilitiesSystemComponent);
 	AbilitiesSystemComponent->InitAbilityActorInfo(playerState, this);
+
+	Cast<UDuraAbilitySystemComponent>(playerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 
 	if (ADuraPlayerController* PayerController = Cast<ADuraPlayerController>(GetController()))
 	{
