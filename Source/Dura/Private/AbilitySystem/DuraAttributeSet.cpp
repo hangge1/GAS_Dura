@@ -10,8 +10,8 @@
 
 UDuraAttributeSet::UDuraAttributeSet()
 {
-	InitHealth(10.0f);
-	InitMana(15.0f);
+	//InitHealth(10.0f);
+	//InitMana(15.0f);
 }
 
 void UDuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)

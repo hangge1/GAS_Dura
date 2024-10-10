@@ -31,6 +31,10 @@ void ADuraCharacterBase::ApplyInitAttribute()
 {
 	ApplyAttributeInitEffectToSelf(PrimaryInitEffectClass, 1.0f);
 	ApplyAttributeInitEffectToSelf(SecondaryInitEffectClass, 1.0f);
+
+	//must put after SecondaryInit
+	//caust it depend on Secondary Attribute of MaxHealth and MaxMana
+	ApplyAttributeInitEffectToSelf(VitalInitEffectClass, 1.0f); 
 }
 
 void ADuraCharacterBase::ApplyAttributeInitEffectToSelf(TSubclassOf<UGameplayEffect> AttributeInitEffectClass, float Level)
