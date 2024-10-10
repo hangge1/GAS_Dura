@@ -27,15 +27,21 @@ void ADuraCharacterBase::InitAbilityActorInfo()
 {
 }
 
-void ADuraCharacterBase::ApplyPrimaryAttributeInitEffect()
+void ADuraCharacterBase::ApplyInitAttribute()
+{
+	ApplyAttributeInitEffectToSelf(PrimaryInitEffectClass, 1.0f);
+	ApplyAttributeInitEffectToSelf(SecondaryInitEffectClass, 1.0f);
+}
+
+void ADuraCharacterBase::ApplyAttributeInitEffectToSelf(TSubclassOf<UGameplayEffect> AttributeInitEffectClass, float Level)
 {
 	check(AbilitiesSystemComponent);
-	check(PrimaryInitEffectClass);
+	check(AttributeInitEffectClass);
 
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
-	FGameplayEffectSpecHandle GameplaySpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(PrimaryInitEffectClass, 1.0f, EffectContext);
+	FGameplayEffectSpecHandle GameplaySpecHandle = GetAbilitySystemComponent()
+		->MakeOutgoingSpec(AttributeInitEffectClass, Level, EffectContext);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplaySpecHandle.Data.Get(), AbilitiesSystemComponent);
-
 }
 
 UAbilitySystemComponent* ADuraCharacterBase::GetAbilitySystemComponent() const

@@ -57,5 +57,5 @@ void ADuraCharacter::InitAbilityActorInfo()
 		}
 	}
 
-	ApplyPrimaryAttributeInitEffect();
+	ApplyInitAttribute();
 }

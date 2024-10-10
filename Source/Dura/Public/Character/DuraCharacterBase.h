@@ -30,7 +30,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
-
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitiesSystemComponent;
 
@@ -40,8 +39,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> PrimaryInitEffectClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> SecondaryInitEffectClass;
 
 	virtual void InitAbilityActorInfo();
 
-	void ApplyPrimaryAttributeInitEffect();
+	void ApplyInitAttribute();
+
+	void ApplyAttributeInitEffectToSelf(TSubclassOf<UGameplayEffect> AttributeInitEffectClass, float Level);
 };
