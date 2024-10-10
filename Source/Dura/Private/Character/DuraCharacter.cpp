@@ -36,6 +36,14 @@ void ADuraCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+int32 ADuraCharacter::GetPlayerLevel() const
+{
+	ADuraPlayerState* playerState = GetPlayerState<ADuraPlayerState>();
+	check(playerState);
+
+	return playerState->GetPlayerLevel();
+}
+
 void ADuraCharacter::InitAbilityActorInfo()
 {
 	ADuraPlayerState* playerState = GetPlayerState<ADuraPlayerState>();

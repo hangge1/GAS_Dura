@@ -4,6 +4,7 @@
 #include "Player/DuraPlayerState.h"
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "AbilitySystem/DuraAttributeSet.h"
+#include "Net/UnrealNetwork.h"
 
 
 ADuraPlayerState::ADuraPlayerState()
@@ -20,4 +21,14 @@ ADuraPlayerState::ADuraPlayerState()
 UAbilitySystemComponent* ADuraPlayerState::GetAbilitySystemComponent() const
 {
 	return AbilitiesSystemComponent;
+}
+
+void ADuraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	DOREPLIFETIME(ADuraPlayerState, Level);
+}
+
+void ADuraPlayerState::OnRep_Level(int32 OldLevel)
+{
+
 }

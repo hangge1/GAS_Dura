@@ -44,3 +44,8 @@ void ADuraEnemy::BeginPlay()
 void ADuraEnemy::InitAbilityActorInfo()
 {
 }
+
+int32 ADuraEnemy::GetPlayerLevel() const
+{
+	return Level;
+}
