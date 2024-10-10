@@ -10,6 +10,7 @@
 class USkeletalMeshComponent;
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UGameplayEffect;
 
 UCLASS(Abstract)
 class DURA_API ADuraCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -36,5 +37,11 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> PrimaryInitEffectClass;
+
+
 	virtual void InitAbilityActorInfo();
+
+	void ApplyPrimaryAttributeInitEffect();
 };

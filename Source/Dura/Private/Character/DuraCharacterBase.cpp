@@ -3,6 +3,8 @@
 
 #include "Character/DuraCharacterBase.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "GameplayEffectTypes.h"
+#include "AbilitySystemComponent.h"
 
 
 // Sets default values
@@ -23,6 +25,17 @@ void ADuraCharacterBase::BeginPlay()
 
 void ADuraCharacterBase::InitAbilityActorInfo()
 {
+}
+
+void ADuraCharacterBase::ApplyPrimaryAttributeInitEffect()
+{
+	check(AbilitiesSystemComponent);
+	check(PrimaryInitEffectClass);
+
+	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
+	FGameplayEffectSpecHandle GameplaySpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(PrimaryInitEffectClass, 1.0f, EffectContext);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplaySpecHandle.Data.Get(), AbilitiesSystemComponent);
+
 }
 
 UAbilitySystemComponent* ADuraCharacterBase::GetAbilitySystemComponent() const
