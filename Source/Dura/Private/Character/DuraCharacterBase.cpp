@@ -39,6 +39,8 @@ void ADuraCharacterBase::ApplyAttributeInitEffectToSelf(TSubclassOf<UGameplayEff
 	check(AttributeInitEffectClass);
 
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+
 	FGameplayEffectSpecHandle GameplaySpecHandle = GetAbilitySystemComponent()
 		->MakeOutgoingSpec(AttributeInitEffectClass, Level, EffectContext);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplaySpecHandle.Data.Get(), AbilitiesSystemComponent);
