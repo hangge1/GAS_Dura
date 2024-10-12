@@ -7,6 +7,8 @@
 #include "Player/DuraPlayerState.h"
 #include "Player/DuraPlayerController.h"
 #include "UI/WidgetController/DuraOverlayWidgetController.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
+
 
 UDuraOverlayWidgetController* UDuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -19,6 +21,22 @@ UDuraOverlayWidgetController* UDuraAbilitySystemLibrary::GetOverlayWidgetControl
 			UAttributeSet* AS = PS->GetAttributeSet();
 			const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
 			return AuraHUD->GetOverlayWidgetController(WidgetControllerParams);
+		}
+	}
+	return nullptr;
+}
+
+UAttributeMenuWidgetController* UDuraAbilitySystemLibrary::GetAttributeMenuWidgetController(const UObject* WorldContextObject)
+{
+	if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
+	{
+		if (ADuraHUD* AuraHUD = Cast<ADuraHUD>(PC->GetHUD()))
+		{
+			ADuraPlayerState* PS = PC->GetPlayerState<ADuraPlayerState>();
+			UAbilitySystemComponent* ASC = PS->GetAbilitySystemComponent();
+			UAttributeSet* AS = PS->GetAttributeSet();
+			const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
+			return AuraHUD->GetAttributeMenuWidgetController(WidgetControllerParams);
 		}
 	}
 	return nullptr;

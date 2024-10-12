@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class DURA_API UAttributeMenuWidgetController : public UDuraWidgetController
 {
 	GENERATED_BODY()

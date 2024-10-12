@@ -6,6 +6,7 @@
 #include "UI/UserWidget/DuraUserWidget.h"
 #include "UI/WidgetController/DuraOverlayWidgetController.h"
 #include "AbilitySystemComponent.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
 
 UDuraOverlayWidgetController* ADuraHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
@@ -18,21 +19,32 @@ UDuraOverlayWidgetController* ADuraHUD::GetOverlayWidgetController(const FWidget
 	return OverlayWidgetController;
 }
 
+UAttributeMenuWidgetController* ADuraHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if (AttributeMenuWidgetController == nullptr)
+	{
+		AttributeMenuWidgetController = NewObject<UAttributeMenuWidgetController>(this, AttributeMenuWidgetControllerClass);
+		AttributeMenuWidgetController->SetWidgetControllerParams(WCParams);
+		AttributeMenuWidgetController->BindCallbacksToDependencies();
+	}
+	return AttributeMenuWidgetController;
+}
+
 void ADuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
 	checkf(OverlayWidgetClass, TEXT("Overlay Widget Class uninitialized, please fill out BP_DuraHUD"));
 	checkf(OverlayWidgetControllerClass, TEXT("Overlay Widget Controller Class uninitialized, please fill out BP_DuraHUD"));
 
-	Overlay = CreateWidget<UDuraUserWidget>(GetWorld(), OverlayWidgetClass);
+	OverlayWidget = CreateWidget<UDuraUserWidget>(GetWorld(), OverlayWidgetClass);
 
 	const FWidgetControllerParams Params(PC, PS, ASC, AS);
 	UDuraOverlayWidgetController* Controller = GetOverlayWidgetController(Params);
 
-	Overlay->SetWidgetController(Controller);
+	OverlayWidget->SetWidgetController(Controller);
 
 	Controller->BroadcastInitialValue();
 
-	Overlay->AddToViewport();
+	OverlayWidget->AddToViewport();
 }
 
 void ADuraHUD::BeginPlay()
