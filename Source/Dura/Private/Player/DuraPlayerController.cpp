@@ -3,7 +3,7 @@
 
 #include "Player/DuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
-#include "EnhancedInputComponent.h"
+#include "Input/DuraEnhancedInputComponent.h"
 #include "Interaction/EnemyInterface.h"
 
 
@@ -36,10 +36,14 @@ void ADuraPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	UEnhancedInputComponent* inputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+	check(InputConfig);
+
+	UDuraEnhancedInputComponent* DurainputComponent = CastChecked<UDuraEnhancedInputComponent>(InputComponent);
 	check(MoveAction);
 
-	inputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADuraPlayerController::Move);
+	DurainputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADuraPlayerController::Move);
+	DurainputComponent->BindAbilityActions(InputConfig, this, &ADuraPlayerController::AbilityInputTagPressed,
+		&ADuraPlayerController::AbilityInputTagReleased, &ADuraPlayerController::AbilityInputTagHeld);
 }
 
 void ADuraPlayerController::PlayerTick(float DeltaTime)
@@ -129,4 +133,19 @@ void ADuraPlayerController::MouseTrace()
 			
 		}
 	}
+}
+
+void ADuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
+}
+
+void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Blue, *InputTag.ToString());
+}
+
+void ADuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
 }
