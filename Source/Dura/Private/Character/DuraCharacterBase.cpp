@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "GameplayEffectTypes.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/DuraAbilitySystemComponent.h"
 
 
 // Sets default values
@@ -48,6 +49,14 @@ void ADuraCharacterBase::ApplyAttributeInitEffectToSelf(TSubclassOf<UGameplayEff
 	FGameplayEffectSpecHandle GameplaySpecHandle = GetAbilitySystemComponent()
 		->MakeOutgoingSpec(AttributeInitEffectClass, Level, EffectContext);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplaySpecHandle.Data.Get(), AbilitiesSystemComponent);
+}
+
+void ADuraCharacterBase::AddCharacterAbilities()
+{
+	UDuraAbilitySystemComponent* DuraASC = CastChecked<UDuraAbilitySystemComponent>(AbilitiesSystemComponent);
+	if (!HasAuthority()) return;
+
+	DuraASC->AddCharacterAbilities(StartupAbilities);
 }
 
 UAbilitySystemComponent* ADuraCharacterBase::GetAbilitySystemComponent() const

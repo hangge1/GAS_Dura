@@ -12,6 +12,7 @@ class USkeletalMeshComponent;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
+class UGameplayAbility;
 
 UCLASS(Abstract)
 class DURA_API ADuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -51,4 +52,10 @@ protected:
 	void ApplyInitAttribute();
 
 	void ApplyAttributeInitEffectToSelf(TSubclassOf<UGameplayEffect> AttributeInitEffectClass, float Level);
+
+	void AddCharacterAbilities();
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category="Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 };
