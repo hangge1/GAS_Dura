@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "DuraGameplayTags.h"
+#include "AbilitySystem/DuraGameplayAbility.h"
 
 
 
@@ -13,11 +14,44 @@ void UDuraAbilitySystemComponent::AbilityActorInfoSet()
 
 void UDuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities)
 {
-	for (TSubclassOf<UGameplayAbility> AbilityClass : Abilities)
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : Abilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
-		//GiveAbility(AbilitySpec);
-		GiveAbilityAndActivateOnce(AbilitySpec);
+		if (const UDuraGameplayAbility* DuraAbility = Cast<UDuraGameplayAbility>(AbilitySpec.Ability))
+		{
+			AbilitySpec.DynamicAbilityTags.AddTag(DuraAbility->StartupInputTag);
+			GiveAbility(AbilitySpec);
+		}
+	}
+}
+
+void UDuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid()) return;
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		{
+			AbilitySpecInputPressed(AbilitySpec);
+			if (!AbilitySpec.IsActive())
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
+		}
+	}
+}
+
+void UDuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid()) return;
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		{
+			AbilitySpecInputReleased(AbilitySpec);
+		}
 	}
 }
 

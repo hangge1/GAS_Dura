@@ -5,6 +5,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "Input/DuraEnhancedInputComponent.h"
 #include "Interaction/EnemyInterface.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystem/DuraAbilitySystemComponent.h"
 
 
 ADuraPlayerController::ADuraPlayerController()
@@ -137,15 +139,27 @@ void ADuraPlayerController::MouseTrace()
 
 void ADuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
 }
 
 void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Blue, *InputTag.ToString());
+	if (GetASC() == nullptr)return;
+	GetASC()->AbilityInputTagReleased(InputTag);
 }
 
 void ADuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
+	if (GetASC() == nullptr)return;
+	GetASC()->AbilityInputTagHeld(InputTag);
+}
+
+UDuraAbilitySystemComponent* ADuraPlayerController::GetASC()
+{
+	if (DuraAbilitySystemComponent == nullptr)
+	{
+		DuraAbilitySystemComponent = 
+			Cast<UDuraAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+	return DuraAbilitySystemComponent;
 }
