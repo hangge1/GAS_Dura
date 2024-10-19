@@ -83,7 +83,6 @@ void ADuraPlayerController::Move(const FInputActionValue& InputValue)
 
 void ADuraPlayerController::MouseTrace()
 {
-	FHitResult hitResult;
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, hitResult);
 
 	if (!hitResult.bBlockingHit) return;
@@ -91,57 +90,11 @@ void ADuraPlayerController::MouseTrace()
 	lastActor = thisActor;
 	thisActor = Cast<IEnemyInterface>(hitResult.GetActor());
 
-	/*
-	* We Can Do sth by condition of whether lastActor is null and thisActor is null
-	* 
-	* if lastActor == null && thisActor == null
-	*	- Do nothing
-	* 
-	* if lastActor == null && thisActor != null
-	*	- thisActor->Highlight
-	* 
-	* if lastActor != null && thisActor == null
-	*   - lastActor->UnHighlight
-	* 
-	* if lastActor != null && thisActor != null
-	* 
-	*	- if lastActor == thisActor
-	*		- do nothing
-	* 
-	*   - if lastActor != thisActor
-	*		- lastActor->UnHighlight && thisActor->Highlight 
-	*/
-
-	if (lastActor == nullptr)
+	//Opt
+	if (lastActor != thisActor)
 	{
-		if (thisActor == nullptr)
-		{
-			//do nothing
-		}
-		else
-		{
-			thisActor->HighlightActor();
-		}
-	}
-	else
-	{
-		if (thisActor == nullptr)
-		{
-			lastActor->UnHighlightActor();
-		}
-		else
-		{
-			if (lastActor == thisActor)
-			{
-				//do nothing
-			}
-			else
-			{
-				lastActor->UnHighlightActor();
-				thisActor->HighlightActor();
-			}
-			
-		}
+		if (lastActor) lastActor->UnHighlightActor();
+		if (thisActor) thisActor->HighlightActor();
 	}
 }
 
@@ -158,79 +111,56 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	if (!InputTag.MatchesTagExact(FDuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 		return;
 	}
 
-	if (bTargeting)
+	if (!bTargeting)
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagHeld(InputTag);
-		}
-	}
-	else
-	{
-		APawn* ControlledPawn = GetPawn();
+		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
 			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
 			{
 				Spline->ClearSplinePoints();
-
 				if (NavPath->PathPoints.Num() != 0)
 				{
 					for (const FVector& point : NavPath->PathPoints)
 					{
 						Spline->AddSplinePoint(point, ESplineCoordinateSpace::World);
-						DrawDebugSphere(GetWorld(), point, 8.0f, 8, FColor::Green, false, 5.0f);
 					}
 
-					if (NavPath->PathPoints.Num() > 1)
-					{
-						CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
-					}
-					
+					if (NavPath->PathPoints.Num() > 1) CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
 					bAutoRunning = true;
-				}		
+				}
 			}
 		}
 		FollowTime = 0.0f;
 		bTargeting = false;
 	}
-
+	else
+	{
+		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
+	}
 }
 
 void ADuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
 	if (!InputTag.MatchesTagExact(FDuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagHeld(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 		return;
 	}
 
 	if (bTargeting)
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagHeld(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}
 	else
 	{
 		FollowTime += GetWorld()->GetDeltaSeconds();
 		
-		FHitResult Hit;
-		if (GetHitResultUnderCursor(ECC_Visibility, false, Hit))
-		{
-			CachedDestination = Hit.ImpactPoint;
-		}
+		if (hitResult.bBlockingHit)  CachedDestination = hitResult.ImpactPoint;
 
 		if (APawn* ControlledPawn = GetPawn())
 		{
@@ -263,9 +193,6 @@ void ADuraPlayerController::AutoRun()
 		ControlledPawn->AddMovementInput(Direction);
 
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
-		if (DistanceToDestination <= AutoRunAcceptanceRadius)
-		{
-			bAutoRunning = false;
-		}
+		if (DistanceToDestination <= AutoRunAcceptanceRadius)  bAutoRunning = false;
 	}
 }

@@ -47,6 +47,7 @@ private:
 
 	IEnemyInterface* lastActor;
 	IEnemyInterface* thisActor;
+	FHitResult hitResult;
 
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
