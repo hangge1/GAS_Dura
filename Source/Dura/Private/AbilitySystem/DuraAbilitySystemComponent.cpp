@@ -3,7 +3,7 @@
 
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "DuraGameplayTags.h"
-#include "AbilitySystem/DuraGameplayAbility.h"
+#include "AbilitySystem/Abilities/DuraGameplayAbility.h"
 
 
 

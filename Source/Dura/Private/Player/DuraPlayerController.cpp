@@ -115,6 +115,7 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		return;
 	}
 
+	
 	if (!bTargeting)
 	{
 		const APawn* ControlledPawn = GetPawn();
@@ -140,7 +141,7 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	}
 	else
 	{
-		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
+		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 	}
 }
 
