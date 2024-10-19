@@ -9,6 +9,8 @@
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
 #include "DuraGameplayTags.h"
+#include "NavigationSystem.h"
+#include "NavigationPath.h"
 
 
 ADuraPlayerController::ADuraPlayerController()
@@ -152,8 +154,42 @@ void ADuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	if (GetASC() == nullptr)return;
-	GetASC()->AbilityInputTagReleased(InputTag);
+	if (!InputTag.MatchesTagExact(FDuraGameplayTags::Get().InputTag_LMB))
+	{
+		if (GetASC())
+		{
+			GetASC()->AbilityInputTagReleased(InputTag);
+		}
+		return;
+	}
+
+	if (bTargeting)
+	{
+		if (GetASC())
+		{
+			GetASC()->AbilityInputTagHeld(InputTag);
+		}
+	}
+	else
+	{
+		APawn* ControlledPawn = GetPawn();
+		if (FollowTime <= ShortPressThreshold && ControlledPawn)
+		{
+			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
+			{
+				Spline->ClearSplinePoints();
+				for (const FVector& point : NavPath->PathPoints)
+				{
+					Spline->AddSplinePoint(point, ESplineCoordinateSpace::World);
+					DrawDebugSphere(GetWorld(), point, 8.0f, 8, FColor::Green, false, 5.0f);
+				}
+				bAutoRunning = true;
+			}
+		}
+		FollowTime = 0.0f;
+		bTargeting = false;
+	}
+
 }
 
 void ADuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
