@@ -59,6 +59,8 @@ void ADuraPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	MouseTrace();
+
+	AutoRun();
 }
 
 void ADuraPlayerController::Move(const FInputActionValue& InputValue)
@@ -178,12 +180,22 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
 			{
 				Spline->ClearSplinePoints();
-				for (const FVector& point : NavPath->PathPoints)
+
+				if (NavPath->PathPoints.Num() != 0)
 				{
-					Spline->AddSplinePoint(point, ESplineCoordinateSpace::World);
-					DrawDebugSphere(GetWorld(), point, 8.0f, 8, FColor::Green, false, 5.0f);
-				}
-				bAutoRunning = true;
+					for (const FVector& point : NavPath->PathPoints)
+					{
+						Spline->AddSplinePoint(point, ESplineCoordinateSpace::World);
+						DrawDebugSphere(GetWorld(), point, 8.0f, 8, FColor::Green, false, 5.0f);
+					}
+
+					if (NavPath->PathPoints.Num() > 1)
+					{
+						CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
+					}
+					
+					bAutoRunning = true;
+				}		
 			}
 		}
 		FollowTime = 0.0f;
@@ -236,4 +248,24 @@ UDuraAbilitySystemComponent* ADuraPlayerController::GetASC()
 			Cast<UDuraAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
 	}
 	return DuraAbilitySystemComponent;
+}
+
+void ADuraPlayerController::AutoRun()
+{
+	if (bAutoRunning == false) return;
+
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		const FVector LocationOnSpline = Spline->
+			FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		const FVector Direction = Spline->
+			FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+		ControlledPawn->AddMovementInput(Direction);
+
+		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
+		if (DistanceToDestination <= AutoRunAcceptanceRadius)
+		{
+			bAutoRunning = false;
+		}
+	}
 }
