@@ -24,6 +24,12 @@ void ADuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
+FVector ADuraCharacterBase::GetCombatSocketLocation() const
+{
+	check(Weapon);
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
 void ADuraCharacterBase::InitAbilityActorInfo()
 {
 }
