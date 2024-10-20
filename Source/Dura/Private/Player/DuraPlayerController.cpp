@@ -48,8 +48,14 @@ void ADuraPlayerController::SetupInputComponent()
 
 	UDuraEnhancedInputComponent* DurainputComponent = CastChecked<UDuraEnhancedInputComponent>(InputComponent);
 	check(MoveAction);
+	check(ShiftAction);
+
 
 	DurainputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADuraPlayerController::Move);
+	DurainputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ADuraPlayerController::ShiftPressed);
+	DurainputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ADuraPlayerController::ShiftReleased);
+
+
 	DurainputComponent->BindAbilityActions(InputConfig, this, &ADuraPlayerController::AbilityInputTagPressed,
 		&ADuraPlayerController::AbilityInputTagReleased, &ADuraPlayerController::AbilityInputTagHeld);
 }
@@ -115,8 +121,9 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		return;
 	}
 
-	
-	if (!bTargeting)
+	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
+
+	if (!bTargeting && !bShiftKeyDown)
 	{
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
@@ -139,10 +146,7 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		FollowTime = 0.0f;
 		bTargeting = false;
 	}
-	else
-	{
-		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
-	}
+
 }
 
 void ADuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
@@ -153,7 +157,7 @@ void ADuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting)
+	if (bTargeting || bShiftKeyDown)
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}
