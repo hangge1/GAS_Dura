@@ -8,6 +8,8 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class UNiagaraSystem;
+class USoundBase;
 
 UCLASS()
 class DURA_API ADuraProjectile : public AActor
@@ -17,15 +19,33 @@ class DURA_API ADuraProjectile : public AActor
 public:	
 	ADuraProjectile();
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 protected:
 	virtual void BeginPlay() override;
 	
+	virtual void Destroyed() override;
+
 	UFUNCTION()
 	void OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 private:
+	bool bHit = false;
+
+	UPROPERTY(EditAnywhere)
+	float LifeSpan = 15.f;
+
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UNiagaraSystem> ImpactEffect;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> ImpactSound;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> LoopingSound;
+
+	UPROPERTY()
+	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 };
