@@ -3,9 +3,10 @@
 
 #include "Character/DuraEnemy.h"
 #include "../Dura.h"
-
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "AbilitySystem/DuraAttributeSet.h"
+#include "Components/WidgetComponent.h"
+#include "UI/UserWidget/DuraUserWidget.h"
 
 ADuraEnemy::ADuraEnemy()
 {
@@ -16,6 +17,9 @@ ADuraEnemy::ADuraEnemy()
 	AbilitiesSystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	AttributeSet = CreateDefaultSubobject<UDuraAttributeSet>("AttributeSet");
+
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
 }
 
 void ADuraEnemy::HighlightActor()
@@ -35,14 +39,44 @@ void ADuraEnemy::UnHighlightActor()
 
 void ADuraEnemy::BeginPlay()
 {
-	check(AbilitiesSystemComponent);
+	Super::BeginPlay();
+	InitAbilityActorInfo();
 
-	AbilitiesSystemComponent->InitAbilityActorInfo(this, this);
-	Cast<UDuraAbilitySystemComponent>(AbilitiesSystemComponent)->AbilityActorInfoSet();
+
+	if (UDuraUserWidget* DuraUserWidget = Cast<UDuraUserWidget>(HealthBar->GetUserWidgetObject()))
+	{
+		DuraUserWidget->SetWidgetController(this);
+	}
+
+	UDuraAttributeSet* DuraAS = Cast<UDuraAttributeSet>(AttributeSet);
+	if (DuraAS)
+	{
+		AbilitiesSystemComponent->GetGameplayAttributeValueChangeDelegate(DuraAS->GetHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data) 
+			{
+				OnHealthChanged.Broadcast(Data.NewValue);
+			}
+		);
+		AbilitiesSystemComponent->GetGameplayAttributeValueChangeDelegate(DuraAS->GetMaxHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnMaxHealthChanged.Broadcast(Data.NewValue);
+			}
+		);
+
+		OnHealthChanged.Broadcast(DuraAS->GetHealth());
+		OnMaxHealthChanged.Broadcast(DuraAS->GetMaxHealth());
+	}
 }
 
 void ADuraEnemy::InitAbilityActorInfo()
 {
+	check(AbilitiesSystemComponent);
+
+	AbilitiesSystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UDuraAbilitySystemComponent>(AbilitiesSystemComponent)->AbilityActorInfoSet();
+
+	InitializeDefaultAttributes();
 }
 
 int32 ADuraEnemy::GetPlayerLevel() const

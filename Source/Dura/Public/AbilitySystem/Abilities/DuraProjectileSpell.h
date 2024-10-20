@@ -7,7 +7,7 @@
 #include "DuraProjectileSpell.generated.h"
 
 class ADuraProjectile;
-
+class UGameplayEffect;
 /**
  * 
  */
@@ -26,4 +26,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ADuraProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

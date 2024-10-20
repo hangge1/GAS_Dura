@@ -66,5 +66,5 @@ void ADuraCharacter::InitAbilityActorInfo()
 		}
 	}
 
-	ApplyInitAttribute();
+	InitializeDefaultAttributes();
 }

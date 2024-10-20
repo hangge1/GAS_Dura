@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/DuraProjectileSpell.h"
 #include "Actor/DuraProjectile.h"
 #include "Interaction/CombatInterface.h"
+#include "AbilitySystemComponent.h"
 
 void UDuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -40,7 +41,11 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 		);
 
-		//TODO: Give the Projectile a Gameplay Effect Spec for causing Damage
+		const UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo();
+		const FGameplayEffectSpecHandle EffectSpecHandler = SourceASC->MakeOutgoingSpec(
+			DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext()
+		);
+		Projectile->DamageEffectSpecHandle = EffectSpecHandler;
 
 		Projectile->FinishSpawning(SpawnTransform);
 

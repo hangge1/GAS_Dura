@@ -16,6 +16,7 @@ ADuraCharacterBase::ADuraCharacterBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
@@ -38,15 +39,12 @@ FVector ADuraCharacterBase::GetCombatSocketLocation() const
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
 }
 
-void ADuraCharacterBase::InitAbilityActorInfo()
-{
-}
+void ADuraCharacterBase::InitAbilityActorInfo() {}
 
-void ADuraCharacterBase::ApplyInitAttribute()
+void ADuraCharacterBase::InitializeDefaultAttributes()
 {
 	ApplyAttributeInitEffectToSelf(PrimaryInitEffectClass, 1.0f);
 	ApplyAttributeInitEffectToSelf(SecondaryInitEffectClass, 1.0f);
-
 	//must put after SecondaryInit
 	//caust it depend on Secondary Attribute of MaxHealth and MaxMana
 	ApplyAttributeInitEffectToSelf(VitalInitEffectClass, 1.0f); 
