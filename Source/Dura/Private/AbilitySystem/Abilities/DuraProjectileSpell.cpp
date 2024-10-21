@@ -48,11 +48,14 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext()
 		);
 
-		FDuraGameplayTags GameplayTags = FDuraGameplayTags::Get();
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandler, GameplayTags.Damage, 50.f);
+		const FDuraGameplayTags GameplayTags = FDuraGameplayTags::Get();
+		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+
+		//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("FireBolt Damage: %f"), ScaledDamage));
+
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandler, GameplayTags.Damage, ScaledDamage);
 		Projectile->DamageEffectSpecHandle = EffectSpecHandler;
 
 		Projectile->FinishSpawning(SpawnTransform);
-
 	}
 }
