@@ -8,6 +8,8 @@
 #include "GameFramework/Character.h"
 #include "DuraGameplayTags.h"
 #include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
+#include "Player/DuraPlayerController.h"
 
 
 UDuraAttributeSet::UDuraAttributeSet()
@@ -73,9 +75,22 @@ void UDuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 				TagContainer.AddTag(FDuraGameplayTags::Get().Effect_HitReact);
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
+
+			ShowFloatingText(Props, LocalIncomingDamage);
+		}
+	}	
+}
+
+void UDuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float damage) const 
+{
+	if (Props.SourceCharacter != Props.TargetCharacter)
+	{
+		if (ADuraPlayerController* PC =
+			Cast<ADuraPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		{
+			PC->ShowDamageNumber(damage, Props.TargetCharacter);
 		}
 	}
-	
 }
 
 void UDuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -232,3 +247,5 @@ void UDuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
 	}
 }
+
+

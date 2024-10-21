@@ -15,6 +15,8 @@ class IEnemyInterface;
 class UDuraInputConfig;
 class UDuraAbilitySystemComponent;
 class USplineComponent;
+class UDamageTextComponent;
+
 
 /**
  * 
@@ -27,12 +29,15 @@ class DURA_API ADuraPlayerController : public APlayerController
 public:
 	ADuraPlayerController();
 
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void SetupInputComponent() override;
 
 	virtual void PlayerTick(float DeltaTime) override;
+
 private:
 	void Move(const FInputActionValue& InputValue);
 
@@ -83,4 +88,7 @@ private:
 
 
 	void AutoRun();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
 };
