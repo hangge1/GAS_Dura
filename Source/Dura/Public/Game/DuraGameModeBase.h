@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "DuraGameModeBase.generated.h"
 
+class UCharacterClassInfo;
 /**
  * 
  */
@@ -14,4 +15,8 @@ class DURA_API ADuraGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category= "Character Class Defaults")
+	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
 };

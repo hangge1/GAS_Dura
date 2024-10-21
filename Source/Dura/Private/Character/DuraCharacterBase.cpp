@@ -41,7 +41,7 @@ FVector ADuraCharacterBase::GetCombatSocketLocation() const
 
 void ADuraCharacterBase::InitAbilityActorInfo() {}
 
-void ADuraCharacterBase::InitializeDefaultAttributes()
+void ADuraCharacterBase::InitializeDefaultAttributes() const
 {
 	ApplyAttributeInitEffectToSelf(PrimaryInitEffectClass, 1.0f);
 	ApplyAttributeInitEffectToSelf(SecondaryInitEffectClass, 1.0f);
@@ -50,7 +50,7 @@ void ADuraCharacterBase::InitializeDefaultAttributes()
 	ApplyAttributeInitEffectToSelf(VitalInitEffectClass, 1.0f); 
 }
 
-void ADuraCharacterBase::ApplyAttributeInitEffectToSelf(TSubclassOf<UGameplayEffect> AttributeInitEffectClass, float Level)
+void ADuraCharacterBase::ApplyAttributeInitEffectToSelf(TSubclassOf<UGameplayEffect> AttributeInitEffectClass, float Level) const
 {
 	check(AbilitiesSystemComponent);
 	check(AttributeInitEffectClass);

@@ -7,6 +7,7 @@
 #include "AbilitySystem/DuraAttributeSet.h"
 #include "Components/WidgetComponent.h"
 #include "UI/UserWidget/DuraUserWidget.h"
+#include "AbilitySystem/DuraAbilitySystemLibrary.h"
 
 ADuraEnemy::ADuraEnemy()
 {
@@ -77,6 +78,11 @@ void ADuraEnemy::InitAbilityActorInfo()
 	Cast<UDuraAbilitySystemComponent>(AbilitiesSystemComponent)->AbilityActorInfoSet();
 
 	InitializeDefaultAttributes();
+}
+
+void ADuraEnemy::InitializeDefaultAttributes() const
+{
+	UDuraAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitiesSystemComponent);
 }
 
 int32 ADuraEnemy::GetPlayerLevel() const
