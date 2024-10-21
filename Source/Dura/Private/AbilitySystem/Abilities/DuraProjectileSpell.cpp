@@ -5,6 +5,8 @@
 #include "Actor/DuraProjectile.h"
 #include "Interaction/CombatInterface.h"
 #include "AbilitySystemComponent.h"
+#include "DuraGameplayTags.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void UDuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -45,6 +47,9 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		const FGameplayEffectSpecHandle EffectSpecHandler = SourceASC->MakeOutgoingSpec(
 			DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext()
 		);
+
+		FDuraGameplayTags GameplayTags = FDuraGameplayTags::Get();
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandler, GameplayTags.Damage, 50.f);
 		Projectile->DamageEffectSpecHandle = EffectSpecHandler;
 
 		Projectile->FinishSpawning(SpawnTransform);
