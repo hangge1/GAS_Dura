@@ -8,6 +8,8 @@
 #include "Components/WidgetComponent.h"
 #include "UI/UserWidget/DuraUserWidget.h"
 #include "AbilitySystem/DuraAbilitySystemLibrary.h"
+#include "DuraGameplayTags.h"
+#include "Gameframework/CharacterMovementComponent.h"
 
 ADuraEnemy::ADuraEnemy()
 {
@@ -38,11 +40,19 @@ void ADuraEnemy::UnHighlightActor()
 	Weapon->SetRenderCustomDepth(false);
 }
 
+void ADuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bHitReacting = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.0f : BaseWalkSpeed;
+}
+
 void ADuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	InitAbilityActorInfo();
 
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+
+	InitAbilityActorInfo();
 
 	if (UDuraUserWidget* DuraUserWidget = Cast<UDuraUserWidget>(HealthBar->GetUserWidgetObject()))
 	{
@@ -64,6 +74,9 @@ void ADuraEnemy::BeginPlay()
 				OnMaxHealthChanged.Broadcast(Data.NewValue);
 			}
 		);
+
+		AbilitiesSystemComponent->RegisterGameplayTagEvent(FDuraGameplayTags::Get().Effect_HitReact, 
+			EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ADuraEnemy::HitReactTagChanged);
 
 		OnHealthChanged.Broadcast(DuraAS->GetHealth());
 		OnMaxHealthChanged.Broadcast(DuraAS->GetMaxHealth());

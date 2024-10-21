@@ -27,6 +27,11 @@ ADuraCharacterBase::ADuraCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+UAnimMontage* ADuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 // Called when the game starts or when spawned
 void ADuraCharacterBase::BeginPlay()
 {
