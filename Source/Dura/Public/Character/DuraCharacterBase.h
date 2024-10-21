@@ -18,7 +18,7 @@ UCLASS(Abstract)
 class DURA_API ADuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
-
+	
 public:
 	ADuraCharacterBase();
 
