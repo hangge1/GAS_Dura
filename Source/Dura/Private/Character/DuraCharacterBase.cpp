@@ -50,6 +50,8 @@ void ADuraCharacterBase::MulticastHandleDeath_Implementation()
 	GetMesh()->SetEnableGravity(true);
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	Dissolve();
 }
 
 // Called when the game starts or when spawned
@@ -94,6 +96,23 @@ void ADuraCharacterBase::AddCharacterAbilities()
 	if (!HasAuthority()) return;
 
 	DuraASC->AddCharacterAbilities(StartupAbilities);
+}
+
+void ADuraCharacterBase::Dissolve()
+{
+	if (IsValid(DissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+		GetMesh()->SetMaterial(0, DynamicMatInst);
+		StartDissolveTimeline(DynamicMatInst);
+	}
+
+	if (IsValid(WeaponDissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+		Weapon->SetMaterial(0, DynamicMatInst);
+		StartWeaponDissolveTimeline(DynamicMatInst);
+	}
 }
 
 UAbilitySystemComponent* ADuraCharacterBase::GetAbilitySystemComponent() const
