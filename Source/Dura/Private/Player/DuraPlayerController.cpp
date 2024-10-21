@@ -110,7 +110,7 @@ void ADuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 	{
 		bTargeting = thisActor ? true : false;
 		bAutoRunning = false;
-	}	
+	}
 }
 
 void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)

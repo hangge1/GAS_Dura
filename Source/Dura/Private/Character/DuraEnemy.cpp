@@ -102,3 +102,9 @@ int32 ADuraEnemy::GetPlayerLevel() const
 {
 	return Level;
 }
+
+void ADuraEnemy::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();
+}

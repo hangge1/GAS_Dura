@@ -7,6 +7,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameFramework/Character.h"
 #include "DuraGameplayTags.h"
+#include "Interaction/CombatInterface.h"
 
 
 UDuraAttributeSet::UDuraAttributeSet()
@@ -58,11 +59,19 @@ void UDuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
 
 			const bool bFatal = NewHealth <= 0.0f;
-			if (!bFatal)
+
+			if (bFatal)
+			{
+				if (ICombatInterface* Combat = Cast<ICombatInterface>(Props.TargetAvatarActor))
+				{
+					Combat->Die();
+				}
+			}
+			else
 			{
 				FGameplayTagContainer TagContainer;
 				TagContainer.AddTag(FDuraGameplayTags::Get().Effect_HitReact);
-				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);		
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
 		}
 	}

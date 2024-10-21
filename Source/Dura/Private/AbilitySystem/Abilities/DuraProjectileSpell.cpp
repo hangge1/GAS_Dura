@@ -31,7 +31,6 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
-		// TODO: Set the Projectile Rotation
 		SpawnTransform.SetRotation(Rotation.Quaternion());
 
 		AActor* Owner = GetOwningActorFromActorInfo();
@@ -49,10 +48,7 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		);
 
 		const FDuraGameplayTags GameplayTags = FDuraGameplayTags::Get();
-		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
-
-		//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("FireBolt Damage: %f"), ScaledDamage));
-
+		const float ScaledDamage = Damage.GetValueAtLevel(/*GetAbilityLevel()*/20);
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandler, GameplayTags.Damage, ScaledDamage);
 		Projectile->DamageEffectSpecHandle = EffectSpecHandler;
 
