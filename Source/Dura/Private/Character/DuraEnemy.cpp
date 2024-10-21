@@ -51,8 +51,8 @@ void ADuraEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
-
 	InitAbilityActorInfo();
+	UDuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitiesSystemComponent);
 
 	if (UDuraUserWidget* DuraUserWidget = Cast<UDuraUserWidget>(HealthBar->GetUserWidgetObject()))
 	{
