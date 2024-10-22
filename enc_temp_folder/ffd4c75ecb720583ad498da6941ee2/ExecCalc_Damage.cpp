@@ -66,6 +66,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	// If Block, Halve the damage.
 	Damage = bBlocked ? Damage * 0.5f : Damage;
 
+	// ArmorPenetration ignores a percentage of the Target's Armor
 	float TargetArmor = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, TargetArmor);
 	TargetArmor = FMath::Max<float>(0.0f, TargetArmor);
@@ -74,12 +75,10 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().Armor_PenetrationDef, EvaluationParameters, SourceArmorPenetration);
 	SourceArmorPenetration = FMath::Max<float>(0.0f, SourceArmorPenetration);
 	
-	// ArmorPenetration ignores a percentage of the Target's Armor
 	//每4点有效穿透忽略敌人1%护甲
 	const float EffectiveArmor = TargetArmor * (100 - SourceArmorPenetration * 0.25f) / 100.f;
 
-	// Armor ignore percentage of the Target's Damage
-	//每3点护甲抵抗1%伤害
+	//每0.333点护甲抵抗1%伤害
 	Damage *= (100 - EffectiveArmor * 0.333f) / 100.f;
 
 	const FGameplayModifierEvaluatedData EvaluatedData(UDuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
