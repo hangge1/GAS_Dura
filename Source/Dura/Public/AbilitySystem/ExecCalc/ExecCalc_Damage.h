@@ -6,6 +6,7 @@
 #include "GameplayEffectExecutionCalculation.h"
 #include "ExecCalc_Damage.generated.h"
 
+
 /**
  * 
  */
@@ -17,9 +18,6 @@ public:
 	UExecCalc_Damage();
 
 	virtual void Execute_Implementation(
-		const FGameplayEffectCustomExecutionParameters& ExecutionParams, 
-		FGameplayEffectCustomExecutionOutput& OutExecutionOutput
-	) override;
-
-
+		const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput
+	) const override;
 };
