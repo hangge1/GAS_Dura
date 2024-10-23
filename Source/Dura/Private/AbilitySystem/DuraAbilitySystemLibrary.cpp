@@ -10,6 +10,7 @@
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "Game/DuraGameModeBase.h"
 #include "AbilitySystemComponent.h"
+#include "DuraAbilitiesTypes.h"
 
 
 UDuraOverlayWidgetController* UDuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
@@ -83,4 +84,38 @@ UCharacterClassInfo* UDuraAbilitySystemLibrary::GetCharacterClassInfo(const UObj
 	ADuraGameModeBase* GameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (GameMode == nullptr) return nullptr;
 	return GameMode->CharacterClassInfo;
+}
+
+bool UDuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FDuraGameplayEffectContext* DuraEffectContext = static_cast<const FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuraEffectContext->IsBlockedHit();
+	}
+	return false;
+}
+
+bool UDuraAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FDuraGameplayEffectContext* DuraEffectContext = static_cast<const FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuraEffectContext->IsCriticalHit();
+	}
+	return false;
+}
+
+void UDuraAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
+{
+	if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetIsBlockedHit(bInIsBlockedHit);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit)
+{
+	if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+	}
 }
