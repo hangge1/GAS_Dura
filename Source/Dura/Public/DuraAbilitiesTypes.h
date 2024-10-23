@@ -21,7 +21,7 @@ public:
 		return StaticStruct();
 	}
 
-	virtual FDuraGameplayEffectContext* Duplicate() const
+	virtual FDuraGameplayEffectContext* Duplicate() const override
 	{
 		FDuraGameplayEffectContext* NewContext = new FDuraGameplayEffectContext();
 		*NewContext = *this;
