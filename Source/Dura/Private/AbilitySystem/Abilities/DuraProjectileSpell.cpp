@@ -46,11 +46,11 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		FGameplayEffectContextHandle EfeectContextHandle = SourceASC->MakeEffectContext();
 		EfeectContextHandle.SetAbility(this); 
 		EfeectContextHandle.AddSourceObject(Projectile);
-
 		TArray<TWeakObjectPtr<AActor>> Actors;
 		Actors.Add(Projectile);
 		EfeectContextHandle.AddActors(Actors);
 		FHitResult HiResult;
+		HiResult.Location = ProjectileTargetLocation;
 		EfeectContextHandle.AddHitResult(HiResult);
 
 
