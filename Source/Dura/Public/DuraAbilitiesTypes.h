@@ -18,7 +18,19 @@ public:
 
 	virtual UScriptStruct* GetScriptStruct() const override
 	{
-		return FDuraGameplayEffectContext::StaticStruct();
+		return StaticStruct();
+	}
+
+	virtual FDuraGameplayEffectContext* Duplicate() const
+	{
+		FDuraGameplayEffectContext* NewContext = new FDuraGameplayEffectContext();
+		*NewContext = *this;
+		if (GetHitResult())
+		{
+			// Does a deep copy of the hit result
+			NewContext->AddHitResult(*GetHitResult(), true);
+		}
+		return NewContext;
 	}
 
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess) override;
@@ -29,4 +41,14 @@ protected:
 
 	UPROPERTY()
 	bool bIsCriticalHit = false;
+};
+
+template<>
+struct TStructOpsTypeTraits< FDuraGameplayEffectContext > : public TStructOpsTypeTraitsBase2< FDuraGameplayEffectContext >
+{
+	enum
+	{
+		WithNetSerializer = true,
+		WithCopy = true
+	};
 };
