@@ -43,8 +43,20 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		);
 
 		const UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo();
+		FGameplayEffectContextHandle EfeectContextHandle = SourceASC->MakeEffectContext();
+		EfeectContextHandle.SetAbility(this); 
+		EfeectContextHandle.AddSourceObject(Projectile);
+
+		TArray<TWeakObjectPtr<AActor>> Actors;
+		Actors.Add(Projectile);
+		EfeectContextHandle.AddActors(Actors);
+		FHitResult HiResult;
+		EfeectContextHandle.AddHitResult(HiResult);
+
+
+
 		const FGameplayEffectSpecHandle EffectSpecHandler = SourceASC->MakeOutgoingSpec(
-			DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext()
+			DamageEffectClass, GetAbilityLevel(), EfeectContextHandle
 		);
 
 		const FDuraGameplayTags GameplayTags = FDuraGameplayTags::Get();
