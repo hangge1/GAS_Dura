@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/DuraGameplayAbility.h"
+#include "AbilitySystem/Abilities/DuraDamageGameplayAbility.h"
 #include "DuraProjectileSpell.generated.h"
 
 class ADuraProjectile;
@@ -12,7 +12,7 @@ class UGameplayEffect;
  * 
  */
 UCLASS()
-class DURA_API UDuraProjectileSpell : public UDuraGameplayAbility
+class DURA_API UDuraProjectileSpell : public UDuraDamageGameplayAbility
 {
 	GENERATED_BODY()
 public:
@@ -27,6 +27,5 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ADuraProjectile> ProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
+	
 };
