@@ -19,6 +19,11 @@ ADuraEnemy::ADuraEnemy()
 {
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+
 	AbilitiesSystemComponent = CreateDefaultSubobject<UDuraAbilitySystemComponent>("AbilitiesSystemComponent");
 	AbilitiesSystemComponent->SetIsReplicated(true);
 	AbilitiesSystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
@@ -115,10 +120,12 @@ void ADuraEnemy::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	if (!HasAuthority()) return;
-	DuraAIController = Cast<ADuraAIController>(NewController);
 
+	DuraAIController = Cast<ADuraAIController>(NewController);
 	DuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	DuraAIController->RunBehaviorTree(BehaviorTree);
+	DuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
+	DuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
 }
 
 int32 ADuraEnemy::GetPlayerLevel() const
