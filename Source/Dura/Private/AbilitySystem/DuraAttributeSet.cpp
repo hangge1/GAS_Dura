@@ -94,8 +94,7 @@ void UDuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float d
 {
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
-		if (ADuraPlayerController* PC =
-			Cast<ADuraPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		if (ADuraPlayerController* PC = Cast<ADuraPlayerController>(Props.SourceCharacter->Controller))
 		{
 			PC->ShowDamageNumber(damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}

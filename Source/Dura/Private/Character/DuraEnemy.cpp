@@ -52,7 +52,12 @@ void ADuraEnemy::BeginPlay()
 
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
-	UDuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitiesSystemComponent);
+
+	if (HasAuthority())
+	{
+		UDuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitiesSystemComponent);
+	}
+	
 
 	if (UDuraUserWidget* DuraUserWidget = Cast<UDuraUserWidget>(HealthBar->GetUserWidgetObject()))
 	{
@@ -90,7 +95,10 @@ void ADuraEnemy::InitAbilityActorInfo()
 	AbilitiesSystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UDuraAbilitySystemComponent>(AbilitiesSystemComponent)->AbilityActorInfoSet();
 
-	InitializeDefaultAttributes();
+	if (HasAuthority())
+	{
+		InitializeDefaultAttributes();
+	}
 }
 
 void ADuraEnemy::InitializeDefaultAttributes() const
