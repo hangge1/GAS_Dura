@@ -10,6 +10,8 @@
 #include "DuraEnemy.generated.h"
 
 class UWidgetComponent;
+class UBehaviorTree;
+class ADuraAIController;
 /**
  * 
  */
@@ -55,6 +57,8 @@ protected:
 	virtual void InitAbilityActorInfo() override;
 	virtual void InitializeDefaultAttributes() const override;
 
+	virtual void PossessedBy(AController* NewController) override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Character Class Defaults");
 	int32 Level = 1;
 
@@ -64,5 +68,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UWidgetComponent> HealthBar;
 
-	
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<ADuraAIController> DuraAIController;
 };

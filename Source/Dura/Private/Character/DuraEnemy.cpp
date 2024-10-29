@@ -10,6 +10,10 @@
 #include "AbilitySystem/DuraAbilitySystemLibrary.h"
 #include "DuraGameplayTags.h"
 #include "Gameframework/CharacterMovementComponent.h"
+#include "AI/DuraAIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
 
 ADuraEnemy::ADuraEnemy()
 {
@@ -104,6 +108,17 @@ void ADuraEnemy::InitAbilityActorInfo()
 void ADuraEnemy::InitializeDefaultAttributes() const
 {
 	UDuraAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitiesSystemComponent);
+}
+
+void ADuraEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!HasAuthority()) return;
+	DuraAIController = Cast<ADuraAIController>(NewController);
+
+	DuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	DuraAIController->RunBehaviorTree(BehaviorTree);
 }
 
 int32 ADuraEnemy::GetPlayerLevel() const
