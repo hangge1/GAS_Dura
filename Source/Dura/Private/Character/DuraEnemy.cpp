@@ -64,7 +64,7 @@ void ADuraEnemy::BeginPlay()
 
 	if (HasAuthority())
 	{
-		UDuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitiesSystemComponent);
+		UDuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitiesSystemComponent, CharacterClass);
 	}
 	
 
