@@ -24,16 +24,16 @@ public:
 
 	ADuraEnemy();
 
-	//~ Imp From IEnemyInterface
+	//** IEnemyInterface
 	void HighlightActor() override;
 	void UnHighlightActor() override;
-	//~ end Imp From IEnemyInterface
+	//** end IEnemyInterface
 
-	//~ Imp From ICombat Interface
+	//** ICombatInterface
 	virtual int32 GetPlayerLevel() const override;
 
 	virtual void Die() override;
-	//~ End Imp From ICombat Interface
+	//** End ICombatInterface
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnHealthChanged;
