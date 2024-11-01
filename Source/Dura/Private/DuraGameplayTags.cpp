@@ -177,4 +177,18 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FString("Attack Abilities Tag")
 	);
 	
+	/*
+	* Montage
+	*/
+	DuraGameplayTags.Montage_Attack_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Montage.Attack.Weapon"),
+		FString("Weapon"));
+
+	DuraGameplayTags.Montage_Attack_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Montage.Attack.RightHand"),
+		FString("Right Hand"));
+
+	DuraGameplayTags.Montage_Attack_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Montage.Attack.LeftHand"),
+		FString("Left Hand"));
 }
