@@ -55,6 +55,16 @@ void ADuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.0f : BaseWalkSpeed;
 }
 
+void ADuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* ADuraEnemy::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
 void ADuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
