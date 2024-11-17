@@ -8,6 +8,7 @@
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "../Dura.h"
+#include <DuraGameplayTags.h>
 
 
 // Sets default values
@@ -62,10 +63,26 @@ void ADuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-FVector ADuraCharacterBase::GetCombatSocketLocation_Implementation() const
+FVector ADuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const
 {
-	check(Weapon);
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+    const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();
+
+    if(MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Weapon))
+    {
+        return Weapon->GetSocketLocation(WeaponTipSocketName);
+    }
+
+    if(MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_LeftHand))
+    {
+        return GetMesh()->GetSocketLocation(LeftHandTipSocketName);
+    }
+
+    if(MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_RightHand))
+    {
+        return GetMesh()->GetSocketLocation(RightHandTipSocketName);
+    }
+	
+    return FVector();
 }
 
 bool ADuraCharacterBase::IsDead_Implementation() const
