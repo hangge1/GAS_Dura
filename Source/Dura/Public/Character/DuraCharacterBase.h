@@ -91,6 +91,11 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    TArray<FTaggedMontage> AttackMontages;
+
+    virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Abilities")

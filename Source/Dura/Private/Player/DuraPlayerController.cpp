@@ -71,8 +71,10 @@ void ADuraPlayerController::SetupInputComponent()
 	DurainputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ADuraPlayerController::ShiftReleased);
 
 
-	DurainputComponent->BindAbilityActions(InputConfig, this, &ADuraPlayerController::AbilityInputTagPressed,
-		&ADuraPlayerController::AbilityInputTagReleased, &ADuraPlayerController::AbilityInputTagHeld);
+	DurainputComponent->BindAbilityActions(InputConfig, this, 
+        &ADuraPlayerController::AbilityInputTagPressed, 
+        &ADuraPlayerController::AbilityInputTagReleased, 
+        &ADuraPlayerController::AbilityInputTagHeld);
 }
 
 void ADuraPlayerController::PlayerTick(float DeltaTime)
@@ -216,6 +218,7 @@ void ADuraPlayerController::AutoRun()
 		ControlledPawn->AddMovementInput(Direction);
 
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
-		if (DistanceToDestination <= AutoRunAcceptanceRadius)  bAutoRunning = false;
+		if (DistanceToDestination <= AutoRunAcceptanceRadius)  
+            bAutoRunning = false;
 	}
 }

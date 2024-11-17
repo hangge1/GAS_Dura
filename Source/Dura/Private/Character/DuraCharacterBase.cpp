@@ -127,6 +127,11 @@ void ADuraCharacterBase::Dissolve()
 	}
 }
 
+TArray<FTaggedMontage> ADuraCharacterBase::GetAttackMontages_Implementation()
+{
+    return AttackMontages;
+}
+
 UAbilitySystemComponent* ADuraCharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitiesSystemComponent;
