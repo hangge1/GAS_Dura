@@ -10,6 +10,7 @@
 #include "../Dura.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include <AbilitySystem/DuraAbilitySystemLibrary.h>
 
 
 
@@ -57,12 +58,16 @@ void ADuraProjectile::Destroyed()
 void ADuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent, 
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	AActor* GECauser = DamageEffectSpecHandle.Data.IsValid() ? DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() : nullptr;
 	if (DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
 	{
 		return;
 	}
 	
+    if(!UDuraAbilitySystemLibrary::IsNotFriend(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
+    {
+        return;
+    }
+
 	if (!bHit)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
