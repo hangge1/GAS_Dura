@@ -151,5 +151,6 @@ int32 ADuraEnemy::GetPlayerLevel() const
 void ADuraEnemy::Die()
 {
 	SetLifeSpan(LifeSpan);
+    if(DuraAIController) DuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
 	Super::Die();
 }
