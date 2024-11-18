@@ -46,7 +46,7 @@ protected:
 
 protected:
 
-	UPROPERTY(VisibleAnywhere, Category="Combat")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
