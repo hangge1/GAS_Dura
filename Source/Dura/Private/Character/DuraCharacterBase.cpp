@@ -104,7 +104,12 @@ FVector ADuraCharacterBase::GetCombatSocketLocation_Implementation(const FGamepl
     {
         return GetMesh()->GetSocketLocation(RightHandTipSocketName);
     }
-	
+
+    if(MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Tail))
+    {
+        return GetMesh()->GetSocketLocation(TailSocketName);
+    }
+
     return FVector();
 }
 
