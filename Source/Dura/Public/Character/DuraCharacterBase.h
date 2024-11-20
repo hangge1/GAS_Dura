@@ -15,6 +15,7 @@ class UGameplayEffect;
 class UGameplayAbility;
 class UMaterialInstance;
 class UNiagaraSystem;
+class USoundBase;
 
 UCLASS(Abstract)
 class DURA_API ADuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -109,8 +110,11 @@ protected:
 
     virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
     UNiagaraSystem* BloodEffect;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+    USoundBase* DeathSound;
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Abilities")

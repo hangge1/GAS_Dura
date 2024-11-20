@@ -10,6 +10,8 @@
 #include "../Dura.h"
 #include <DuraGameplayTags.h>
 
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 ADuraCharacterBase::ADuraCharacterBase()
@@ -59,6 +61,8 @@ FTaggedMontage ADuraCharacterBase::GetTaggedMontagedByTag_Implementation(const F
 
 void ADuraCharacterBase::MulticastHandleDeath_Implementation()
 {
+    UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
+
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	Weapon->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
