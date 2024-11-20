@@ -66,15 +66,23 @@ public:
 	FGameplayTag Damage_Arcane;
 	FGameplayTag Damage_Physical;
 
-
 	FGameplayTag Abilities_Attack;
 
 	/*
-	* Montage
+	* CombatSocket
 	*/
-	FGameplayTag Montage_Attack_Weapon;
-	FGameplayTag Montage_Attack_RightHand;
-	FGameplayTag Montage_Attack_LeftHand;
+	FGameplayTag CombatSocket_Weapon;
+	FGameplayTag CombatSocket_RightHand;
+	FGameplayTag CombatSocket_LeftHand;
+
+    /*
+	* Montage Attack
+	*/
+    FGameplayTag Montage_Attack_1;
+	FGameplayTag Montage_Attack_2;
+	FGameplayTag Montage_Attack_3;
+	FGameplayTag Montage_Attack_4;
+
 
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 

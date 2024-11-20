@@ -41,6 +41,8 @@ public:
 
     virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 
+    virtual FTaggedMontage GetTaggedMontagedByTag_Implementation(const FGameplayTag& MontageTag) override;
+
 	//** End ICombatInterface
 
 	UFUNCTION(NetMulticast, Reliable)

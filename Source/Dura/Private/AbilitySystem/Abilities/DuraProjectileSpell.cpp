@@ -25,8 +25,7 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	if (CombatInterface)
 	{
 		const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(
-            GetAvatarActorFromActorInfo(), FDuraGameplayTags::Get().Montage_Attack_Weapon);
-		//const FVector SocketLocation = CombatInterface->GetCombatSocketLocation_Implementation();
+            GetAvatarActorFromActorInfo(), FDuraGameplayTags::Get().CombatSocket_Weapon);
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 		//Rotation.Pitch = 0.f;
 
