@@ -25,14 +25,19 @@ void UTargetDataUnderMouse::Activate()
 		const FGameplayAbilitySpecHandle SpecHandler = GetAbilitySpecHandle();
 		const FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();
 
+        //TargetData被设置的回调
 		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandler, ActivationPredictionKey).
 			AddUObject(this,&UTargetDataUnderMouse::OnTargetDataReplicatedCallback);
 
+        //手动调用委托
+        //如果TargetData已经被设置，手动调用【TargetData先，Activate后】，返回true
+        //如果Activate执行到此，TargetData还没被设置，返回false，等待数据到达会自动调用委托！
 		const bool bCalledDelegate = AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(SpecHandler, ActivationPredictionKey);
-		if (!bCalledDelegate)
+		if (!bCalledDelegate) //false代表Activate在先，TargetData设置在后
 		{
-			SetWaitingOnRemotePlayerData();
+			SetWaitingOnRemotePlayerData(); //等待TargetData数据到达，会自动调用委托
 		}
+
 	}
 }
 

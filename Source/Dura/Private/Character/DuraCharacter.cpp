@@ -26,6 +26,7 @@ void ADuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+    //服务器端, 初始化ASC
 	InitAbilityActorInfo();
 	AddCharacterAbilities();
 }
@@ -34,7 +35,12 @@ void ADuraCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
-	InitAbilityActorInfo();
+    if(!HasAuthority())
+    {
+        //客户端, 初始化ASC
+	    InitAbilityActorInfo();
+    }
+    
 }
 
 int32 ADuraCharacter::GetPlayerLevel() const
@@ -58,11 +64,11 @@ void ADuraCharacter::InitAbilityActorInfo()
 
 	Cast<UDuraAbilitySystemComponent>(playerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 
-	if (ADuraPlayerController* PayerController = Cast<ADuraPlayerController>(GetController()))
+	if (ADuraPlayerController* PlayerController = Cast<ADuraPlayerController>(GetController()))
 	{
-		if (ADuraHUD* HUD = Cast<ADuraHUD>(PayerController->GetHUD()))
+		if (ADuraHUD* HUD = Cast<ADuraHUD>(PlayerController->GetHUD()))
 		{
-			HUD->InitOverlay(PayerController, playerState, AbilitiesSystemComponent, AttributeSet);
+			HUD->InitOverlay(PlayerController, playerState, AbilitiesSystemComponent, AttributeSet);
 		}
 	}
 

@@ -14,9 +14,6 @@ class UAttributeInfo;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoSignature, const FDuraAttributeInfo&, Info);
 
-/**
- * 
- */
 UCLASS(BlueprintType, Blueprintable)
 class DURA_API UAttributeMenuWidgetController : public UDuraWidgetController
 {

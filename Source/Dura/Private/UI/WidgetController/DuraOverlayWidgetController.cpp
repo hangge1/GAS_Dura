@@ -11,7 +11,6 @@ void UDuraOverlayWidgetController::BroadcastInitialValue()
 {
 	UDuraAttributeSet* AS = CastChecked<UDuraAttributeSet>(AttributeSet);
 
-
 	OnHealthChanged.Broadcast(AS->GetHealth());
 	OnMaxHealthChanged.Broadcast(AS->GetMaxHealth());
 
