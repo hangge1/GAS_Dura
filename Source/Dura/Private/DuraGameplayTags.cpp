@@ -176,7 +176,12 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FName("Abilities.Attack"),
 		FString("Attack Abilities Tag")
 	);
-	
+
+    DuraGameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Summon"),
+		FString("Summon Abilities Tag")
+	);
+
 	/*
 	* CombatSocket
 	*/
