@@ -42,8 +42,9 @@ void ADuraCharacterBase::Die()
 void ADuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	Weapon->SetSimulatePhysics(true);
-	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	Weapon->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+    Weapon->SetEnableGravity(true);
 
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
