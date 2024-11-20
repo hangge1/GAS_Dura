@@ -39,6 +39,11 @@ void ADuraCharacterBase::Die()
 	MulticastHandleDeath();
 }
 
+UNiagaraSystem* ADuraCharacterBase::GetBloodEffect_Implementation()
+{
+    return BloodEffect;
+}
+
 void ADuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	Weapon->SetSimulatePhysics(true);

@@ -14,6 +14,7 @@ class UAttributeSet;
 class UGameplayEffect;
 class UGameplayAbility;
 class UMaterialInstance;
+class UNiagaraSystem;
 
 UCLASS(Abstract)
 class DURA_API ADuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -37,6 +38,9 @@ public:
 	virtual AActor* GetAvatar_Implementation() override;
 
 	virtual void Die() override; 
+
+    virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
+
 	//** End ICombatInterface
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -102,6 +106,9 @@ protected:
     TArray<FTaggedMontage> AttackMontages;
 
     virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    UNiagaraSystem* BloodEffect;
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Abilities")
