@@ -15,16 +15,20 @@ TArray<FVector> UDuraSummonAbility::GetSpawnLocations()
     for(int32 i = 0; i < NumMinions; i++)
     {
         const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
-        const FVector ChosenSpawnLocation = Location + Direction * FMath::FRandRange(MinSpawnDistnace, MaxSpawnDistnace);
+        FVector ChosenSpawnLocation = Location + Direction * FMath::FRandRange(MinSpawnDistnace, MaxSpawnDistnace);
+
+        FHitResult hit;
+        GetWorld()->LineTraceSingleByChannel(hit, 
+            ChosenSpawnLocation + FVector(0.f, 0.f, 400.f), 
+            ChosenSpawnLocation - FVector(0.f, 0.f, 400.f), ECC_Visibility);
+
+        if(hit.bBlockingHit)
+        {
+            ChosenSpawnLocation = hit.ImpactPoint;
+        }
+
         SpawnLocations.Add(ChosenSpawnLocation);
-
-        DrawDebugSphere(GetWorld(), ChosenSpawnLocation, 15.f, 12, FColor::Cyan, false, 3.f);
-        UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(),Location, Location + Direction * MaxSpawnDistnace, 4.0f, FLinearColor::Green, 5.0f);
-        
-        DrawDebugSphere(GetWorld(), Location + Direction * MinSpawnDistnace, 15.f, 12, FColor::Green, false, 3.f);
-        DrawDebugSphere(GetWorld(), Location + Direction * MaxSpawnDistnace, 15.f, 12, FColor::Green, false, 3.f);
     }
-
   
     return SpawnLocations;
 }
