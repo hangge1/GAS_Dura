@@ -2,7 +2,7 @@
 
 
 #include "UI/WidgetController/DuraOverlayWidgetController.h"
-#include <AbilitySystem/DuraAttributeSet.h>
+#include "AbilitySystem/DuraAttributeSet.h"
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 
 
@@ -75,6 +75,13 @@ void UDuraOverlayWidgetController::OnInitializeStartupAbilities(UDuraAbilitySyst
     //TODO: Get information about all given abilities, look up their Ability Info and broadcast it to widgets
     if(!ASC->bStartupAbilitiesGiven)return;
 
+    FForEachAbility BroadcastDelegate;
+    BroadcastDelegate.BindLambda([this, ASC](const FGameplayAbilitySpec& AbilitySpec) 
+    {
+        FDuraAbilityInfo AbilityInfo = AbilityInfoDataTable->FindAbilityInfoForTag(UDuraAbilitySystemComponent::GetAbilityTagFromSpec(AbilitySpec));
+        AbilityInfo.InputTag = UDuraAbilitySystemComponent::GetInputTagFromSpec(AbilitySpec);
+        AbilityInfoDelegate.Broadcast(AbilityInfo);
+    });
 
-
+    ASC->ForEachAbility(BroadcastDelegate);
 }
