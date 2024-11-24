@@ -187,6 +187,14 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FString("FireBolt Ability Tag")
 	);
 
+    /*
+	* CoolDown
+	*/
+
+    DuraGameplayTags.CoolDown_Fire_Bolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("CoolDown.Fire.FireBolt"),
+		FString("CoolDown Ability Tag")
+	);
     
 	/*
 	* CombatSocket

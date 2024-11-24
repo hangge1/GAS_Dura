@@ -70,6 +70,7 @@ public:
 	FGameplayTag Abilities_Summon;
 
 	FGameplayTag Abilities_Fire_Bolt;
+	FGameplayTag CoolDown_Fire_Bolt;
 
 	/*
 	* CombatSocket
