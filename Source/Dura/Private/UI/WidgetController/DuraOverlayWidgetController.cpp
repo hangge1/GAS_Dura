@@ -33,9 +33,21 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetMaxManaAttribute()).
 		AddLambda([this](const FOnAttributeChangeData& Data) { OnMaxManaChanged.Broadcast(Data.NewValue); });
+    
 
-	Cast<UDuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
-		[this](const FGameplayTagContainer& AssetTags)
+    if(UDuraAbilitySystemComponent* DuraASC = Cast<UDuraAbilitySystemComponent>(AbilitySystemComponent))
+    {
+        if(DuraASC->bStartupAbilitiesGiven)
+        {
+            OnInitializeStartupAbilities(DuraASC);
+        }
+        else
+        {
+            DuraASC->AbilitiesGivenDelegate.AddUObject(this, &UDuraOverlayWidgetController::OnInitializeStartupAbilities);
+        } 
+
+        DuraASC->EffectAssetTags.AddLambda(
+		    [this](const FGameplayTagContainer& AssetTags)
 		{
 			for (const FGameplayTag& Tag : AssetTags)
 			{
@@ -52,5 +64,17 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 				}
 			}
 		}
-	);
+	    );
+    }
+
+	
+}
+
+void UDuraOverlayWidgetController::OnInitializeStartupAbilities(UDuraAbilitySystemComponent* ASC)
+{
+    //TODO: Get information about all given abilities, look up their Ability Info and broadcast it to widgets
+    if(!ASC->bStartupAbilitiesGiven)return;
+
+
+
 }

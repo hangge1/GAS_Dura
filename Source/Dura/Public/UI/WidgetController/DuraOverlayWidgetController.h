@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "UI/WidgetController/DuraWidgetController.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 #include "DuraOverlayWidgetController.generated.h"
 
-
+class UDuraAbilitySystemComponent;
 class UDuraUserWidget;
 struct FOnAttributeChangeData;
 
@@ -61,11 +62,17 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 protected:
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UAbilityInfo> AbilityInfoDataTable;
+
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+
+    void OnInitializeStartupAbilities(UDuraAbilitySystemComponent* ASC);
 };
 
 template<typename T>

@@ -182,6 +182,12 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FString("Summon Abilities Tag")
 	);
 
+    DuraGameplayTags.Abilities_Fire_Bolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Fire.FireBolt"),
+		FString("FireBolt Ability Tag")
+	);
+
+    
 	/*
 	* CombatSocket
 	*/
