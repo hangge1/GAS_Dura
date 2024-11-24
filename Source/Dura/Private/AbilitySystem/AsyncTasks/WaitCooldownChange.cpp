@@ -16,7 +16,7 @@ UWaitCooldownChange* UWaitCooldownChange::WaitForCooldownChange(UAbilitySystemCo
         return nullptr;
     }
 
-    // To know when a cooldown effect has been removed
+    // To know when a cooldown effect has ended
     AbilitySystemComponent->RegisterGameplayTagEvent(InCooldownTag, EGameplayTagEventType::NewOrRemoved)
     .AddUObject(WaitCooldownChange, &UWaitCooldownChange::CooldownTagChanged);
 
