@@ -8,6 +8,7 @@
 #include "Player/DuraPlayerController.h"
 #include "UI/HUD/DuraHUD.h"
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
+#include "AbilitySystem/Data/LevelUpInfo.h"
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -24,6 +25,24 @@ ADuraCharacter::ADuraCharacter()
     CharacterClass = ECharacterClass::Elementalist;
 }
 
+void ADuraCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
+{
+    //TODO: Add SpellPoints to PlayerState
+
+}
+
+void ADuraCharacter::AddToAttributePoints_Implementation(int32 InAttributePoints)
+{
+    //TODO: Add AttributePoints to PlayerState
+
+}
+
+void ADuraCharacter::AddToPlayerLevel_Implementation(int32 InPlayerLevel)
+{
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+    DuraPlayerState->AddToLevel(InPlayerLevel);
+}
+
 void ADuraCharacter::AddToXP_Implementation(int32 InXP)
 {
     ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
@@ -33,6 +52,30 @@ void ADuraCharacter::AddToXP_Implementation(int32 InXP)
 void ADuraCharacter::LevelUp_Implementation()
 {
     
+}
+
+int32 ADuraCharacter::GetXP_Implementation() const
+{
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+    return DuraPlayerState->GetXP();
+}
+
+int32 ADuraCharacter::FindLevelForXP_Implementation(int32 InXP) const
+{
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+    return DuraPlayerState->LevelUpInfoDataAsset->FindLevelForXP(InXP);
+}
+
+int32 ADuraCharacter::GetAttributePointsReward_Implementation(int32 Level) const
+{
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+    return DuraPlayerState->LevelUpInfoDataAsset->LevelUpInformation[Level].AttributePointAward;
+}
+
+int32 ADuraCharacter::GetSpellPointsReward_Implementation(int32 Level) const
+{
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+    return DuraPlayerState->LevelUpInfoDataAsset->LevelUpInformation[Level].SpellPointAward;
 }
 
 void ADuraCharacter::PossessedBy(AController* NewController)
