@@ -168,6 +168,7 @@ void ADuraCharacterBase::AddCharacterAbilities()
 	if (!HasAuthority()) return;
 
 	DuraASC->AddCharacterAbilities(StartupAbilities);
+	DuraASC->AddCharacterPassiveAbilities(StartupPassiveAbilities);  
 }
 
 void ADuraCharacterBase::Dissolve()

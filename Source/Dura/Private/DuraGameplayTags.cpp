@@ -71,6 +71,14 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FString("Reduces damage taken, improves Block Chance"));
 
 
+    /*
+    * Meta Attributes
+    */
+    DuraGameplayTags.Attributes_Meta_IncomingXP = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Meta.IncomingXP"), 
+		FString("Incoming XP Meta Attributes"));
+    
+
 	/*
 	 * Input Tags
 	 */

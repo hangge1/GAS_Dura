@@ -29,6 +29,15 @@ void UDuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
     AbilitiesGivenDelegate.Broadcast(this);
 }
 
+void UDuraAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& PassiveAbilities)
+{
+    for (const TSubclassOf<UGameplayAbility> AbilityClass : PassiveAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}
+
 void UDuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid()) return;

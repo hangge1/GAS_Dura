@@ -25,6 +25,7 @@ class DURA_API UDuraAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	void AbilityActorInfoSet();
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
+	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& PassiveAbilities);
 
 	FEffectAssetTags EffectAssetTags;
     FAbilitiesGiven AbilitiesGivenDelegate;
