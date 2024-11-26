@@ -20,6 +20,8 @@ ADuraCharacter::ADuraCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = true;
+
+    CharacterClass = ECharacterClass::Elementalist;
 }
 
 void ADuraCharacter::PossessedBy(AController* NewController)

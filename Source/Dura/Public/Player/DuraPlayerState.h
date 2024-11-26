@@ -28,6 +28,7 @@ public:
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
+    UPROPERTY(EditDefaultsOnly)
     TObjectPtr<ULevelUpInfo> LevelUpInfoDataAsset;
 	
     FOnPlayerStatChanged OnXPChangedDelegate;

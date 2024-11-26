@@ -69,6 +69,11 @@ void ADuraCharacterBase::IncrementMinionCount_Implementation(int32 Amount)
     MinionCount += Amount;
 }
 
+ECharacterClass ADuraCharacterBase::GetCharacterClass_Implementation()
+{
+    return CharacterClass;
+}
+
 void ADuraCharacterBase::MulticastHandleDeath_Implementation()
 {
     UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());

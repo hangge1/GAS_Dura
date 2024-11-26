@@ -6,7 +6,6 @@
 #include "Character/DuraCharacterBase.h"
 #include "Interaction/EnemyInterface.h"
 #include "UI/WidgetController/DuraOverlayWidgetController.h"
-#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "DuraEnemy.generated.h"
 
 class UWidgetComponent;
@@ -67,9 +66,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Character Class Defaults");
 	int32 Level = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults");
-	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TObjectPtr<UWidgetComponent> HealthBar;

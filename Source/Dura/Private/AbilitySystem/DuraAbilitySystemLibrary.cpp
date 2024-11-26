@@ -91,6 +91,18 @@ void UDuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
 	}
 }
 
+int32 UDuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject, 
+    ECharacterClass CharacterClass, int32 CharacterLevel)
+{
+    UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if (!CharacterClassInfo) return 0;
+
+    const FCharacterClassDefaultInfo& Info = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+    const float XPReward = Info.XPReward.GetValueAtLevel(CharacterLevel);
+
+    return static_cast<int32>(XPReward);
+}
+
 UCharacterClassInfo* UDuraAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
 {
 	ADuraGameModeBase* GameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
@@ -155,6 +167,8 @@ bool UDuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondAc
     const bool bFriends = bBothArePlayers || bBothAreEnemies;
     return !bFriends;
 }
+
+
 
 void UDuraAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
 {
