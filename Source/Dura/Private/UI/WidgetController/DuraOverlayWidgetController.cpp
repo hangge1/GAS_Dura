@@ -24,6 +24,11 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 {
     ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(PlayerState);
     DuraPlayerState->OnXPChangedDelegate.AddUObject(this, &UDuraOverlayWidgetController::OnXPChanged);
+    DuraPlayerState->OnLevelChangedDelegate.AddLambda([this](int32 NewLevel)
+    {
+        OnPlayerLevelChangedDelegate.Broadcast(NewLevel);
+    });
+    
 
 	UDuraAttributeSet* AS = CastChecked<UDuraAttributeSet>(AttributeSet);
     
@@ -110,6 +115,6 @@ void UDuraOverlayWidgetController::OnXPChanged(int32 NewXP) const
         const int32 XPForThisLevel = NewXP - PrevioutLevelUpRequirement;
 
         const float XPBarPercent = static_cast<float>(XPForThisLevel) / static_cast<float>(DeltaLevelRequirement);
-        OnXPPercentChanged.Broadcast(XPBarPercent);
+        OnXPPercentChangedDelegate.Broadcast(XPBarPercent);
     }
 }
