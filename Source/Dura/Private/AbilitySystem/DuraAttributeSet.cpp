@@ -125,11 +125,10 @@ void UDuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float d
 
 void UDuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
 {
-    ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetCharacter);
-    if(CombatInterface)
+    if(Props.TargetCharacter->Implements<UCombatInterface>())
     {
-        const int32 TargetLevel = CombatInterface->GetPlayerLevel();
-        const ECharacterClass TargetClass = CombatInterface->Execute_GetCharacterClass(Props.TargetCharacter);
+        const int32 TargetLevel = ICombatInterface::Execute_GetPlayerLevel(Props.TargetCharacter);
+        const ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
         const int32 Reward = UDuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
 
         const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();

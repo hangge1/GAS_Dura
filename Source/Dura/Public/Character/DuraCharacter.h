@@ -21,12 +21,14 @@ public:
     // Player Interface
     virtual void AddToXP_Implementation(int32 InXP) override;
     
+    virtual void LevelUp_Implementation() override;
+
     // EndPlayer Interface
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
-	virtual int32 GetPlayerLevel() const override;
+	virtual int32 GetPlayerLevel_Implementation() const override;
 private:
 	virtual void InitAbilityActorInfo() override;
 };

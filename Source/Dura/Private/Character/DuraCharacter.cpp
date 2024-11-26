@@ -30,6 +30,11 @@ void ADuraCharacter::AddToXP_Implementation(int32 InXP)
     DuraPlayerState->AddToXP(InXP);
 }
 
+void ADuraCharacter::LevelUp_Implementation()
+{
+    
+}
+
 void ADuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -51,7 +56,7 @@ void ADuraCharacter::OnRep_PlayerState()
     
 }
 
-int32 ADuraCharacter::GetPlayerLevel() const
+int32 ADuraCharacter::GetPlayerLevel_Implementation() const
 {
 	ADuraPlayerState* playerState = GetPlayerState<ADuraPlayerState>();
 	check(playerState);

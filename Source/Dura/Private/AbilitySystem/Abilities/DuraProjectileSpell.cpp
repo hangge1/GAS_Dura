@@ -21,8 +21,7 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		return;
 	}
 
-	ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
-	if (CombatInterface)
+	if (GetAvatarActorFromActorInfo()->Implements<UCombatInterface>())
 	{
 		const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(
             GetAvatarActorFromActorInfo(), SocketTag);

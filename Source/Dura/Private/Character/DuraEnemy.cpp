@@ -143,7 +143,7 @@ void ADuraEnemy::PossessedBy(AController* NewController)
 	DuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
 }
 
-int32 ADuraEnemy::GetPlayerLevel() const
+int32 ADuraEnemy::GetPlayerLevel_Implementation() const
 {
 	return Level;
 }
