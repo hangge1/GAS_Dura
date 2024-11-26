@@ -10,6 +10,7 @@
 #include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/DuraPlayerController.h"
+#include "Dura/DuraLogChannels.h"
 #include <AbilitySystem/DuraAbilitySystemLibrary.h>
 
 
@@ -50,7 +51,7 @@ void UDuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
-		UE_LOG(LogTemp, Warning, TEXT("Changed Health on %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth());
+		//UE_LOG(LogDura, Warning, TEXT("Changed Health on %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth());
 	}
 
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
@@ -87,7 +88,15 @@ void UDuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 			const bool bCriticalHit = UDuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 			ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit);
 		}
-	}	
+	}
+    
+    if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
+	{
+        const float LocalIncomingXP = GetIncomingXP();
+        SetIncomingXP(0.f);
+        UE_LOG(LogDura, Warning, TEXT("IncomingXP Attribute: %f"), LocalIncomingXP);
+    }
+
 }
 
 void UDuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float damage, bool bBlockedHit, bool bCriticalHit) const

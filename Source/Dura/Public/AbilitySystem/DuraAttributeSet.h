@@ -166,6 +166,10 @@ public:
 	FGameplayAttributeData IncomingDamage;
 	ATTRIBUTE_ACCESSORS(UDuraAttributeSet, IncomingDamage);
 
+    UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingXP;
+	ATTRIBUTE_ACCESSORS(UDuraAttributeSet, IncomingXP);
+
 	/* End Meta Attributes */
 
 	UFUNCTION()
