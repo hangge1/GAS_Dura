@@ -4,6 +4,8 @@
 #include "UI/WidgetController/DuraOverlayWidgetController.h"
 #include "AbilitySystem/DuraAttributeSet.h"
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
+#include "Player/DuraPlayerState.h"
+#include "AbilitySystem/Data/LevelUpInfo.h"
 
 
 
@@ -20,8 +22,11 @@ void UDuraOverlayWidgetController::BroadcastInitialValue()
 
 void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 {
-	UDuraAttributeSet* AS = CastChecked<UDuraAttributeSet>(AttributeSet);
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(PlayerState);
+    DuraPlayerState->OnXPChangedDelegate.AddUObject(this, &UDuraOverlayWidgetController::OnXPChanged);
 
+	UDuraAttributeSet* AS = CastChecked<UDuraAttributeSet>(AttributeSet);
+    
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).
 		AddLambda([this](const FOnAttributeChangeData& Data){ OnHealthChanged.Broadcast(Data.NewValue);});
 
@@ -68,6 +73,7 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
     }
 
 	
+    
 }
 
 void UDuraOverlayWidgetController::OnInitializeStartupAbilities(UDuraAbilitySystemComponent* ASC)
@@ -84,4 +90,26 @@ void UDuraOverlayWidgetController::OnInitializeStartupAbilities(UDuraAbilitySyst
     });
 
     ASC->ForEachAbility(BroadcastDelegate);
+}
+
+void UDuraOverlayWidgetController::OnXPChanged(int32 NewXP) const 
+{
+    const ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(PlayerState);
+    const ULevelUpInfo* LevelUpInfo = DuraPlayerState->LevelUpInfoDataAsset;
+    checkf(LevelUpInfo, TEXT("Unabled to find LevelUpInfo. Please fill out in DuraPlayerState Blueprint"));
+
+    const int32 Level = LevelUpInfo->FindLevelForXP(NewXP);
+    const int32 MaxLevel = LevelUpInfo->LevelUpInformation.Num();
+
+    if(Level <= MaxLevel && Level > 0)
+    {
+        const int32 LevelUpRequirement = LevelUpInfo->LevelUpInformation[Level].LevelUpRequirement;
+        const int32 PrevioutLevelUpRequirement = LevelUpInfo->LevelUpInformation[Level - 1].LevelUpRequirement;
+
+        const int32 DeltaLevelRequirement = LevelUpRequirement - PrevioutLevelUpRequirement;       
+        const int32 XPForThisLevel = NewXP - PrevioutLevelUpRequirement;
+
+        const float XPBarPercent = static_cast<float>(XPForThisLevel) / static_cast<float>(DeltaLevelRequirement);
+        OnXPPercentChanged.Broadcast(XPBarPercent);
+    }
 }

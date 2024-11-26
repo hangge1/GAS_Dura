@@ -10,6 +10,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class ULevelUpInfo;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /*StatValue*/);
 
@@ -23,12 +24,11 @@ class DURA_API ADuraPlayerState : public APlayerState, public IAbilitySystemInte
 	
 public:
 	ADuraPlayerState();
-
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
+    TObjectPtr<ULevelUpInfo> LevelUpInfoDataAsset;
 	
     FOnPlayerStatChanged OnXPChangedDelegate;
     FOnPlayerStatChanged OnLevelChangedDelegate;
