@@ -92,7 +92,7 @@ void UDuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
 }
 
 int32 UDuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject, 
-    ECharacterClass CharacterClass, int32 CharacterLevel)
+    const ECharacterClass CharacterClass, const int32 CharacterLevel)
 {
     UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 	if (!CharacterClassInfo) return 0;

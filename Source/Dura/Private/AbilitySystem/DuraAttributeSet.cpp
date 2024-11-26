@@ -76,6 +76,7 @@ void UDuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 				{
 					Combat->Die();
 				}
+                SendXPEvent(Props);
 			}
 			else
 			{
@@ -113,6 +114,26 @@ void UDuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float d
 			PC->ShowDamageNumber(damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}
 	}
+}
+
+void UDuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
+{
+    ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetCharacter);
+    if(CombatInterface)
+    {
+        const int32 TargetLevel = CombatInterface->GetPlayerLevel();
+        const ECharacterClass TargetClass = CombatInterface->Execute_GetCharacterClass(Props.TargetCharacter);
+        const int32 Reward = UDuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
+
+        const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();
+
+        FGameplayEventData Payload;
+        Payload.EventTag = GameplayTags.Attributes_Meta_IncomingXP;
+        Payload.EventMagnitude = Reward;
+
+        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Props.SourceCharacter, 
+            GameplayTags.Attributes_Meta_IncomingXP,Payload);
+    }
 }
 
 void UDuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
