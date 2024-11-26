@@ -24,6 +24,12 @@ ADuraCharacter::ADuraCharacter()
     CharacterClass = ECharacterClass::Elementalist;
 }
 
+void ADuraCharacter::AddToXP_Implementation(int32 InXP)
+{
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+    DuraPlayerState->AddToXP(InXP);
+}
+
 void ADuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);

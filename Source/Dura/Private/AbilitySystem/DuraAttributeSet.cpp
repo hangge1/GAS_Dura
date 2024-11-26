@@ -11,7 +11,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Player/DuraPlayerController.h"
 #include "Dura/DuraLogChannels.h"
-#include <AbilitySystem/DuraAbilitySystemLibrary.h>
+#include "AbilitySystem/DuraAbilitySystemLibrary.h"
+#include "Interaction/PlayerInterface.h"
 
 
 UDuraAttributeSet::UDuraAttributeSet()
@@ -95,7 +96,13 @@ void UDuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	{
         const float LocalIncomingXP = GetIncomingXP();
         SetIncomingXP(0.f);
-        UE_LOG(LogDura, Warning, TEXT("IncomingXP Attribute: %f"), LocalIncomingXP);
+        
+        //TODO: See if we should level up
+        if(Props.SourceCharacter->Implements<UPlayerInterface>())
+        {
+            IPlayerInterface::Execute_AddToXP(Props.SourceCharacter, LocalIncomingXP);
+        }
+        
     }
 
 }
