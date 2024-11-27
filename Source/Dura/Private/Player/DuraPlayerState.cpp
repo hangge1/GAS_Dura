@@ -35,6 +35,18 @@ void ADuraPlayerState::AddToLevel(int32 InLevel)
     OnLevelChangedDelegate.Broadcast(Level);
 }
 
+void ADuraPlayerState::AddToAttributePoints(int32 InAttributePoints)
+{
+    AttributePoints += InAttributePoints;
+    OnAttributePointsChangedDelegate.Broadcast(AttributePoints);
+}
+
+void ADuraPlayerState::AddToSpellPoints(int32 InSpellPoints)
+{
+    SpellPoints += InSpellPoints;
+    OnSpellPointsChangedDelegate.Broadcast(SpellPoints);
+}
+
 void ADuraPlayerState::SetXP(int32 InXP)
 {
     XP = InXP;
@@ -63,4 +75,14 @@ void ADuraPlayerState::OnRep_Level(int32 OldLevel)
 void ADuraPlayerState::OnRep_XP(int32 OldXP)
 {
     OnXPChangedDelegate.Broadcast(XP);
+}
+
+void ADuraPlayerState::OnRep_AttributePoints(int32 Old_AttributePoints)
+{
+    OnAttributePointsChangedDelegate.Broadcast(AttributePoints);
+}
+
+void ADuraPlayerState::OnRep_SpellPoints(int32 Old_SpellPoints)
+{
+    OnSpellPointsChangedDelegate.Broadcast(SpellPoints);
 }
