@@ -7,6 +7,9 @@
 #include "Interaction/PlayerInterface.h"
 #include "DuraCharacter.generated.h"
 
+class UNiagaraComponent;
+class UCameraComponent;
+class USpringArmComponent;
 /**
  * 
  */
@@ -32,10 +35,22 @@ public:
 
     // EndPlayer Interface
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
+
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 	virtual int32 GetPlayerLevel_Implementation() const override;
 private:
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<UCameraComponent> TopDownCameraComponent;
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<USpringArmComponent> CameraBoom;
+
 	virtual void InitAbilityActorInfo() override;
+
+    UFUNCTION(NetMulticast, Reliable)
+    void MulticastLevelUpParticles() const;
 };

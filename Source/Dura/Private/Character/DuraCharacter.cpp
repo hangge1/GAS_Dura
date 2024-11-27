@@ -10,8 +10,25 @@
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/LevelUpInfo.h"
 
+#include "NiagaraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+
 ADuraCharacter::ADuraCharacter()
 {
+    CameraBoom = CreateDefaultSubobject<USpringArmComponent>("CameraBoom");
+    CameraBoom->SetupAttachment(GetRootComponent());
+    CameraBoom->SetUsingAbsoluteRotation(true);
+    CameraBoom->bDoCollisionTest = false;
+
+    TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>("TopDownCameraComponent");
+    TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+    TopDownCameraComponent->bUsePawnControlRotation = false;
+
+    LevelUpNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("LevelUpNiagaraComponent");
+    LevelUpNiagaraComponent->SetupAttachment(GetRootComponent());
+    LevelUpNiagaraComponent->bAutoActivate = false;
+
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
@@ -51,7 +68,7 @@ void ADuraCharacter::AddToXP_Implementation(int32 InXP)
 
 void ADuraCharacter::LevelUp_Implementation()
 {
-    
+    MulticastLevelUpParticles();
 }
 
 int32 ADuraCharacter::GetXP_Implementation() const
@@ -129,4 +146,17 @@ void ADuraCharacter::InitAbilityActorInfo()
 	}
 
 	InitializeDefaultAttributes();
+}
+
+void ADuraCharacter::MulticastLevelUpParticles_Implementation() const
+{
+    if(IsValid(LevelUpNiagaraComponent))
+    {
+        const FVector CameraLocation = TopDownCameraComponent->GetComponentLocation();
+        const FVector NiagaraSystemLocation = LevelUpNiagaraComponent->GetComponentLocation();
+        const FRotator ToCameraRotation = (CameraLocation - NiagaraSystemLocation).Rotation();
+
+        LevelUpNiagaraComponent->SetWorldRotation(ToCameraRotation);
+        LevelUpNiagaraComponent->Activate(true);
+    }
 }
