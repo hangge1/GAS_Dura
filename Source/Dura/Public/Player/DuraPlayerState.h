@@ -64,10 +64,10 @@ private:
 	int32 XP = 1;
 
     UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_AttributePoints);
-	int32 AttributePoints = 1;
+	int32 AttributePoints = 0;
 
     UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SpellPoints);
-	int32 SpellPoints = 1;
+	int32 SpellPoints = 0;
 
 	UFUNCTION()
 	void OnRep_Level(int32 OldLevel);

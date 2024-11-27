@@ -44,14 +44,14 @@ ADuraCharacter::ADuraCharacter()
 
 void ADuraCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
 {
-    //TODO: Add SpellPoints to PlayerState
-
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+    DuraPlayerState->AddToSpellPoints(InSpellPoints);
 }
 
 void ADuraCharacter::AddToAttributePoints_Implementation(int32 InAttributePoints)
 {
-    //TODO: Add AttributePoints to PlayerState
-
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+    DuraPlayerState->AddToAttributePoints(InAttributePoints);
 }
 
 void ADuraCharacter::AddToPlayerLevel_Implementation(int32 InPlayerLevel)

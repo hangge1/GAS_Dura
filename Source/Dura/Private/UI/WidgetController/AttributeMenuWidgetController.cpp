@@ -17,6 +17,9 @@ void UAttributeMenuWidgetController::BroadcastInitialValue()
 	{
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
 	}
+
+    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(PlayerState);
+    AttributePointsChangedDelegate.Broadcast(DuraPlayerState->GetAttributePoints());
 }
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
