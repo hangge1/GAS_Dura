@@ -42,6 +42,18 @@ ADuraCharacter::ADuraCharacter()
     CharacterClass = ECharacterClass::Elementalist;
 }
 
+int32 ADuraCharacter::GetSpellPoints_Implementation() const
+{
+     ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+     return DuraPlayerState->GetSpellPoints();   
+}
+
+int32 ADuraCharacter::GetAttributePoints_Implementation() const
+{
+     ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
+     return DuraPlayerState->GetAttributePoints();
+}
+
 void ADuraCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
 {
     ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());

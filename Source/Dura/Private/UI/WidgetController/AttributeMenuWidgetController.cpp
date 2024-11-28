@@ -5,6 +5,7 @@
 #include "DuraGameplayTags.h"
 #include "AbilitySystem/DuraAttributeSet.h"
 #include "AbilitySystem/Data/AttributeInfo.h"
+#include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "Player/DuraPlayerState.h"
 
 void UAttributeMenuWidgetController::BroadcastInitialValue()
@@ -41,6 +42,12 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
     {
         AttributePointsChangedDelegate.Broadcast(NewAttributePoints);
     });
+}
+
+void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& AttributeTag)
+{
+    UDuraAbilitySystemComponent* DuraASC = CastChecked<UDuraAbilitySystemComponent>(AbilitySystemComponent);
+    DuraASC->UpgradeAttribute(AttributeTag);
 }
 
 void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const

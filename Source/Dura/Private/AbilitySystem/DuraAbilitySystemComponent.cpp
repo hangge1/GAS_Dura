@@ -5,6 +5,8 @@
 #include "DuraGameplayTags.h"
 #include "AbilitySystem/Abilities/DuraGameplayAbility.h"
 #include "Dura/DuraLogChannels.h"
+#include "Interaction/PlayerInterface.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 
 
@@ -105,6 +107,31 @@ FGameplayTag UDuraAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbi
         }
     }
     return FGameplayTag();
+}
+
+void UDuraAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& AttributeTag)
+{
+    if(GetAvatarActor()->Implements<UPlayerInterface>())
+    {
+        if(IPlayerInterface::Execute_GetAttributePoints(GetAvatarActor()) > 0)
+        {
+            ServerUpgradeAttribute(AttributeTag);
+        }
+    }
+}
+
+void UDuraAbilitySystemComponent::ServerUpgradeAttribute_Implementation(const FGameplayTag& AttributeTag)
+{
+    FGameplayEventData Payload;
+    Payload.EventTag = AttributeTag;
+    Payload.EventMagnitude = 1.f;
+
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetAvatarActor(), AttributeTag, Payload);
+
+    if(GetAvatarActor()->Implements<UPlayerInterface>())
+    {
+        IPlayerInterface::Execute_AddToAttributePoints(GetAvatarActor(), -1);
+    }
 }
 
 void UDuraAbilitySystemComponent::OnRep_ActivateAbilities()
