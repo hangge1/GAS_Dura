@@ -115,8 +115,8 @@ void UDuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
                 IPlayerInterface::Execute_AddToAttributePoints(Props.SourceCharacter, AttributePointReward);
                 IPlayerInterface::Execute_AddToSpellPoints(Props.SourceCharacter, SpellPointReward);
 
-                SetHealth(GetMaxHealth());
-                SetMana(GetMaxMana());
+                bTopOffHealth = true;
+                bTopOffMana = true;
 
                 IPlayerInterface::Execute_LevelUp(Props.SourceCharacter);
             }
@@ -175,6 +175,22 @@ void UDuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxMana());
 	}
+}
+
+void UDuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+    Super::PostAttributeChange(Attribute, OldValue, NewValue);
+
+    if(Attribute == GetMaxHealthAttribute() && bTopOffHealth)
+    {
+        SetHealth(GetMaxHealth());
+        bTopOffHealth = false;
+    }
+    if(Attribute == GetMaxManaAttribute() && bTopOffMana)
+    {
+        SetMana(GetMaxMana());
+        bTopOffMana = false;
+    }
 }
 
 void UDuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
