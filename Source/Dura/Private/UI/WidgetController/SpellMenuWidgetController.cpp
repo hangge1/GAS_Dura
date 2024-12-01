@@ -7,6 +7,8 @@
 void USpellMenuWidgetController::BroadcastInitialValue()
 {
     BroadcastAbilityInfo();
+
+    OnSpellPointsChangedDelegate.Broadcast(GetDuraPS()->GetSpellPoints());
 }
 
 void USpellMenuWidgetController::BindCallbacksToDependencies()
@@ -19,5 +21,10 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
             Info.StatusTag = StatusTag;
             AbilityInfoDelegate.Broadcast(Info);
         }
+    });
+
+    GetDuraPS()->OnSpellPointsChangedDelegate.AddLambda([this](int32 NewSpellPoints)
+    {
+        OnSpellPointsChangedDelegate.Broadcast(NewSpellPoints);
     });
 }

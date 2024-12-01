@@ -203,6 +203,8 @@ void UDuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const
     AbilityStatusChanged.Broadcast(AbilityTag, StatusTag);
 }
 
+
+
 void UDuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)
 {
 	FGameplayTagContainer TagContainer;

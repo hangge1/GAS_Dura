@@ -65,6 +65,9 @@ void ADuraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 	DOREPLIFETIME(ADuraPlayerState, Level);
 	DOREPLIFETIME(ADuraPlayerState, XP);
+
+    DOREPLIFETIME(ADuraPlayerState, SpellPoints);
+	DOREPLIFETIME(ADuraPlayerState, AttributePoints);
 }
 
 void ADuraPlayerState::OnRep_Level(int32 OldLevel)

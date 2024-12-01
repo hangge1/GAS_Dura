@@ -64,6 +64,7 @@ void ADuraCharacter::AddToAttributePoints_Implementation(int32 InAttributePoints
 {
     ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(GetPlayerState());
     DuraPlayerState->AddToAttributePoints(InAttributePoints);
+
 }
 
 void ADuraCharacter::AddToPlayerLevel_Implementation(int32 InPlayerLevel)
