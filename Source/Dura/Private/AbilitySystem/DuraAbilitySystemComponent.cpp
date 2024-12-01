@@ -180,8 +180,11 @@ void UDuraAbilitySystemComponent::UpdateAbilityStatues(int32 Level)
             AbilitySpec.DynamicAbilityTags.AddTag(FDuraGameplayTags::Get().Abilities_Status_Eligible);
             GiveAbility(AbilitySpec);
             MarkAbilitySpecDirty(AbilitySpec);
+            ClientUpdateAbilityStatus(Info.AbilityTag, FDuraGameplayTags::Get().Abilities_Status_Eligible);
         }       
     }
+
+    
 }
 
 void UDuraAbilitySystemComponent::OnRep_ActivateAbilities()
@@ -193,6 +196,11 @@ void UDuraAbilitySystemComponent::OnRep_ActivateAbilities()
         bStartupAbilitiesGiven = true;
         AbilitiesGivenDelegate.Broadcast();        
     }    
+}
+
+void UDuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
+{
+    AbilityStatusChanged.Broadcast(AbilityTag, StatusTag);
 }
 
 void UDuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)

@@ -9,10 +9,10 @@
 
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/);
-
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven);
-
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChanged, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/);
+
 
 /**
  * 
@@ -23,6 +23,9 @@ class DURA_API UDuraAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 	
 public:
+
+    FAbilityStatusChanged AbilityStatusChanged;
+
 	void AbilityActorInfoSet();
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
 	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& PassiveAbilities);
@@ -55,4 +58,6 @@ protected:
 
 	virtual void OnRep_ActivateAbilities() override;
 
+    UFUNCTION(Client, Reliable)
+    void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
 };
