@@ -206,6 +206,46 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FString("FireBolt Ability Tag")
 	);
 
+    DuraGameplayTags.Abilities_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.HitReact"),
+		FString("Attack HitReact Tag")
+	);
+
+    DuraGameplayTags.Abilities_Status_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Status.Locked"),
+		FString("Status Locked")
+	);
+
+    DuraGameplayTags.Abilities_Status_Eligible = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Status.Eligible"),
+		FString("Status Eligible")
+	);
+
+    DuraGameplayTags.Abilities_Status_UnLocked = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Status.UnLocked"),
+		FString("Status UnLocked")
+	);
+
+    DuraGameplayTags.Abilities_Status_Equipped = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Status.Equipped"),
+		FString("Status Equipped")
+	);
+
+    DuraGameplayTags.Abilities_Type_Offensive = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Type.Offensive"),
+		FString("Type Equipped")
+	);
+
+    DuraGameplayTags.Abilities_Type_Passive = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Type.Passive"),
+		FString("Type Passive")
+	);
+
+    DuraGameplayTags.Abilities_Type_None = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Type.None"),
+		FString("Type None")
+	);
+
     /*
 	* CoolDown
 	*/

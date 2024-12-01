@@ -23,6 +23,7 @@ void UDuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 		if (const UDuraGameplayAbility* DuraAbility = Cast<UDuraGameplayAbility>(AbilitySpec.Ability))
 		{
 			AbilitySpec.DynamicAbilityTags.AddTag(DuraAbility->StartupInputTag);
+            AbilitySpec.DynamicAbilityTags.AddTag(FDuraGameplayTags::Get().Abilities_Status_Equipped);
 			GiveAbility(AbilitySpec);
 		}
 	}
@@ -102,6 +103,18 @@ FGameplayTag UDuraAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbi
     for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
     {
         if(Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag"))))
+        {
+            return Tag;
+        }
+    }
+    return FGameplayTag();
+}
+
+FGameplayTag UDuraAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+    for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
+    {
+        if(Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Status"))))
         {
             return Tag;
         }
