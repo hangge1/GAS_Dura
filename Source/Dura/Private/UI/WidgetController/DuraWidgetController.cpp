@@ -35,6 +35,7 @@ void UDuraWidgetController::BroadcastAbilityInfo()
     {
         FDuraAbilityInfo AbilityInfo = AbilityInfoDataTable->FindAbilityInfoForTag(UDuraAbilitySystemComponent::GetAbilityTagFromSpec(AbilitySpec));
         AbilityInfo.InputTag = UDuraAbilitySystemComponent::GetInputTagFromSpec(AbilitySpec);
+        AbilityInfo.StatusTag = UDuraAbilitySystemComponent::GetStatusFromSpec(AbilitySpec);
         AbilityInfoDelegate.Broadcast(AbilityInfo);
     });
 

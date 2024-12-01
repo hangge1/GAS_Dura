@@ -23,7 +23,7 @@ void UDuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 		if (const UDuraGameplayAbility* DuraAbility = Cast<UDuraGameplayAbility>(AbilitySpec.Ability))
 		{
 			AbilitySpec.DynamicAbilityTags.AddTag(DuraAbility->StartupInputTag);
-            AbilitySpec.DynamicAbilityTags.AddTag(FDuraGameplayTags::Get().Abilities_Status_Equipped);
+            AbilitySpec.DynamicAbilityTags.AddTag(FDuraGameplayTags::Get().Abilities_Status_Locked);
 			GiveAbility(AbilitySpec);
 		}
 	}

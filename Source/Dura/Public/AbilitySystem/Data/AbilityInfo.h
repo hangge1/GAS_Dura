@@ -18,6 +18,9 @@ struct FDuraAbilityInfo
     UPROPERTY(BlueprintReadOnly)
     FGameplayTag InputTag = FGameplayTag();
 
+    UPROPERTY(BlueprintReadOnly)
+    FGameplayTag StatusTag = FGameplayTag();
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     FGameplayTag CooldownTag = FGameplayTag();
 
