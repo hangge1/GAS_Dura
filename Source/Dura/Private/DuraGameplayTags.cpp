@@ -113,6 +113,17 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FString("Input Tag for 4 key")
 	);
 
+    DuraGameplayTags.InputTag_Passive_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Passive.1"),
+		FString("Input Tag for Passive 1")
+	);
+
+	DuraGameplayTags.InputTag_Passive_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Passive.2"),
+		FString("Input Tag for Passive 2")
+	);
+
+    
 	
 
 	DuraGameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
