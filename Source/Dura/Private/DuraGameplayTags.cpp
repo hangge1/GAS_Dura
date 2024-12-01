@@ -206,6 +206,11 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FString("FireBolt Ability Tag")
 	);
 
+    DuraGameplayTags.Abilities_Lightning_Electrocute = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Lightning.Electrocute"),
+		FString("Electrocute Ability Tag")
+	);
+
     DuraGameplayTags.Abilities_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Abilities.HitReact"),
 		FString("Attack HitReact Tag")
@@ -254,6 +259,9 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FName("CoolDown.Fire.FireBolt"),
 		FString("CoolDown Ability Tag")
 	);
+
+    
+
     
 	/*
 	* CombatSocket

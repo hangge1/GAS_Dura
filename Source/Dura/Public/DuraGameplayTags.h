@@ -87,6 +87,7 @@ public:
 
 
 	FGameplayTag Abilities_Fire_Bolt;
+	FGameplayTag Abilities_Lightning_Electrocute;
 	FGameplayTag CoolDown_Fire_Bolt;
 
 	/*

@@ -145,6 +145,13 @@ UCharacterClassInfo* UDuraAbilitySystemLibrary::GetCharacterClassInfo(const UObj
 	return GameMode->CharacterClassInfo;
 }
 
+UAbilityInfo* UDuraAbilitySystemLibrary::GetAbilityInfo(const UObject* WorldContextObject)
+{
+    ADuraGameModeBase* GameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (GameMode == nullptr) return nullptr;
+	return GameMode->AbilityInfo;
+}
+
 bool UDuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	if (const FDuraGameplayEffectContext* DuraEffectContext = static_cast<const FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
