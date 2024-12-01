@@ -7,6 +7,8 @@
 #include "Dura/DuraLogChannels.h"
 #include "Interaction/PlayerInterface.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
+#include "AbilitySystem/DuraAbilitySystemLibrary.h"
 
 
 
@@ -122,6 +124,23 @@ FGameplayTag UDuraAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbili
     return FGameplayTag();
 }
 
+FGameplayAbilitySpec* UDuraAbilitySystemComponent::GetSpecFromAbilityTag(const FGameplayTag& AbilityTag)
+{
+    FScopedAbilityListLock ActiveScopeLock(*this);
+    for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+    {
+        for (FGameplayTag Tag : AbilitySpec.Ability.Get()->AbilityTags)
+        {
+            if(AbilityTag.MatchesTagExact(Tag))
+            {
+                return &AbilitySpec;
+            }
+        }
+    }
+
+    return nullptr;
+}
+
 void UDuraAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
     if(GetAvatarActor()->Implements<UPlayerInterface>())
@@ -144,6 +163,24 @@ void UDuraAbilitySystemComponent::ServerUpgradeAttribute_Implementation(const FG
     if(GetAvatarActor()->Implements<UPlayerInterface>())
     {
         IPlayerInterface::Execute_AddToAttributePoints(GetAvatarActor(), -1);
+    }
+}
+
+void UDuraAbilitySystemComponent::UpdateAbilityStatues(int32 Level)
+{
+    UAbilityInfo* AbilityInfo = UDuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
+    for (const FDuraAbilityInfo& Info : AbilityInfo->AbilityInformation)
+    {
+        if(!Info.AbilityTag.IsValid()) continue;
+        if(Level < Info.LevelRequirement) continue;
+
+        if(GetSpecFromAbilityTag(Info.AbilityTag) == nullptr)
+        {
+            FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
+            AbilitySpec.DynamicAbilityTags.AddTag(FDuraGameplayTags::Get().Abilities_Status_Eligible);
+            GiveAbility(AbilitySpec);
+            MarkAbilitySpecDirty(AbilitySpec);
+        }       
     }
 }
 
