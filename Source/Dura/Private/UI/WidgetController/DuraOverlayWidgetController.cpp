@@ -22,15 +22,14 @@ void UDuraOverlayWidgetController::BroadcastInitialValue()
 
 void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 {
-    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(PlayerState);
-    DuraPlayerState->OnXPChangedDelegate.AddUObject(this, &UDuraOverlayWidgetController::OnXPChanged);
-    DuraPlayerState->OnLevelChangedDelegate.AddLambda([this](int32 NewLevel)
+    GetDuraPS()->OnXPChangedDelegate.AddUObject(this, &UDuraOverlayWidgetController::OnXPChanged);
+    GetDuraPS()->OnLevelChangedDelegate.AddLambda([this](int32 NewLevel)
     {
         OnPlayerLevelChangedDelegate.Broadcast(NewLevel);
     });
     
 
-	UDuraAttributeSet* AS = CastChecked<UDuraAttributeSet>(AttributeSet);
+	UDuraAttributeSet* AS = GetDuraAS();
     
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).
 		AddLambda([this](const FOnAttributeChangeData& Data){ OnHealthChanged.Broadcast(Data.NewValue);});
@@ -45,18 +44,18 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 		AddLambda([this](const FOnAttributeChangeData& Data) { OnMaxManaChanged.Broadcast(Data.NewValue); });
     
 
-    if(UDuraAbilitySystemComponent* DuraASC = Cast<UDuraAbilitySystemComponent>(AbilitySystemComponent))
+    if(GetDuraASC())
     {
-        if(DuraASC->bStartupAbilitiesGiven)
+        if(GetDuraASC()->bStartupAbilitiesGiven)
         {
-            OnInitializeStartupAbilities(DuraASC);
+            BroadcastAbilityInfo();
         }
         else
         {
-            DuraASC->AbilitiesGivenDelegate.AddUObject(this, &UDuraOverlayWidgetController::OnInitializeStartupAbilities);
+            GetDuraASC()->AbilitiesGivenDelegate.AddUObject(this, &UDuraOverlayWidgetController::BroadcastAbilityInfo);
         } 
 
-        DuraASC->EffectAssetTags.AddLambda(
+        GetDuraASC()->EffectAssetTags.AddLambda(
 		    [this](const FGameplayTagContainer& AssetTags)
 		{
 			for (const FGameplayTag& Tag : AssetTags)
@@ -75,32 +74,12 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 			}
 		}
 	    );
-    }
-
-	
-    
+    }  
 }
 
-void UDuraOverlayWidgetController::OnInitializeStartupAbilities(UDuraAbilitySystemComponent* ASC)
+void UDuraOverlayWidgetController::OnXPChanged(int32 NewXP) 
 {
-    //TODO: Get information about all given abilities, look up their Ability Info and broadcast it to widgets
-    if(!ASC->bStartupAbilitiesGiven)return;
-
-    FForEachAbility BroadcastDelegate;
-    BroadcastDelegate.BindLambda([this, ASC](const FGameplayAbilitySpec& AbilitySpec) 
-    {
-        FDuraAbilityInfo AbilityInfo = AbilityInfoDataTable->FindAbilityInfoForTag(UDuraAbilitySystemComponent::GetAbilityTagFromSpec(AbilitySpec));
-        AbilityInfo.InputTag = UDuraAbilitySystemComponent::GetInputTagFromSpec(AbilitySpec);
-        AbilityInfoDelegate.Broadcast(AbilityInfo);
-    });
-
-    ASC->ForEachAbility(BroadcastDelegate);
-}
-
-void UDuraOverlayWidgetController::OnXPChanged(int32 NewXP) const 
-{
-    const ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(PlayerState);
-    const ULevelUpInfo* LevelUpInfo = DuraPlayerState->LevelUpInfoDataAsset;
+    const ULevelUpInfo* LevelUpInfo = GetDuraPS()->LevelUpInfoDataAsset;
     checkf(LevelUpInfo, TEXT("Unabled to find LevelUpInfo. Please fill out in DuraPlayerState Blueprint"));
 
     const int32 Level = LevelUpInfo->FindLevelForXP(NewXP);

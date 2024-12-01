@@ -10,24 +10,20 @@
 
 void UAttributeMenuWidgetController::BroadcastInitialValue()
 {
-	UDuraAttributeSet* AS = CastChecked<UDuraAttributeSet>(AttributeSet);
-
 	check(AttributeInfo);
 
-	for (auto& Pair : AS->TagsToAttributes)
+	for (auto& Pair : GetDuraAS()->TagsToAttributes)
 	{
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
 	}
 
-    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(PlayerState);
-    AttributePointsChangedDelegate.Broadcast(DuraPlayerState->GetAttributePoints());
+    AttributePointsChangedDelegate.Broadcast(GetDuraPS()->GetAttributePoints());
 }
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 {
-	UDuraAttributeSet* AS = CastChecked<UDuraAttributeSet>(AttributeSet);
 	check(AttributeInfo);
-	for (auto& Pair : AS->TagsToAttributes)
+	for (auto& Pair : GetDuraAS()->TagsToAttributes)
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
 			[this, Pair](const FOnAttributeChangeData& Data)
@@ -37,8 +33,7 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 		);
 	}
 
-    ADuraPlayerState* DuraPlayerState = CastChecked<ADuraPlayerState>(PlayerState);
-    DuraPlayerState->OnAttributePointsChangedDelegate.AddLambda([this](int32 NewAttributePoints)
+    GetDuraPS()->OnAttributePointsChangedDelegate.AddLambda([this](int32 NewAttributePoints)
     {
         AttributePointsChangedDelegate.Broadcast(NewAttributePoints);
     });
@@ -46,8 +41,7 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 
 void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
-    UDuraAbilitySystemComponent* DuraASC = CastChecked<UDuraAbilitySystemComponent>(AbilitySystemComponent);
-    DuraASC->UpgradeAttribute(AttributeTag);
+    GetDuraASC()->UpgradeAttribute(AttributeTag);
 }
 
 void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const
