@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class DURA_API USpellMenuWidgetController : public UDuraWidgetController
 {
 	GENERATED_BODY()
