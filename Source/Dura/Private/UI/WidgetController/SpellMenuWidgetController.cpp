@@ -4,7 +4,7 @@
 #include "UI/WidgetController/SpellMenuWidgetController.h"
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "Player/DuraPlayerState.h"
-#include "DuraGameplayTags.h"
+
 
 void USpellMenuWidgetController::BroadcastInitialValue()
 {
@@ -23,11 +23,28 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
             Info.StatusTag = StatusTag;
             AbilityInfoDelegate.Broadcast(Info);
         }
+
+        //处理UI打开时的更新
+        if(SelectedAbility.AbilityTag.MatchesTagExact(AbilityTag))
+        {
+            SelectedAbility.Status = StatusTag;
+            bool bShouldEnableSpellPointsButton = false;
+            bool bShouldEnableEquipButton = false;
+            ShouldEnableButtons(SelectedAbility.Status, CurrentSpellPoints, bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
+            SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
+        }
     });
 
     GetDuraPS()->OnSpellPointsChangedDelegate.AddLambda([this](int32 NewSpellPoints)
     {
         OnSpellPointsChangedDelegate.Broadcast(NewSpellPoints);
+
+        //处理UI打开时的更新
+        CurrentSpellPoints = NewSpellPoints;
+        bool bShouldEnableSpellPointsButton = false;
+        bool bShouldEnableEquipButton = false;
+        ShouldEnableButtons(SelectedAbility.Status, CurrentSpellPoints, bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
+        SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton);  
     });
 }
 
@@ -50,6 +67,10 @@ void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityT
    {
         AbilityStatus = GetDuraASC()->GetStatusFromSpec(*AbilitySpec);
    }
+
+   //本地记录选择的技能
+   SelectedAbility.AbilityTag = AbilityTag;
+   SelectedAbility.Status = AbilityStatus;
 
    bool bShouldEnableSpellPointsButton = false;
    bool bShouldEnableEquipButton = false;
