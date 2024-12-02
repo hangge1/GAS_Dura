@@ -31,7 +31,10 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
             bool bShouldEnableSpellPointsButton = false;
             bool bShouldEnableEquipButton = false;
             ShouldEnableButtons(SelectedAbility.Status, CurrentSpellPoints, bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
-            SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
+            FString Description;
+            FString NextLevelDescription;
+            GetDuraASC()->GetDescriptionsByAbilityTag(AbilityTag, Description, NextLevelDescription);  
+            SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton, Description, NextLevelDescription);
         }
     });
 
@@ -44,7 +47,11 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
         bool bShouldEnableSpellPointsButton = false;
         bool bShouldEnableEquipButton = false;
         ShouldEnableButtons(SelectedAbility.Status, CurrentSpellPoints, bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
-        SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton);  
+        
+        FString Description;
+        FString NextLevelDescription;
+        GetDuraASC()->GetDescriptionsByAbilityTag(SelectedAbility.AbilityTag, Description, NextLevelDescription);  
+        SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton, Description, NextLevelDescription);  
     });
 }
 
@@ -75,7 +82,11 @@ void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityT
    bool bShouldEnableSpellPointsButton = false;
    bool bShouldEnableEquipButton = false;
    ShouldEnableButtons(AbilityStatus, SpellPoints, bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
-   SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
+
+   FString Description;
+   FString NextLevelDescription;
+   GetDuraASC()->GetDescriptionsByAbilityTag(SelectedAbility.AbilityTag, Description, NextLevelDescription);  
+   SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton, Description, NextLevelDescription);
 }
 
 void USpellMenuWidgetController::SpendPointButtonPressed()

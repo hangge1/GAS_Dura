@@ -214,6 +214,24 @@ void UDuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
     }
 }
 
+bool UDuraAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, 
+    FString& OutDescription, FString& OutNextLevelDescription)
+{
+    if(const FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
+    {
+        if(UDuraGameplayAbility* DuraAbility = Cast<UDuraGameplayAbility>(AbilitySpec->Ability))
+        {
+            OutDescription = DuraAbility->GetDescription(AbilitySpec->Level);                
+            OutNextLevelDescription = DuraAbility->GetNextLevelDescription(AbilitySpec->Level + 1);     
+            return true;
+        }
+    }
+    const UAbilityInfo* AbilityInfo = UDuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
+    OutDescription = UDuraGameplayAbility::GetLockedDescription(AbilityInfo->FindAbilityInfoForTag(AbilityTag).LevelRequirement);
+    OutNextLevelDescription = FString();
+    return false;
+}
+
 void UDuraAbilitySystemComponent::OnRep_ActivateAbilities()
 {
     Super::OnRep_ActivateAbilities();
