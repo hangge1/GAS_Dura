@@ -37,6 +37,9 @@ public:
 
     UFUNCTION(BlueprintCallable)
     void SpendPointButtonPressed();
+
+    UFUNCTION(BlueprintCallable)
+    void GlobeDeSelect();
 private:
     void ShouldEnableButtons(const FGameplayTag& AbilityStatus, int32 SpellPoints, 
         bool& bShouldEnableSpellPointsButton, bool& bShouldEnableEquipButton);
