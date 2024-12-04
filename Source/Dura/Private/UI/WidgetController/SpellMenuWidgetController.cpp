@@ -57,36 +57,44 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 
 void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityTag)
 {
-   const int32 SpellPoints = GetDuraPS()->GetSpellPoints();
-   const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();
+    if(bWaitingForEquipSelection)
+    {
+        const FGameplayTag SelectedAbilityType = AbilityInfoDataTable->FindAbilityInfoForTag(AbilityTag).AbilityType;
+        StopWaitForEquipDelegate.Broadcast(SelectedAbilityType);
+        bWaitingForEquipSelection = false;
+    }
+    
+
+    const int32 SpellPoints = GetDuraPS()->GetSpellPoints();
+    const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();
    
-   const bool bTagValid = AbilityTag.IsValid();
-   const bool bTagNone = AbilityTag.MatchesTag(GameplayTags.Abilities_None);
-   FGameplayAbilitySpec* AbilitySpec = GetDuraASC()->GetSpecFromAbilityTag(AbilityTag);
-   const bool bSpecValid = AbilitySpec != nullptr;
+    const bool bTagValid = AbilityTag.IsValid();
+    const bool bTagNone = AbilityTag.MatchesTag(GameplayTags.Abilities_None);
+    FGameplayAbilitySpec* AbilitySpec = GetDuraASC()->GetSpecFromAbilityTag(AbilityTag);
+    const bool bSpecValid = AbilitySpec != nullptr;
 
-   FGameplayTag AbilityStatus;
-   if(!bTagValid || bTagNone || !bSpecValid)
-   {
+    FGameplayTag AbilityStatus;
+    if(!bTagValid || bTagNone || !bSpecValid)
+    {
         AbilityStatus = GameplayTags.Abilities_Status_Locked;
-   }
-   else
-   {
+    }
+    else
+    {
         AbilityStatus = GetDuraASC()->GetStatusFromSpec(*AbilitySpec);
-   }
+    }
 
-   //本地记录选择的技能
-   SelectedAbility.AbilityTag = AbilityTag;
-   SelectedAbility.Status = AbilityStatus;
+    //本地记录选择的技能
+    SelectedAbility.AbilityTag = AbilityTag;
+    SelectedAbility.Status = AbilityStatus;
 
-   bool bShouldEnableSpellPointsButton = false;
-   bool bShouldEnableEquipButton = false;
-   ShouldEnableButtons(AbilityStatus, SpellPoints, bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
+    bool bShouldEnableSpellPointsButton = false;
+    bool bShouldEnableEquipButton = false;
+    ShouldEnableButtons(AbilityStatus, SpellPoints, bShouldEnableSpellPointsButton, bShouldEnableEquipButton);
 
-   FString Description;
-   FString NextLevelDescription;
-   GetDuraASC()->GetDescriptionsByAbilityTag(SelectedAbility.AbilityTag, Description, NextLevelDescription);  
-   SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton, Description, NextLevelDescription);
+    FString Description;
+    FString NextLevelDescription;
+    GetDuraASC()->GetDescriptionsByAbilityTag(SelectedAbility.AbilityTag, Description, NextLevelDescription);  
+    SpellGlobeButtonEnabledChanged.Broadcast(bShouldEnableSpellPointsButton, bShouldEnableEquipButton, Description, NextLevelDescription);
 }
 
 void USpellMenuWidgetController::SpendPointButtonPressed()
@@ -99,9 +107,24 @@ void USpellMenuWidgetController::SpendPointButtonPressed()
 
 void USpellMenuWidgetController::GlobeDeSelect()
 {
+    if(bWaitingForEquipSelection)
+    {
+        const FGameplayTag SelectedAbilityType = AbilityInfoDataTable->FindAbilityInfoForTag(SelectedAbility.AbilityTag).AbilityType;
+        StopWaitForEquipDelegate.Broadcast(SelectedAbilityType);
+        bWaitingForEquipSelection = false;
+    }
+
     SelectedAbility.AbilityTag = FDuraGameplayTags::Get().Abilities_None;
     SelectedAbility.Status = FDuraGameplayTags::Get().Abilities_Status_Locked;
     SpellGlobeButtonEnabledChanged.Broadcast(false, false, FString(), FString());
+}
+
+void USpellMenuWidgetController::EquipButtonPressed()
+{
+    const FGameplayTag& AbilityType = AbilityInfoDataTable->FindAbilityInfoForTag(SelectedAbility.AbilityTag).AbilityType;
+    
+    WaitForEquipDelegate.Broadcast(AbilityType);
+    bWaitingForEquipSelection = true;
 }
 
 void USpellMenuWidgetController::ShouldEnableButtons(const FGameplayTag& AbilityStatus, int32 SpellPoints, 
