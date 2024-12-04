@@ -17,6 +17,9 @@ class DURA_API UDuraProjectileSpell : public UDuraDamageGameplayAbility
 {
 	GENERATED_BODY()
 public:
+    
+    virtual FString GetDescription(int32 Level) override;
+    virtual FString GetNextLevelDescription(int32 Level) override;
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, 
@@ -28,5 +31,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ADuraProjectile> ProjectileClass;
 
-	
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 NumProjectiles = 5;
 };

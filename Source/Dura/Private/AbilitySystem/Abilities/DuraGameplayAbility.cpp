@@ -15,5 +15,5 @@ FString UDuraGameplayAbility::GetNextLevelDescription(int32 Level)
 
 FString UDuraGameplayAbility::GetLockedDescription(int32 Level)
 {
-    return FString::Printf(TEXT("<Default>Spell Locked Until Level: %d</>"), Level);
+    return FString::Printf(TEXT("<Default>Spell Locked</>\n<Default>Until Level: %d</>"), Level);
 }

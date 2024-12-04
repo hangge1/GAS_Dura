@@ -8,6 +8,25 @@
 #include "DuraGameplayTags.h"
 #include "AbilitySystemBlueprintLibrary.h"
 
+FString UDuraProjectileSpell::GetDescription(int32 Level)
+{   
+    const float Damage = DamageTypes[FDuraGameplayTags::Get().Damage_Fire].GetValueAtLevel(Level);
+    if(Level == 1)
+    {
+        return FString::Printf(TEXT("<Title>FIRE BOLT</>\n\n<Default>Launched a bolt of fire, exploding on impact and dealing </><Damage>%d</><Default> fire damage with a chance to burn</>\n\n<Small>Level: </><Level>%d</>"), (int32)Damage, Level);
+    }
+    else
+    {
+        return FString::Printf(TEXT("<Title>FIRE BOLT</>\n\n<Default>Launched %d bolts of fire, exploding on impact and dealing </><Damage>%d</><Default> fire damage with a chance to burn</>\n\n<Small>Level: </><Level>%d</>"), FMath::Min(Level, NumProjectiles), (int32)Damage, Level);
+    }
+}
+
+FString UDuraProjectileSpell::GetNextLevelDescription(int32 Level)
+{
+    const float Damage = DamageTypes[FDuraGameplayTags::Get().Damage_Fire].GetValueAtLevel(Level);
+    return FString::Printf(TEXT("<Title>Next Level: </>\n\n<Default>Launched %d bolts of fire, exploding on impact and dealing </><Damage>%d</><Default> fire damage with a chance to burn</>\n\n<Small>Level: </><Level>%d</>"), FMath::Min(Level, NumProjectiles), (int32)Damage, Level);
+}
+
 void UDuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
