@@ -135,7 +135,7 @@ void USpellMenuWidgetController::EquipButtonPressed()
     }
 }
 
-void USpellMenuWidgetController::SpellRowGlobeProssed(const FGameplayTag& SlotTag, const FGameplayTag& AbilityType)
+void USpellMenuWidgetController::SpellRowGlobePressed(const FGameplayTag& SlotTag, const FGameplayTag& AbilityType)
 {
     if(!bWaitingForEquipSelection) return;
 
@@ -167,6 +167,9 @@ void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTa
     AbilityInfoDelegate.Broadcast(Info);
 
     StopWaitForEquipDelegate.Broadcast(AbilityInfoDataTable->FindAbilityInfoForTag(AbilityTag).AbilityType);
+
+    SpellGlobeReassignedDelegate.Broadcast(AbilityTag);
+    GlobeDeSelect();
 }
 
 void USpellMenuWidgetController::ShouldEnableButtons(const FGameplayTag& AbilityStatus, int32 SpellPoints, 
