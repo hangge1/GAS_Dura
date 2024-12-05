@@ -6,6 +6,7 @@
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "Player/DuraPlayerState.h"
 #include "AbilitySystem/Data/LevelUpInfo.h"
+#include "DuraGameplayTags.h"
 
 
 
@@ -46,6 +47,8 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 
     if(GetDuraASC())
     {
+        GetDuraASC()->AbilityEquipped.AddUObject(this, &UDuraOverlayWidgetController::OnAbilityEquipped);
+
         if(GetDuraASC()->bStartupAbilitiesGiven)
         {
             BroadcastAbilityInfo();
@@ -75,6 +78,24 @@ void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 		}
 	    );
     }  
+}
+
+void UDuraOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, 
+        const FGameplayTag& Slot, const FGameplayTag& PrevSlot) const
+{
+    const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();
+
+    FDuraAbilityInfo LastSlotInfo;
+    LastSlotInfo.StatusTag = GameplayTags.Abilities_Status_UnLocked;
+    LastSlotInfo.InputTag = PrevSlot;
+    LastSlotInfo.AbilityTag = GameplayTags.Abilities_None;
+    //Broadcast empty info if PrevSlot is a valid slot. Only if equipping an already-equipped all
+    AbilityInfoDelegate.Broadcast(LastSlotInfo);
+
+    FDuraAbilityInfo Info = AbilityInfoDataTable->FindAbilityInfoForTag(AbilityTag);
+    Info.StatusTag = StatusTag;
+    Info.InputTag = Slot;
+    AbilityInfoDelegate.Broadcast(Info);
 }
 
 void UDuraOverlayWidgetController::OnXPChanged(int32 NewXP) 

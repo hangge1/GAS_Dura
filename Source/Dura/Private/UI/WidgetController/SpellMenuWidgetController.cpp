@@ -147,7 +147,8 @@ void USpellMenuWidgetController::SpellRowGlobeProssed(const FGameplayTag& SlotTa
     GetDuraASC()->ServerEquipAbility(SelectedAbility.AbilityTag, SlotTag);
 }
 
-void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& Slot, const FGameplayTag& PrevSlot)
+void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, 
+    const FGameplayTag& Slot, const FGameplayTag& PrevSlot)
 {
     bWaitingForEquipSelection = false;
 
