@@ -11,7 +11,9 @@
 #include "Game/DuraGameModeBase.h"
 #include "AbilitySystemComponent.h"
 #include "DuraAbilitiesTypes.h"
-#include <Interaction/CombatInterface.h>
+#include "Interaction/CombatInterface.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "DuraGameplayTags.h"
 
 
 bool UDuraAbilitySystemLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject,
@@ -211,6 +213,42 @@ bool UDuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondAc
 }
 
 
+
+FGameplayEffectContextHandle UDuraAbilitySystemLibrary::ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams)
+{
+    const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+
+    FGameplayEffectContextHandle EffectContextHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
+    EffectContextHandle.AddSourceObject(SourceAvatarActor);
+
+    FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(
+        DamageEffectParams.DamageGameplayEffectClass, 
+        DamageEffectParams.AbilityLevel, 
+        EffectContextHandle
+    );
+
+    const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();
+
+    //Set By Caller 
+    UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, 
+    DamageEffectParams.DamageType, DamageEffectParams.BaseDamage);
+
+    UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, 
+    GameplayTags.Debuff_Chance, DamageEffectParams.DebuffChance);
+
+    UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, 
+    GameplayTags.Debuff_Damage, DamageEffectParams.DebuffDamage);
+
+    UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, 
+    GameplayTags.Debuff_Duration, DamageEffectParams.DebuffDuration);
+
+    UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, 
+    GameplayTags.Debuff_Frequency, DamageEffectParams.DebuffFrequency);
+
+    DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+
+    return EffectContextHandle;
+}
 
 void UDuraAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
 {

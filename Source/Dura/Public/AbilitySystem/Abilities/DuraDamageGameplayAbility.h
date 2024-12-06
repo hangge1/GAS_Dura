@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Abilities/DuraGameplayAbility.h"
+#include "DuraAbilitiesTypes.h"
 #include "DuraDamageGameplayAbility.generated.h"
 
 /**
@@ -18,6 +19,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* TargetActor);
 
+    FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

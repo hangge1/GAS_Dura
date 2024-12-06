@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Data/CharacterClassInfo.h"
+#include "DuraAbilitiesTypes.h"
 #include "DuraAbilitySystemLibrary.generated.h"
 
 class UDuraOverlayWidgetController;
@@ -68,6 +69,8 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
     static bool IsNotFriend(AActor* FirstActor, AActor* SecondActor);
 
-
+    UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+    static FGameplayEffectContextHandle ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams);
+    
     static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject,const ECharacterClass CharacterClass,const int32 CharacterLevel);
 };
