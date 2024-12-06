@@ -16,10 +16,7 @@ void UDuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag, bool bOverridePitch, float PitchOverride)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
-	if (!bIsServer)
-	{
-		return;
-	}
+	if (!bIsServer) return;
 
 	if (GetAvatarActorFromActorInfo()->Implements<UCombatInterface>())
 	{
@@ -45,26 +42,7 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 		);
 
-		const UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo();
-		FGameplayEffectContextHandle EfeectContextHandle = SourceASC->MakeEffectContext();
-		EfeectContextHandle.SetAbility(this); 
-		EfeectContextHandle.AddSourceObject(Projectile);
-		TArray<TWeakObjectPtr<AActor>> Actors;
-		Actors.Add(Projectile);
-		EfeectContextHandle.AddActors(Actors);
-		FHitResult HiResult;
-		HiResult.Location = ProjectileTargetLocation;
-		EfeectContextHandle.AddHitResult(HiResult);
-
-
-		const FGameplayEffectSpecHandle EffectSpecHandler = SourceASC->MakeOutgoingSpec(
-			DamageEffectClass, GetAbilityLevel(), EfeectContextHandle
-		);
-
-        const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandler, DamageType, ScaledDamage);
-
-		Projectile->DamageEffectSpecHandle = EffectSpecHandler;
+        Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
 		Projectile->FinishSpawning(SpawnTransform);
 	}
