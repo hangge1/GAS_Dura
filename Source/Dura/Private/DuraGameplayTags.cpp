@@ -200,6 +200,26 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FString("Debuff for Physical damage")
 	);
 
+    DuraGameplayTags.Debuff_Chance = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Chance"),
+		FString("Debuff for Debuff_Chance")
+	);
+
+	DuraGameplayTags.Debuff_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Damage"),
+		FString("Debuff for Damage")
+	);
+
+	DuraGameplayTags.Debuff_Duration = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Duration"),
+		FString("Debuff for Duration")
+	);
+
+	DuraGameplayTags.Debuff_Frequency = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Frequency"),
+		FString("Debuff for Frequency")
+	);
+
 	
 	/* Map of Damage Types to Resistance */
 	DuraGameplayTags.DamageTypesToResistances.Add(DuraGameplayTags.Damage_Arcane, DuraGameplayTags.Attributes_Resistance_Arcane);
