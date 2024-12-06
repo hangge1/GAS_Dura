@@ -2,13 +2,11 @@
 
 
 #include "AbilitySystem/Abilities/DuraFireBolt.h"
-#include "DuraGameplayTags.h"
-
 
 
 FString UDuraFireBolt::GetDescription(int32 Level)
 {   
-    const int32 Damage = GetDamageByDamageType(Level, FDuraGameplayTags::Get().Damage_Fire);
+    const int32 DamageValue = Damage.GetValueAtLevel(Level);
     const float ManaCost = FMath::Abs(GetManaCost(Level));
     const float Cooldown = GetCooldown(Level);
 
@@ -37,7 +35,7 @@ FString UDuraFireBolt::GetDescription(int32 Level)
             Level, 
             ManaCost, 
             Cooldown,
-            Damage);
+            DamageValue);
     }
     else
     {
@@ -66,13 +64,13 @@ FString UDuraFireBolt::GetDescription(int32 Level)
             ManaCost, 
             Cooldown,
             FMath::Min(Level, NumProjectiles), 
-            Damage);
+            DamageValue);
     }
 }
 
 FString UDuraFireBolt::GetNextLevelDescription(int32 Level)
 {
-    const int32 Damage = GetDamageByDamageType(Level, FDuraGameplayTags::Get().Damage_Fire);
+    const int32 DamageValue = Damage.GetValueAtLevel(Level);
     const float ManaCost = FMath::Abs(GetManaCost(Level));
     const float Cooldown = GetCooldown(Level);
 
@@ -101,5 +99,5 @@ FString UDuraFireBolt::GetNextLevelDescription(int32 Level)
             ManaCost, 
             Cooldown,
             FMath::Min(Level, NumProjectiles), 
-            Damage);
+            DamageValue);
 }

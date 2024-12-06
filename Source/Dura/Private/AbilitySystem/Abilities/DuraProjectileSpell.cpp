@@ -61,13 +61,9 @@ void UDuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			DamageEffectClass, GetAbilityLevel(), EfeectContextHandle
 		);
 
-		const FDuraGameplayTags GameplayTags = FDuraGameplayTags::Get();
+        const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandler, DamageType, ScaledDamage);
 
-		for (auto& Pair : DamageTypes)
-		{
-			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
-			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandler, Pair.Key, ScaledDamage);
-		}
 		Projectile->DamageEffectSpecHandle = EffectSpecHandler;
 
 		Projectile->FinishSpawning(SpawnTransform);
