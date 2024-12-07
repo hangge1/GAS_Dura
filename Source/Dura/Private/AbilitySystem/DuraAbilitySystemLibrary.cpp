@@ -214,7 +214,16 @@ FGameplayTag UDuraAbilitySystemLibrary::GetDamageType(const FGameplayEffectConte
 	{
 		return *DuraEffectContext->GetDamageType();
 	}
-	return FGameplayTag();   
+	return FGameplayTag();
+}
+
+FVector UDuraAbilitySystemLibrary::GetDeathImpulse(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+    if (const FDuraGameplayEffectContext* DuraEffectContext = static_cast<const FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuraEffectContext->GetDeathImpulse();
+	}
+	return FVector::ZeroVector;  
 }
 
 void UDuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, 
@@ -245,8 +254,6 @@ void UDuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 			}
 		}
 	}
-
-
 }
 
 bool UDuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondActor)
@@ -265,6 +272,7 @@ FGameplayEffectContextHandle UDuraAbilitySystemLibrary::ApplyDamageEffect(const 
 
     FGameplayEffectContextHandle EffectContextHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
     EffectContextHandle.AddSourceObject(SourceAvatarActor);
+    SetDeathImpulse(EffectContextHandle, DamageEffectParams.DeathImpulse);
 
     FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(
         DamageEffectParams.DamageGameplayEffectClass, 
@@ -349,5 +357,13 @@ void UDuraAbilitySystemLibrary::SetDamageType(FGameplayEffectContextHandle& Effe
 	{
         TSharedPtr<FGameplayTag> DamageType = MakeShared<FGameplayTag>(InDamageType);
 		DuraEffectContext->SetDamageType(DamageType);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetDeathImpulse(FGameplayEffectContextHandle& EffectContextHandle, FVector InDeathImpulse)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetDeathImpulse(InDeathImpulse);
 	}
 }
