@@ -38,10 +38,10 @@ UAnimMontage* ADuraCharacterBase::GetHitReactMontage_Implementation()
 	return HitReactMontage;
 }
 
-void ADuraCharacterBase::Die()
+void ADuraCharacterBase::Die(const FVector& DeathImpulse)
 {
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true)); //auto replicated
-	MulticastHandleDeath();
+	MulticastHandleDeath(DeathImpulse);
 }
 
 UNiagaraSystem* ADuraCharacterBase::GetBloodEffect_Implementation()
@@ -77,7 +77,7 @@ ECharacterClass ADuraCharacterBase::GetCharacterClass_Implementation()
     return CharacterClass;
 }
 
-void ADuraCharacterBase::MulticastHandleDeath_Implementation()
+void ADuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& DeathImpulse)
 {
     UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
 
@@ -85,12 +85,14 @@ void ADuraCharacterBase::MulticastHandleDeath_Implementation()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	Weapon->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
     Weapon->SetEnableGravity(true);
+    Weapon->AddImpulse(DeathImpulse * 0.1, NAME_None, true);
 
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	GetMesh()->SetEnableGravity(true);
-	
+	GetMesh()->AddImpulse(DeathImpulse, NAME_None, true);
+
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Dissolve();

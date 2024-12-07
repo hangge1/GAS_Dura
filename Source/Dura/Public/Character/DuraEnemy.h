@@ -31,7 +31,7 @@ public:
 	//** ICombatInterface
 	virtual int32 GetPlayerLevel_Implementation() const override;
 
-	virtual void Die() override;
+	virtual void Die(const FVector& DeathImpulse) override;
 	//** End ICombatInterface
 	
 	UPROPERTY(BlueprintAssignable)

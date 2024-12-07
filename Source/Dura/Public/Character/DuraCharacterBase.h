@@ -40,7 +40,7 @@ public:
 
 	virtual AActor* GetAvatar_Implementation() override;
 
-	virtual void Die() override; 
+	virtual void Die(const FVector& DeathImpulse) override; 
 
     virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 
@@ -61,7 +61,7 @@ public:
 	//** End ICombatInterface
 
 	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleDeath();
+	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
 
     
 protected:

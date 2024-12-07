@@ -150,9 +150,10 @@ int32 ADuraEnemy::GetPlayerLevel_Implementation() const
 	return Level;
 }
 
-void ADuraEnemy::Die()
+void ADuraEnemy::Die(const FVector& DeathImpulse)
 {
 	SetLifeSpan(LifeSpan);
     if(DuraAIController) DuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
-	Super::Die();
+
+	Super::Die(DeathImpulse);
 }

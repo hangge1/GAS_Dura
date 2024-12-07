@@ -294,11 +294,10 @@ void UDuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bFatal = NewHealth <= 0.0f;
 		if (bFatal)
 		{
-            //TODO: Use Death Impulse!
-
 			if (ICombatInterface* Combat = Cast<ICombatInterface>(Props.TargetAvatarActor))
 			{
-				Combat->Die();
+                FVector Impulse = UDuraAbilitySystemLibrary::GetDeathImpulse(Props.EffectContextHandle);
+				Combat->Die(Impulse);
 			}
             SendXPEvent(Props);
 		}
