@@ -310,3 +310,44 @@ void UDuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& E
 		DuraEffectContext->SetIsCriticalHit(bInIsCriticalHit);
 	}
 }
+
+void UDuraAbilitySystemLibrary::SetIsSuccessfulDebuff(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsSuccessfulDebuff)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetIsSuccessfulDebuff(bInIsSuccessfulDebuff);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetDebuffDamage(FGameplayEffectContextHandle& EffectContextHandle, float bInDebuffDamage)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetDebuffDamage(bInDebuffDamage);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetDebuffDuration(FGameplayEffectContextHandle& EffectContextHandle, float bInDebuffDuration)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetDebuffDuration(bInDebuffDuration);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetDebuffFrequency(FGameplayEffectContextHandle& EffectContextHandle, float bInDebuffFrequency)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetDebuffFrequency(bInDebuffFrequency);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetDamageType(FGameplayEffectContextHandle& EffectContextHandle, FGameplayTag InDamageType)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+        TSharedPtr<FGameplayTag> DamageType = MakeShared<FGameplayTag>(InDamageType);
+		DuraEffectContext->SetDamageType(DamageType);
+	}
+}

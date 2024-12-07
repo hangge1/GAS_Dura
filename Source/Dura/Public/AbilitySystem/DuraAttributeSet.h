@@ -226,6 +226,9 @@ public:
 	UFUNCTION()
 	void OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const;
 private:
+    void HandleIncomingDamage(const FEffectProperties& Props);
+    void HandleIncomingXP(const FEffectProperties& Props);
+    void Debuff(const FEffectProperties& Props);
 
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
 
