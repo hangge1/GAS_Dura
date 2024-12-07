@@ -148,6 +148,8 @@ void ADuraCharacter::InitAbilityActorInfo()
 	AbilitiesSystemComponent = playerState->GetAbilitySystemComponent();
 	AttributeSet = playerState->GetAttributeSet();
 
+    OnASCRegistered.Broadcast(AbilitiesSystemComponent);
+
 	check(AbilitiesSystemComponent);
 	AbilitiesSystemComponent->InitAbilityActorInfo(playerState, this);
 

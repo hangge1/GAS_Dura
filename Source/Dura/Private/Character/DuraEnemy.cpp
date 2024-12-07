@@ -123,6 +123,8 @@ void ADuraEnemy::InitAbilityActorInfo()
 	{
 		InitializeDefaultAttributes();
 	}
+
+    OnASCRegistered.Broadcast(AbilitiesSystemComponent);
 }
 
 void ADuraEnemy::InitializeDefaultAttributes() const

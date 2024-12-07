@@ -13,6 +13,7 @@
 #include "Dura/DuraLogChannels.h"
 #include "AbilitySystem/DuraAbilitySystemLibrary.h"
 #include "Interaction/PlayerInterface.h"
+#include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
 
 
 UDuraAttributeSet::UDuraAttributeSet()
@@ -354,8 +355,7 @@ void UDuraAttributeSet::HandleIncomingXP(const FEffectProperties& Props)
 void UDuraAttributeSet::Debuff(const FEffectProperties& Props)
 {
     const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();
-    FGameplayEffectContextHandle EffectContext = Props.SourceASC->MakeEffectContext();
-    EffectContext.AddSourceObject(Props.SourceASC);
+    
 
     const FGameplayTag DamageType = UDuraAbilitySystemLibrary::GetDamageType(Props.EffectContextHandle);
     const float DebuffDamage = UDuraAbilitySystemLibrary::GetDebuffDamage(Props.EffectContextHandle);
@@ -370,7 +370,13 @@ void UDuraAttributeSet::Debuff(const FEffectProperties& Props)
     Effect->Period = DebuffFrequency;
     Effect->DurationMagnitude = FScalableFloat(DebuffDuration);
 
-    Effect->InheritableOwnedTagsContainer.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
+    UTargetTagsGameplayEffectComponent& TargetTagComponent = Effect->AddComponent<UTargetTagsGameplayEffectComponent>();
+    FGameplayTagContainer TagContainer;
+    TagContainer.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
+    FInheritedTagContainer InheritedTagContainer;
+    InheritedTagContainer.Added = TagContainer;
+    TargetTagComponent.SetAndApplyTargetTagChanges(InheritedTagContainer);
+    //Effect->InheritableOwnedTagsContainer.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
 
     Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
     Effect->StackLimitCount = 1;
@@ -378,10 +384,12 @@ void UDuraAttributeSet::Debuff(const FEffectProperties& Props)
     int32 Index = Effect->Modifiers.Num();
     Effect->Modifiers.Add(FGameplayModifierInfo());
     FGameplayModifierInfo& ModifierInfo = Effect->Modifiers[Index];
-
     ModifierInfo.ModifierMagnitude = FScalableFloat(DebuffDamage);
     ModifierInfo.ModifierOp = EGameplayModOp::Additive;
     ModifierInfo.Attribute = UDuraAttributeSet::GetIncomingDamageAttribute();
+
+    FGameplayEffectContextHandle EffectContext = Props.SourceASC->MakeEffectContext();
+    EffectContext.AddSourceObject(Props.SourceASC);
 
     FGameplayEffectSpec* MutableSpec = new FGameplayEffectSpec(Effect, EffectContext, 1.f);
     if(MutableSpec)

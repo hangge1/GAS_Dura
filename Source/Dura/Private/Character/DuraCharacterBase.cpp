@@ -1,22 +1,25 @@
 // Copyright by person HDD  
 
-
 #include "Character/DuraCharacterBase.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameplayEffectTypes.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "../Dura.h"
-#include <DuraGameplayTags.h>
-
+#include "DuraGameplayTags.h"
 #include "Kismet/GameplayStatics.h"
+#include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "../Dura.h"
 
 
 // Sets default values
 ADuraCharacterBase::ADuraCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+    BurnDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("BurnDebuffComponent");
+    BurnDebuffComponent->SetupAttachment(GetRootComponent());
+    BurnDebuffComponent->DebuffTag = FDuraGameplayTags::Get().Debuff_Burn;
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
@@ -93,6 +96,17 @@ void ADuraCharacterBase::MulticastHandleDeath_Implementation()
 	Dissolve();
 
 	bDead = true;
+    OnDeath.Broadcast(this);
+}
+
+FOnASCRegistered ADuraCharacterBase::GetOnASCRegisteredDelegate()
+{
+    return OnASCRegistered;
+}
+
+FOnDeath ADuraCharacterBase::GetOnDeathDelegate()
+{
+    return OnDeath;
 }
 
 // Called when the game starts or when spawned

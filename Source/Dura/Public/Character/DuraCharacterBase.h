@@ -17,6 +17,7 @@ class UGameplayAbility;
 class UMaterialInstance;
 class UNiagaraSystem;
 class USoundBase;
+class UDebuffNiagaraComponent;
 
 UCLASS(Abstract)
 class DURA_API ADuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -50,10 +51,19 @@ public:
     virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 
     virtual ECharacterClass GetCharacterClass_Implementation() override;
+
+    virtual FOnASCRegistered GetOnASCRegisteredDelegate() override;
+
+    virtual FOnDeath GetOnDeathDelegate() override;
+
+    FOnASCRegistered OnASCRegistered;
+    FOnDeath OnDeath;
 	//** End ICombatInterface
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
+
+    
 protected:
 	virtual void BeginPlay() override;
 
@@ -131,6 +141,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults");
 	ECharacterClass CharacterClass = ECharacterClass::Warrior;
+
+    UPROPERTY(EditDefaultsOnly)
+    TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Abilities")
