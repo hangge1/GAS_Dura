@@ -76,6 +76,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
     static FVector GetDeathImpulse(const FGameplayEffectContextHandle& EffectContextHandle);
 
+    UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+    static FVector GetKocnbackForce(const FGameplayEffectContextHandle& EffectContextHandle);
+
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
 
@@ -99,6 +102,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
     static void SetDeathImpulse(FGameplayEffectContextHandle& EffectContextHandle, FVector InDeathImpulse);
+
+    UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+    static void SetKnockbackForce(FGameplayEffectContextHandle& EffectContextHandle, FVector InKnockbackForce);
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, 

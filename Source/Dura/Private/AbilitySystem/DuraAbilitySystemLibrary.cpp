@@ -226,6 +226,15 @@ FVector UDuraAbilitySystemLibrary::GetDeathImpulse(const FGameplayEffectContextH
 	return FVector::ZeroVector;  
 }
 
+FVector UDuraAbilitySystemLibrary::GetKocnbackForce(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+    if (const FDuraGameplayEffectContext* DuraEffectContext = static_cast<const FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuraEffectContext->GetKnockbackForce();
+	}
+	return FVector::ZeroVector;  
+}
+
 void UDuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, 
 	TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereLocation)
 {
@@ -273,8 +282,9 @@ FGameplayEffectContextHandle UDuraAbilitySystemLibrary::ApplyDamageEffect(const 
     FGameplayEffectContextHandle EffectContextHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
     EffectContextHandle.AddSourceObject(SourceAvatarActor);
     SetDeathImpulse(EffectContextHandle, DamageEffectParams.DeathImpulse);
+    SetKnockbackForce(EffectContextHandle, DamageEffectParams.KnockbackForce);
 
-    FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(
+    const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(
         DamageEffectParams.DamageGameplayEffectClass, 
         DamageEffectParams.AbilityLevel, 
         EffectContextHandle
@@ -365,5 +375,13 @@ void UDuraAbilitySystemLibrary::SetDeathImpulse(FGameplayEffectContextHandle& Ef
     if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		DuraEffectContext->SetDeathImpulse(InDeathImpulse);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetKnockbackForce(FGameplayEffectContextHandle& EffectContextHandle, FVector InKnockbackForce)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetKnockbackForce(InKnockbackForce);
 	}
 }
