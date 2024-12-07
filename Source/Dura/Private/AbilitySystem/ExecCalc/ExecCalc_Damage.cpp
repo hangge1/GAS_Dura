@@ -64,8 +64,10 @@ UExecCalc_Damage::UExecCalc_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().PhysicalResistanceDef);
 }
 
-void UExecCalc_Damage::DetermineDebuff(const FGameplayEffectSpec& Spec, const FGameplayEffectCustomExecutionParameters& ExecutionParams, 
-    FAggregatorEvaluateParameters EvaluationParameters, const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& InTagsToDefs) const
+void UExecCalc_Damage::DetermineDebuff(const FGameplayEffectSpec& Spec, 
+    const FGameplayEffectCustomExecutionParameters& ExecutionParams, 
+    FAggregatorEvaluateParameters EvaluationParameters, 
+    const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& InTagsToDefs) const
 {
     const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();
     for( const TTuple<FGameplayTag, FGameplayTag>& Pair : GameplayTags.DamageTypesToDebuffs )
