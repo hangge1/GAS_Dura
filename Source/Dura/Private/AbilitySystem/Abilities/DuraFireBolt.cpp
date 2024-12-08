@@ -9,6 +9,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "AbilitySystem/DuraAbilitySystemLibrary.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 FString UDuraFireBolt::GetDescription(int32 Level)
 {   
@@ -114,35 +115,52 @@ void UDuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
     const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
-	if (GetAvatarActorFromActorInfo()->Implements<UCombatInterface>())
-	{
-		const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(
+	if (!GetAvatarActorFromActorInfo()->Implements<UCombatInterface>()) return;
+
+    const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(
             GetAvatarActorFromActorInfo(), SocketTag);
-		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
-		if(bOverridePitch) Rotation.Pitch = PitchOverride;
+	FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+	if(bOverridePitch) Rotation.Pitch = PitchOverride;
 
-        const FVector Forward = Rotation.Vector();
+    const FVector Forward = Rotation.Vector();
+    int32 EffectiveNumProjectiles = FMath::Min(NumProjectiles, GetAbilityLevel());
 
-        TArray<FRotator> Rotators = UDuraAbilitySystemLibrary::EvenlySpacedRotators(Forward, FVector::UpVector, ProjectileSpread, NumProjectiles);
+    TArray<FRotator> Rotators = UDuraAbilitySystemLibrary::EvenlySpacedRotators(Forward, FVector::UpVector, 
+        ProjectileSpread, EffectiveNumProjectiles);
 
-        for (const FRotator& Rot : Rotators)
+    for (const FRotator& Rot : Rotators)
+    {
+        FTransform SpawnTransform;
+		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetRotation(Rot.Quaternion());
+
+		AActor* Owner = GetOwningActorFromActorInfo();
+		ADuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<ADuraProjectile>(
+			ProjectileClass,
+			SpawnTransform,
+			Owner,
+			Cast<APawn>(Owner),
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+		);
+
+        Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+
+        if(IsValid(HomingTarget) && HomingTarget->Implements<UCombatInterface>())
         {
-            FTransform SpawnTransform;
-		    SpawnTransform.SetLocation(SocketLocation);
-		    SpawnTransform.SetRotation(Rot.Quaternion());
-
-		    AActor* Owner = GetOwningActorFromActorInfo();
-		    ADuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<ADuraProjectile>(
-			    ProjectileClass,
-			    SpawnTransform,
-			    Owner,
-			    Cast<APawn>(Owner),
-			    ESpawnActorCollisionHandlingMethod::AlwaysSpawn
-		    );
-
-            Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
-		    Projectile->FinishSpawning(SpawnTransform);
+            Projectile->ProjectileMovement->HomingTargetComponent = HomingTarget->GetRootComponent();
         }
-    }
+        else
+        {
+            Projectile->HomingTargetSceneComponent = NewObject<USceneComponent>(USceneComponent::StaticClass());
+            Projectile->HomingTargetSceneComponent->SetWorldLocation(ProjectileTargetLocation);
 
+            Projectile->ProjectileMovement->HomingTargetComponent = Projectile->HomingTargetSceneComponent;
+        }
+        Projectile->ProjectileMovement->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
+        Projectile->ProjectileMovement->bIsHomingProjectile = bLaunchHomingProjectiles;
+
+		Projectile->FinishSpawning(SpawnTransform);
+    }
+    
+    
 }
