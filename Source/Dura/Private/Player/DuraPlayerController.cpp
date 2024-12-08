@@ -13,6 +13,7 @@
 #include "NavigationPath.h"
 #include "GameFramework/Character.h"
 #include "UI/UserWidget/DamageTextComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 
 ADuraPlayerController::ADuraPlayerController()
@@ -162,6 +163,9 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 					}
 				}
 			}
+
+            UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+
 		}
 		FollowTime = 0.0f;
 		bTargeting = false;
