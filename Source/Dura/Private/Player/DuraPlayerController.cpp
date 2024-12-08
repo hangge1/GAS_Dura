@@ -89,6 +89,9 @@ void ADuraPlayerController::PlayerTick(float DeltaTime)
 
 void ADuraPlayerController::Move(const FInputActionValue& InputValue)
 {
+    if(GetASC() && GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_InputPressed))
+        return;
+
 	FVector2d AxisValue = InputValue.Get<FVector2d>();
 
 	FRotator CtlRotation = GetControlRotation();
@@ -107,6 +110,15 @@ void ADuraPlayerController::Move(const FInputActionValue& InputValue)
 
 void ADuraPlayerController::MouseTrace()
 {
+    if(GetASC() && GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_CursorTrace))
+    {
+        if (lastActor) lastActor->UnHighlightActor();
+		if (thisActor) thisActor->UnHighlightActor();
+        lastActor = nullptr;
+        thisActor = nullptr;
+        return;
+    }
+
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, hitResult);
 
 	if (!hitResult.bBlockingHit) return;
@@ -124,6 +136,9 @@ void ADuraPlayerController::MouseTrace()
 
 void ADuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
+    if(GetASC() && GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_InputPressed))
+        return;
+
 	if (InputTag.MatchesTagExact(FDuraGameplayTags::Get().InputTag_LMB))
 	{
 		bTargeting = thisActor ? true : false;
@@ -135,6 +150,9 @@ void ADuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
+    if(GetASC() && GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_InputReleased))
+        return;
+
 	if (!InputTag.MatchesTagExact(FDuraGameplayTags::Get().InputTag_LMB))
 	{
 		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
@@ -166,8 +184,10 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				}
 			}
 
-            UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
-
+            if(GetASC() && !GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_InputPressed))
+            {
+                UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+            }
 		}
 		FollowTime = 0.0f;
 		bTargeting = false;
@@ -177,6 +197,9 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void ADuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
+    if(GetASC() && GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_InputHeld))
+        return;
+
 	if (!InputTag.MatchesTagExact(FDuraGameplayTags::Get().InputTag_LMB))
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
