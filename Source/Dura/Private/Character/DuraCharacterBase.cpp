@@ -111,6 +111,11 @@ FOnDeath ADuraCharacterBase::GetOnDeathDelegate()
     return OnDeath;
 }
 
+USkeletalMeshComponent* ADuraCharacterBase::GetWeapon_Implementation()
+{
+    return Weapon;
+}
+
 // Called when the game starts or when spawned
 void ADuraCharacterBase::BeginPlay()
 {

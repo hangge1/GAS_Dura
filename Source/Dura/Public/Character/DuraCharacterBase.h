@@ -56,6 +56,8 @@ public:
 
     virtual FOnDeath GetOnDeathDelegate() override;
 
+    USkeletalMeshComponent* GetWeapon_Implementation() override;
+
     FOnASCRegistered OnASCRegistered;
     FOnDeath OnDeath;
 	//** End ICombatInterface
