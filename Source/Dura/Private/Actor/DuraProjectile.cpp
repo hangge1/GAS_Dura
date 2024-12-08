@@ -64,15 +64,12 @@ void ADuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent,
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
-	if (SourceAvatarActor == OtherActor)
-		return;
+	if (SourceAvatarActor == OtherActor) return;
 	
-    if(!UDuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor))
-        return;
+    if(!UDuraAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return;
 
 	if (!bHit) OnHit();
 	
-
 	if (HasAuthority())
 	{
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
@@ -89,12 +86,10 @@ void ADuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent,
                 const FVector KnockbackDirection = Rotation.Vector();
                 const FVector KnockbackForce = KnockbackDirection * DamageEffectParams.KnockbackMagnitude;
                 DamageEffectParams.KnockbackForce = KnockbackForce;
-            }
-            
+            }     
             DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
             UDuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
 		}
-
 		Destroy();
 	}
 	else
