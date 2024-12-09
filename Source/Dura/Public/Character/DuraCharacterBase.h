@@ -54,12 +54,12 @@ public:
 
     virtual FOnASCRegistered GetOnASCRegisteredDelegate() override;
 
-    virtual FOnDeath GetOnDeathDelegate() override;
+    virtual FOnDeathSignature& GetOnDeathDelegate() override;
 
     USkeletalMeshComponent* GetWeapon_Implementation() override;
 
     FOnASCRegistered OnASCRegistered;
-    FOnDeath OnDeath;
+    FOnDeathSignature OnDeathDelegate;
 	//** End ICombatInterface
 
 	UFUNCTION(NetMulticast, Reliable)

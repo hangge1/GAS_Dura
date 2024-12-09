@@ -98,7 +98,7 @@ void ADuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 	Dissolve();
 
 	bDead = true;
-    OnDeath.Broadcast(this);
+    OnDeathDelegate.Broadcast(this);
 }
 
 FOnASCRegistered ADuraCharacterBase::GetOnASCRegisteredDelegate()
@@ -106,9 +106,9 @@ FOnASCRegistered ADuraCharacterBase::GetOnASCRegisteredDelegate()
     return OnASCRegistered;
 }
 
-FOnDeath ADuraCharacterBase::GetOnDeathDelegate()
+FOnDeathSignature& ADuraCharacterBase::GetOnDeathDelegate()
 {
-    return OnDeath;
+    return OnDeathDelegate;
 }
 
 USkeletalMeshComponent* ADuraCharacterBase::GetWeapon_Implementation()
