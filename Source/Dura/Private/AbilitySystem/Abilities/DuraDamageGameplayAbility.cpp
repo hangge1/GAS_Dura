@@ -48,6 +48,11 @@ FDamageEffectParams UDuraDamageGameplayAbility::MakeDamageEffectParamsFromClassD
     return Params;
 }
 
+float UDuraDamageGameplayAbility::GetDamageAtLevel() const
+{
+    return Damage.GetValueAtLevel(GetAbilityLevel());
+}
+
 FTaggedMontage UDuraDamageGameplayAbility::GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages) const
 {
     if(TaggedMontages.Num() > 0)
