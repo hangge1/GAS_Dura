@@ -82,6 +82,4 @@ void UDuraBeamSpell::StoreAdditionalTargets(TArray<AActor*>& OutAddditionalTarge
     int32 NumAdditionalTargets = 5;
     UDuraAbilitySystemLibrary::GetClosetTargets(NumAdditionalTargets, OverlappingActors, 
         MouseHitActor->GetActorLocation(), OutAddditionalTargets);
-    
-
 }
