@@ -54,7 +54,7 @@ public:
 
     virtual ECharacterClass GetCharacterClass_Implementation() override;
 
-    virtual FOnASCRegistered GetOnASCRegisteredDelegate() override;
+    virtual FOnASCRegistered& GetOnASCRegisteredDelegate() override;
 
     virtual FOnDeathSignature& GetOnDeathDelegate() override;
 
@@ -70,8 +70,16 @@ public:
     UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
     bool bIsStunned = false;
 
+    UPROPERTY(ReplicatedUsing=OnRep_Burned, BlueprintReadOnly)
+    bool bIsBurned = false;
+
     UFUNCTION()
     virtual void OnRep_Stunned();
+
+    UFUNCTION()
+    virtual void OnRep_Burned();
+
+    
 
 protected:
 	virtual void BeginPlay() override;
@@ -158,6 +166,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly)
     TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
+
+    UPROPERTY(EditDefaultsOnly)
+    TObjectPtr<UDebuffNiagaraComponent> StunnedDebuffComponent;
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Abilities")

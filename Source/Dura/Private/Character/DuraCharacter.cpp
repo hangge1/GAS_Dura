@@ -13,6 +13,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DuraGameplayTags.h"
+#include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -56,12 +57,25 @@ void ADuraCharacter::OnRep_Stunned()
         if(bIsStunned)
         {
             DuraASC->AddLooseGameplayTags(BlockTags);
-
+            StunnedDebuffComponent->Activate();
         }
         else
         {
             DuraASC->RemoveLooseGameplayTags(BlockTags);
+            StunnedDebuffComponent->Deactivate();
         }
+    }
+}
+
+void ADuraCharacter::OnRep_Burned()
+{
+    if(bIsBurned)
+    {
+        BurnDebuffComponent->Activate();
+    }
+    else
+    {
+        BurnDebuffComponent->Deactivate();
     }
 }
 

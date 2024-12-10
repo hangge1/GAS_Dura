@@ -22,6 +22,11 @@ ADuraCharacterBase::ADuraCharacterBase()
     BurnDebuffComponent->SetupAttachment(GetRootComponent());
     BurnDebuffComponent->DebuffTag = FDuraGameplayTags::Get().Debuff_Burn;
 
+    StunnedDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("StunnedDebuffComponent");
+    StunnedDebuffComponent->SetupAttachment(GetRootComponent());
+    StunnedDebuffComponent->DebuffTag = FDuraGameplayTags::Get().Debuff_Stun;
+    
+
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
@@ -39,6 +44,7 @@ void ADuraCharacterBase::GetLifetimeReplicatedProps(TArray< class FLifetimePrope
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
     DOREPLIFETIME(ADuraCharacterBase, bIsStunned);
+    DOREPLIFETIME(ADuraCharacterBase, bIsBurned);
 }
 
 UAnimMontage* ADuraCharacterBase::GetHitReactMontage_Implementation()
@@ -106,10 +112,19 @@ void ADuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 	Dissolve();
 
 	bDead = true;
+
+    BurnDebuffComponent->Deactivate();
+    StunnedDebuffComponent->Deactivate();
+
     OnDeathDelegate.Broadcast(this);
 }
 
 void ADuraCharacterBase::OnRep_Stunned()
+{
+    
+}
+
+void ADuraCharacterBase::OnRep_Burned()
 {
     
 }
@@ -120,7 +135,7 @@ void ADuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 Ne
     GetCharacterMovement()->MaxWalkSpeed = bIsStunned ? 0.0f : BaseWalkSpeed;
 }
 
-FOnASCRegistered ADuraCharacterBase::GetOnASCRegisteredDelegate()
+FOnASCRegistered& ADuraCharacterBase::GetOnASCRegisteredDelegate()
 {
     return OnASCRegistered;
 }

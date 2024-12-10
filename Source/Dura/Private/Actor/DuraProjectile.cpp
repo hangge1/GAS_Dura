@@ -18,6 +18,7 @@ ADuraProjectile::ADuraProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
+    
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -33,13 +34,14 @@ ADuraProjectile::ADuraProjectile()
 	ProjectileMovement->InitialSpeed = 500.0f;
 	ProjectileMovement->MaxSpeed = 550.0f;
 	ProjectileMovement->ProjectileGravityScale = 0.0f;
-
+    
 }
 
 void ADuraProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SetLifeSpan(LifeSpan);
+    SetReplicateMovement(true);
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ADuraProjectile::OnSphereOverlap);
 	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
 
@@ -73,6 +75,11 @@ void ADuraProjectile::OnHit()
 void ADuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent, 
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+    if(!DamageEffectParams.SourceAbilitySystemComponent)
+    {
+        return;
+    }
+
     AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
 	if (SourceAvatarActor == OtherActor) return;
 	
