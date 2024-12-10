@@ -186,7 +186,7 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 	);
 
 	DuraGameplayTags.Debuff_Stun = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Debuff.Lightning"),
+		FName("Debuff.Stun"),
 		FString("Debuff for  Lightning damage")
 	);
 

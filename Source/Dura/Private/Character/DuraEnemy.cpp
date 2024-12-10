@@ -32,6 +32,8 @@ ADuraEnemy::ADuraEnemy()
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
+
+    BaseWalkSpeed = 250.f;
 }
 
 void ADuraEnemy::HighlightActor()
@@ -118,6 +120,8 @@ void ADuraEnemy::InitAbilityActorInfo()
 
 	AbilitiesSystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UDuraAbilitySystemComponent>(AbilitiesSystemComponent)->AbilityActorInfoSet();
+    AbilitiesSystemComponent->RegisterGameplayTagEvent(FDuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved)
+    .AddUObject(this, &ADuraEnemy::StunTagChanged);
 
 	if (HasAuthority())
 	{
@@ -130,6 +134,16 @@ void ADuraEnemy::InitAbilityActorInfo()
 void ADuraEnemy::InitializeDefaultAttributes() const
 {
 	UDuraAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitiesSystemComponent);
+}
+
+void ADuraEnemy::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+    Super::StunTagChanged(CallbackTag, NewCount);
+
+    if (DuraAIController && DuraAIController->GetBlackboardComponent())
+	{
+		DuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Stunned"), bIsStunned);
+	}
 }
 
 void ADuraEnemy::PossessedBy(AController* NewController)

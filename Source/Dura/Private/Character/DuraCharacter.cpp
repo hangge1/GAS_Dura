@@ -9,10 +9,10 @@
 #include "UI/HUD/DuraHUD.h"
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/LevelUpInfo.h"
-
 #include "NiagaraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "DuraGameplayTags.h"
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -40,6 +40,29 @@ ADuraCharacter::ADuraCharacter()
 	bUseControllerRotationYaw = true;
 
     CharacterClass = ECharacterClass::Elementalist;
+}
+
+void ADuraCharacter::OnRep_Stunned()
+{
+    UDuraAbilitySystemComponent* DuraASC = Cast<UDuraAbilitySystemComponent>(AbilitiesSystemComponent);
+    if(DuraASC)
+    {
+        FGameplayTagContainer BlockTags;
+        BlockTags.AddTag(FDuraGameplayTags::Get().Player_Block_CursorTrace);
+        BlockTags.AddTag(FDuraGameplayTags::Get().Player_Block_InputHeld);
+        BlockTags.AddTag(FDuraGameplayTags::Get().Player_Block_InputPressed);
+        BlockTags.AddTag(FDuraGameplayTags::Get().Player_Block_InputReleased);
+        
+        if(bIsStunned)
+        {
+            DuraASC->AddLooseGameplayTags(BlockTags);
+
+        }
+        else
+        {
+            DuraASC->RemoveLooseGameplayTags(BlockTags);
+        }
+    }
 }
 
 int32 ADuraCharacter::GetSpellPoints_Implementation() const
@@ -149,6 +172,9 @@ void ADuraCharacter::InitAbilityActorInfo()
 	AttributeSet = playerState->GetAttributeSet();
 
     OnASCRegistered.Broadcast(AbilitiesSystemComponent);
+    AbilitiesSystemComponent->RegisterGameplayTagEvent(FDuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved)
+    .AddUObject(this, &ADuraCharacter::StunTagChanged);
+
 
 	check(AbilitiesSystemComponent);
 	AbilitiesSystemComponent->InitAbilityActorInfo(playerState, this);

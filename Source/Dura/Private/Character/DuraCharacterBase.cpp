@@ -10,7 +10,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "../Dura.h"
-
+#include "Gameframework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 ADuraCharacterBase::ADuraCharacterBase()
@@ -31,6 +32,13 @@ ADuraCharacterBase::ADuraCharacterBase()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ADuraCharacterBase::GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(ADuraCharacterBase, bIsStunned);
 }
 
 UAnimMontage* ADuraCharacterBase::GetHitReactMontage_Implementation()
@@ -101,6 +109,17 @@ void ADuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
     OnDeathDelegate.Broadcast(this);
 }
 
+void ADuraCharacterBase::OnRep_Stunned()
+{
+    
+}
+
+void ADuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+    bIsStunned = NewCount > 0;
+    GetCharacterMovement()->MaxWalkSpeed = bIsStunned ? 0.0f : BaseWalkSpeed;
+}
+
 FOnASCRegistered ADuraCharacterBase::GetOnASCRegisteredDelegate()
 {
     return OnASCRegistered;
@@ -159,7 +178,10 @@ AActor* ADuraCharacterBase::GetAvatar_Implementation()
 	return this;
 }
 
-void ADuraCharacterBase::InitAbilityActorInfo() {}
+void ADuraCharacterBase::InitAbilityActorInfo() 
+{
+    
+}
 
 void ADuraCharacterBase::InitializeDefaultAttributes() const
 {

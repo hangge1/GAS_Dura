@@ -27,6 +27,8 @@ class DURA_API ADuraCharacterBase : public ACharacter, public IAbilitySystemInte
 public:
 	ADuraCharacterBase();
 
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
@@ -65,7 +67,12 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
 
-    
+    UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
+    bool bIsStunned = false;
+
+    UFUNCTION()
+    virtual void OnRep_Stunned();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -87,6 +94,11 @@ protected:
 	FName TailSocketName;
 
 	bool bDead = false;
+
+    virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
+    UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 600.f;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitiesSystemComponent;
