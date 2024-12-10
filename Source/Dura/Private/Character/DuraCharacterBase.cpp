@@ -45,6 +45,7 @@ void ADuraCharacterBase::GetLifetimeReplicatedProps(TArray< class FLifetimePrope
 
     DOREPLIFETIME(ADuraCharacterBase, bIsStunned);
     DOREPLIFETIME(ADuraCharacterBase, bIsBurned);
+    DOREPLIFETIME(ADuraCharacterBase, bIsBeingShocked);
 }
 
 UAnimMontage* ADuraCharacterBase::GetHitReactMontage_Implementation()
@@ -89,6 +90,16 @@ void ADuraCharacterBase::IncrementMinionCount_Implementation(int32 Amount)
 ECharacterClass ADuraCharacterBase::GetCharacterClass_Implementation()
 {
     return CharacterClass;
+}
+
+bool ADuraCharacterBase::IsBeingShocked_Implementation()
+{
+    return bIsBeingShocked;
+}
+
+void ADuraCharacterBase::SetIsBeingShocked_Implementation(bool InIsBeingShocked)
+{
+    bIsBeingShocked = InIsBeingShocked;
 }
 
 void ADuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& DeathImpulse)

@@ -62,6 +62,9 @@ public:
 
     FOnASCRegistered OnASCRegistered;
     FOnDeathSignature OnDeathDelegate;
+
+    virtual bool IsBeingShocked_Implementation() override;
+    virtual void SetIsBeingShocked_Implementation(bool InIsBeingShocked) override;
 	//** End ICombatInterface
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -72,6 +75,9 @@ public:
 
     UPROPERTY(ReplicatedUsing=OnRep_Burned, BlueprintReadOnly)
     bool bIsBurned = false;
+
+    UPROPERTY(Replicated, BlueprintReadOnly)
+    bool bIsBeingShocked = false;
 
     UFUNCTION()
     virtual void OnRep_Stunned();
