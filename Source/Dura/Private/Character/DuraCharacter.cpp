@@ -48,6 +48,7 @@ void ADuraCharacter::ShowMagicCircle_Implementation(UMaterialInterface* DecalMat
     if (ADuraPlayerController* PlayerController = Cast<ADuraPlayerController>(GetController()))
 	{
         PlayerController->ShowMagicCircle(DecalMaterial);
+        PlayerController->bShowMouseCursor = false;
     }
 }
 
@@ -56,6 +57,7 @@ void ADuraCharacter::HideMagicCircle_Implementation()
     if (ADuraPlayerController* PlayerController = Cast<ADuraPlayerController>(GetController()))
 	{
         PlayerController->HideMagicCircle();
+        PlayerController->bShowMouseCursor = true;
     }
 }
 
