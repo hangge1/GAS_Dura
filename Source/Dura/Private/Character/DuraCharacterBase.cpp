@@ -12,11 +12,12 @@
 #include "../Dura.h"
 #include "Gameframework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "AbilitySystem/Passive/PassiveNiagaraComponent.h"
 
 // Sets default values
 ADuraCharacterBase::ADuraCharacterBase()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
     BurnDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("BurnDebuffComponent");
     BurnDebuffComponent->SetupAttachment(GetRootComponent());
@@ -37,6 +38,30 @@ ADuraCharacterBase::ADuraCharacterBase()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+
+    EffectAttachComponent = CreateDefaultSubobject<USceneComponent>("EffectAttachComponent");
+    EffectAttachComponent->SetupAttachment(GetRootComponent());
+
+    HaloOfProtextionNiagaraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("HaloOfProtextionNiagaraComponent");
+    HaloOfProtextionNiagaraComponent->SetupAttachment(EffectAttachComponent);
+    HaloOfProtextionNiagaraComponent->PassiveSpellTag = FDuraGameplayTags::Get().Abilities_Passive_HaloOfProtection;
+
+    LifeSiphonNiagaraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("LifeSiphonNiagaraComponent");
+    LifeSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
+    LifeSiphonNiagaraComponent->PassiveSpellTag = FDuraGameplayTags::Get().Abilities_Passive_LifeSiphon;
+
+    ManaSiphonNiagaraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("ManaSiphonNiagaraComponent");
+    ManaSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
+    ManaSiphonNiagaraComponent->PassiveSpellTag = FDuraGameplayTags::Get().Abilities_Passive_ManaSiphon;
+
+
+}
+
+void ADuraCharacterBase::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+    EffectAttachComponent->SetWorldRotation(FRotator::ZeroRotator);
 }
 
 void ADuraCharacterBase::GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const

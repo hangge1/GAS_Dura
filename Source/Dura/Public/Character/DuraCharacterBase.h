@@ -18,6 +18,7 @@ class UMaterialInstance;
 class UNiagaraSystem;
 class USoundBase;
 class UDebuffNiagaraComponent;
+class UPassiveNiagaraComponent;
 
 UCLASS(Abstract)
 class DURA_API ADuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -26,6 +27,8 @@ class DURA_API ADuraCharacterBase : public ACharacter, public IAbilitySystemInte
 	
 public:
 	ADuraCharacterBase();
+
+    virtual void Tick(float DeltaTime) override;
 
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -185,4 +188,16 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<UPassiveNiagaraComponent> HaloOfProtextionNiagaraComponent;
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<UPassiveNiagaraComponent> LifeSiphonNiagaraComponent;
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<UPassiveNiagaraComponent> ManaSiphonNiagaraComponent;
+
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<USceneComponent> EffectAttachComponent;
 };

@@ -295,6 +295,7 @@ void UDuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 
                     if(IsPassiveAbility(*SpecWithSlot))
                     {
+                        MultiCastActivatePassiveEffect(GetAbilityTagFromSpec(*SpecWithSlot), false);
                         DeactivatePassiveAbility.Broadcast(GetAbilityTagFromSpec(*SpecWithSlot));
                     }
 
@@ -308,25 +309,11 @@ void UDuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
                 if(IsPassiveAbility(*AbilitySpec))
                 {
                     TryActivateAbility(AbilitySpec->Handle);
+                    MultiCastActivatePassiveEffect(AbilityTag, true);
                 }
             }
             
             AssignSlotToAbility(*AbilitySpec, Slot);
-
-            /*
-                // Remove this InputTag from any Ability that has it;
-                ClearAbilitiesOfSlot(Slot);
-                //Clear this ability's slot, just in case, it's a different slot
-                ClearSlot(AbilitySpec);
-                // Now, assign this ability to this slot
-                AbilitySpec->DynamicAbilityTags.AddTag(Slot);
-                if(Status.MatchesTagExact(GameplayTags.Abilities_Status_UnLocked))
-                {
-                    AbilitySpec->DynamicAbilityTags.RemoveTag(GameplayTags.Abilities_Status_UnLocked);
-                    AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Equipped);
-                }
-            */
-
             MarkAbilitySpecDirty(*AbilitySpec);
         }
 
@@ -429,6 +416,11 @@ void UDuraAbilitySystemComponent::AssignSlotToAbility(FGameplayAbilitySpec& Spec
 {
     ClearSlot(&Spec);
     Spec.DynamicAbilityTags.AddTag(Slot);
+}
+
+void UDuraAbilitySystemComponent::MultiCastActivatePassiveEffect_Implementation(const FGameplayTag& AbilityTag, bool bActivate)
+{
+    ActivatePassiveEffect.Broadcast(AbilityTag, bActivate);
 }
 
 void UDuraAbilitySystemComponent::OnRep_ActivateAbilities()
