@@ -20,6 +20,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     TObjectPtr<UDecalComponent> MagicCircleDecay;
 };

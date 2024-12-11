@@ -14,7 +14,7 @@
 #include "GameFramework/Character.h"
 #include "UI/UserWidget/DamageTextComponent.h"
 #include "NiagaraFunctionLibrary.h"
-
+#include "Actor/MagicCircle.h"
 
 ADuraPlayerController::ADuraPlayerController()
 {
@@ -34,6 +34,22 @@ void ADuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, 
 		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 		DamageText->SetDamageText(DamageAmount, bBlockedHit, bCriticalHit);
 	}
+}
+
+void ADuraPlayerController::ShowMagicCircle()
+{
+    if(!IsValid(MagicCiecle))
+    {
+        MagicCiecle = GetWorld()->SpawnActor<AMagicCircle>(MagicCircleClass);
+    }
+}
+
+void ADuraPlayerController::HideMagicCircle()
+{
+    if(IsValid(MagicCiecle))
+    {
+        MagicCiecle->Destroy();
+    }
 }
 
 void ADuraPlayerController::BeginPlay()
@@ -83,8 +99,8 @@ void ADuraPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	MouseTrace();
-
 	AutoRun();
+    UpdateMagicCircleLocation();
 }
 
 void ADuraPlayerController::Move(const FInputActionValue& InputValue)
@@ -250,4 +266,12 @@ void ADuraPlayerController::AutoRun()
 		if (DistanceToDestination <= AutoRunAcceptanceRadius)  
             bAutoRunning = false;
 	}
+}
+
+void ADuraPlayerController::UpdateMagicCircleLocation()
+{
+    if(IsValid(MagicCiecle))
+    {
+        MagicCiecle->SetActorLocation(hitResult.ImpactPoint);
+    }
 }
