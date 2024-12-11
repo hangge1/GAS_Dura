@@ -34,7 +34,7 @@ void UDuraWidgetController::BroadcastAbilityInfo()
     BroadcastDelegate.BindLambda([this](const FGameplayAbilitySpec& AbilitySpec) 
     {
         FDuraAbilityInfo AbilityInfo = AbilityInfoDataTable->FindAbilityInfoForTag(UDuraAbilitySystemComponent::GetAbilityTagFromSpec(AbilitySpec));
-        AbilityInfo.InputTag = UDuraAbilitySystemComponent::GetInputTagFromSpec(AbilitySpec);
+        AbilityInfo.InputTag = UDuraAbilitySystemComponent::GetSlotFromSpec(AbilitySpec);
         AbilityInfo.StatusTag = UDuraAbilitySystemComponent::GetStatusFromSpec(AbilitySpec);
         AbilityInfoDelegate.Broadcast(AbilityInfo);
     });
