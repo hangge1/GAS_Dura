@@ -345,10 +345,16 @@ void UDuraAttributeSet::HandleIncomingXP(const FEffectProperties& Props)
         const int32 NumLevelUps = NewLevel - CurrentLevel;
         if(NumLevelUps > 0)
         {
-            const int32 AttributePointReward = IPlayerInterface::Execute_GetAttributePointsReward(Props.SourceCharacter, CurrentLevel); 
-            const int32 SpellPointReward = IPlayerInterface::Execute_GetSpellPointsReward(Props.SourceCharacter, CurrentLevel); 
-
             IPlayerInterface::Execute_AddToPlayerLevel(Props.SourceCharacter, NumLevelUps);
+            
+            //计算升级获得的属性点和技能点奖励
+            int32 AttributePointReward = 0;
+            int32 SpellPointReward = 0;
+            for (int32 i = 0; i < NumLevelUps; ++i)
+            {
+                AttributePointReward += IPlayerInterface::Execute_GetAttributePointsReward(Props.SourceCharacter, CurrentLevel + i); 
+                SpellPointReward += IPlayerInterface::Execute_GetSpellPointsReward(Props.SourceCharacter, CurrentLevel + i); 
+            }
             IPlayerInterface::Execute_AddToAttributePoints(Props.SourceCharacter, AttributePointReward);
             IPlayerInterface::Execute_AddToSpellPoints(Props.SourceCharacter, SpellPointReward);
 
