@@ -26,3 +26,8 @@ void AMagicCircle::Tick(float DeltaTime)
 
 }
 
+void AMagicCircle::SetMaterial(int32 Index, UMaterialInterface* DecalMaterial)
+{
+    MagicCircleDecay->SetMaterial(Index, DecalMaterial);
+}
+

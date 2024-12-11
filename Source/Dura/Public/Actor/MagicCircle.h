@@ -13,13 +13,14 @@ class DURA_API AMagicCircle : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	AMagicCircle();
     virtual void Tick(float DeltaTime) override;
 
+    void SetMaterial(int32 Index, UMaterialInterface* DecalMaterial);
 protected:
 	virtual void BeginPlay() override;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    TObjectPtr<UDecalComponent> MagicCircleDecay;
+    TObjectPtr<UDecalComponent> MagicCircleDecay;  
 };

@@ -36,11 +36,15 @@ void ADuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, 
 	}
 }
 
-void ADuraPlayerController::ShowMagicCircle()
+void ADuraPlayerController::ShowMagicCircle(UMaterialInterface* DecalMaterial)
 {
     if(!IsValid(MagicCiecle))
     {
         MagicCiecle = GetWorld()->SpawnActor<AMagicCircle>(MagicCircleClass);
+        if(DecalMaterial)
+        {
+            MagicCiecle->SetMaterial(0, DecalMaterial);
+        }
     }
 }
 

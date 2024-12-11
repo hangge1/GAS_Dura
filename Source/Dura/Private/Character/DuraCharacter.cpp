@@ -43,6 +43,22 @@ ADuraCharacter::ADuraCharacter()
     CharacterClass = ECharacterClass::Elementalist;
 }
 
+void ADuraCharacter::ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial /*= nullptr*/)
+{
+    if (ADuraPlayerController* PlayerController = Cast<ADuraPlayerController>(GetController()))
+	{
+        PlayerController->ShowMagicCircle(DecalMaterial);
+    }
+}
+
+void ADuraCharacter::HideMagicCircle_Implementation()
+{
+    if (ADuraPlayerController* PlayerController = Cast<ADuraPlayerController>(GetController()))
+	{
+        PlayerController->HideMagicCircle();
+    }
+}
+
 void ADuraCharacter::OnRep_Stunned()
 {
     UDuraAbilitySystemComponent* DuraASC = Cast<UDuraAbilitySystemComponent>(AbilitiesSystemComponent);
