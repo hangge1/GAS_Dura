@@ -235,6 +235,42 @@ FVector UDuraAbilitySystemLibrary::GetKocnbackForce(const FGameplayEffectContext
 	return FVector::ZeroVector;  
 }
 
+bool UDuraAbilitySystemLibrary::IsRadialDamage(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+    if (const FDuraGameplayEffectContext* DuraEffectContext = static_cast<const FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuraEffectContext->IsRadialDamage();
+	}
+	return false;
+}
+
+float UDuraAbilitySystemLibrary::GetRadialDamageInnerRadius(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+    if (const FDuraGameplayEffectContext* DuraEffectContext = static_cast<const FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuraEffectContext->GetRadialDamageInnerRadius();
+	}
+	return false;
+}
+
+float UDuraAbilitySystemLibrary::GetRadialDamageOuterRadius(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+    if (const FDuraGameplayEffectContext* DuraEffectContext = static_cast<const FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuraEffectContext->GetRadialDamageOuterRadius();
+	}
+	return false;
+}
+
+FVector UDuraAbilitySystemLibrary::GetRadialDamageOrigin(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+    if (const FDuraGameplayEffectContext* DuraEffectContext = static_cast<const FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuraEffectContext->GetRadialDamageOrigin();
+	}
+	return FVector::ZeroVector;  
+}
+
 void UDuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, 
 	TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereLocation)
 {
@@ -316,6 +352,12 @@ FGameplayEffectContextHandle UDuraAbilitySystemLibrary::ApplyDamageEffect(const 
     EffectContextHandle.AddSourceObject(SourceAvatarActor);
     SetDeathImpulse(EffectContextHandle, DamageEffectParams.DeathImpulse);
     SetKnockbackForce(EffectContextHandle, DamageEffectParams.KnockbackForce);
+
+    //Set Radial Damage Param.
+    SetIsRadialDamage(EffectContextHandle, DamageEffectParams.bIsRadialDamage);
+    SetRadialDamageOrigin(EffectContextHandle, DamageEffectParams.RadialDamageOrigin);
+    SetRadialDamageInnerRadius(EffectContextHandle, DamageEffectParams.RadialDamageInnerRadius);
+    SetRadialDamageOuterRadius(EffectContextHandle, DamageEffectParams.RadialDamageOuterRadius);
 
     const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(
         DamageEffectParams.DamageGameplayEffectClass, 
@@ -462,5 +504,37 @@ void UDuraAbilitySystemLibrary::SetKnockbackForce(FGameplayEffectContextHandle& 
     if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		DuraEffectContext->SetKnockbackForce(InKnockbackForce);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetIsRadialDamage(FGameplayEffectContextHandle& EffectContextHandle, bool bInsRadialDamage)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetIsRadialDamage(bInsRadialDamage);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetRadialDamageInnerRadius(FGameplayEffectContextHandle& EffectContextHandle, float bInRadialDamageInnerRadius)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetRadialDamageInnerRadius(bInRadialDamageInnerRadius);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetRadialDamageOuterRadius(FGameplayEffectContextHandle& EffectContextHandle, float bInRadialDamageOuterRadius)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetRadialDamageOuterRadius(bInRadialDamageOuterRadius);
+	}
+}
+
+void UDuraAbilitySystemLibrary::SetRadialDamageOrigin(FGameplayEffectContextHandle& EffectContextHandle, FVector InRadialDamageOrigin)
+{
+    if (FDuraGameplayEffectContext* DuraEffectContext = static_cast<FDuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuraEffectContext->SetRadialDamageOrigin(InRadialDamageOrigin);
 	}
 }
