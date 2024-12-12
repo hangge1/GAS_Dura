@@ -64,7 +64,6 @@ FDamageEffectParams UDuraDamageGameplayAbility::MakeDamageEffectParamsFromClassD
         }
     }
     
-
     if(bOverrideKnockbackDirection)
     {
         InKnockbackDirectionOverride.Normalize();
@@ -78,7 +77,6 @@ FDamageEffectParams UDuraDamageGameplayAbility::MakeDamageEffectParamsFromClassD
         }
     }
 
-
     if(bOverrideDeathImpulse)
     {
         InDeathImpulseDirectionOverride.Normalize();
@@ -91,16 +89,6 @@ FDamageEffectParams UDuraDamageGameplayAbility::MakeDamageEffectParamsFromClassD
             Params.DeathImpulse = DeathImpulseRotation.Vector() * DeathImpulseMagnitude;
         }
     }
-
-    //if(IsValid(TargetActor))
-    //{
-    //    FRotator Rotation = (TargetActor->GetActorLocation() - GetAvatarActorFromActorInfo()->GetActorLocation()).Rotation();
-    //    Rotation.Pitch = 45.f;
-    //    const FVector ToTarget = Rotation.Vector();
-
-    //    Params.DeathImpulse = ToTarget * DeathImpulseMagnitude;
-    //    Params.KnockbackForce = ToTarget * KnockbackMagnitude;
-    //}
 
     if(bIsRadialDamage)
     {
