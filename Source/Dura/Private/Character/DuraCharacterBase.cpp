@@ -76,7 +76,7 @@ void ADuraCharacterBase::GetLifetimeReplicatedProps(TArray< class FLifetimePrope
 float ADuraCharacterBase::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
     const float DamageTaken = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-    OnDamageDelegate.Broadcast(Damage);
+    OnDamageDelegate.Broadcast(DamageTaken);
     return DamageTaken;
 }
 
