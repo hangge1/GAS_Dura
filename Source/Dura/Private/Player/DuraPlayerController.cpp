@@ -15,6 +15,7 @@
 #include "UI/UserWidget/DamageTextComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Actor/MagicCircle.h"
+#include <Dura\Dura.h>
 
 ADuraPlayerController::ADuraPlayerController()
 {
@@ -139,7 +140,8 @@ void ADuraPlayerController::MouseTrace()
         return;
     }
 
-	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, hitResult);
+    const ECollisionChannel TraceChannel = IsValid(MagicCiecle) ? ECC_ExcludePlayers : ECC_Visibility;
+	GetHitResultUnderCursor(TraceChannel, false, hitResult);
 
 	if (!hitResult.bBlockingHit) return;
 
