@@ -9,6 +9,8 @@
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "DuraCharacterBase.generated.h"
 
+
+
 class USkeletalMeshComponent;
 class UAbilitySystemComponent;
 class UAttributeSet;
@@ -31,6 +33,8 @@ public:
     virtual void Tick(float DeltaTime) override;
 
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+    virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
@@ -61,10 +65,13 @@ public:
 
     virtual FOnDeathSignature& GetOnDeathDelegate() override;
 
+    virtual FOnDamageSignature& GetOnDamageDelegate() override;
+
     USkeletalMeshComponent* GetWeapon_Implementation() override;
 
     FOnASCRegistered OnASCRegistered;
     FOnDeathSignature OnDeathDelegate;
+    FOnDamageSignature OnDamageDelegate;
 
     virtual bool IsBeingShocked_Implementation() override;
     virtual void SetIsBeingShocked_Implementation(bool InIsBeingShocked) override;

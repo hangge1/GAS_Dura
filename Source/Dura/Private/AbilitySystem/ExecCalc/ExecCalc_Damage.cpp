@@ -8,6 +8,7 @@
 #include "AbilitySystem/DuraAbilitySystemLibrary.h"
 #include "Interaction/CombatInterface.h"
 #include "DuraAbilitiesTypes.h"
+#include <Kismet\GameplayStatics.h>
 
 
 struct DuraDamageStatics
@@ -109,6 +110,9 @@ void UExecCalc_Damage::DetermineDebuff(const FGameplayEffectSpec& Spec,
 void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, 
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
+    const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+    FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+
     TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
     const FDuraGameplayTags& Tags = FDuraGameplayTags::Get();
 
@@ -145,11 +149,6 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar);
 	ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
 
-    
-
-	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
-	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
-
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
 	FAggregatorEvaluateParameters EvaluationParameters;
@@ -178,6 +177,39 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		Resistance = FMath::Clamp(Resistance, 0.f, 100.f);
 
 		DamageTypeValue *= (100.f - Resistance) / 100.f;
+
+        //判断是否RadialDamage
+        if(UDuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle))
+        {
+            // 1. override TakeDamage in DuraCharacterBase *
+            // 2. create delegate OnDamageDelegate, broadcast damage received in TakeDamage *
+            // 3. Bind lamabda to OnDamageDelegate on the Victim here. *
+            // 4. Call UGameplayStatics::ApplyRadialDamageWithFalloff to cause damage *
+            //      (this will result in TakeDamage being called)
+            // 5. In lambda, set DamageTypeValue to the damage received from the broadcast *
+
+            if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetAvatar))
+            {
+                CombatInterface->GetOnDamageDelegate().AddLambda([&](float DamageAmount)
+                {
+                    DamageTypeValue = DamageAmount;
+                });
+
+                UGameplayStatics::ApplyRadialDamageWithFalloff(
+                    TargetAvatar, DamageTypeValue, 0.f, 
+                    UDuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle),
+                    UDuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+                    UDuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle),
+                    1.f,
+                    UDamageType::StaticClass(),
+                    TArray<AActor*>(),
+                    SourceAvatar,
+                    nullptr
+                );
+            }
+
+        }
+
 		Damage += DamageTypeValue;
 	}
 

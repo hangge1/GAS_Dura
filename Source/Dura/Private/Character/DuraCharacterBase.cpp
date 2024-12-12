@@ -73,6 +73,13 @@ void ADuraCharacterBase::GetLifetimeReplicatedProps(TArray< class FLifetimePrope
     DOREPLIFETIME(ADuraCharacterBase, bIsBeingShocked);
 }
 
+float ADuraCharacterBase::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+    const float DamageTaken = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+    OnDamageDelegate.Broadcast(Damage);
+    return DamageTaken;
+}
+
 UAnimMontage* ADuraCharacterBase::GetHitReactMontage_Implementation()
 {
 	return HitReactMontage;
@@ -179,6 +186,11 @@ FOnASCRegistered& ADuraCharacterBase::GetOnASCRegisteredDelegate()
 FOnDeathSignature& ADuraCharacterBase::GetOnDeathDelegate()
 {
     return OnDeathDelegate;
+}
+
+FOnDamageSignature& ADuraCharacterBase::GetOnDamageDelegate()
+{
+    return OnDamageDelegate;
 }
 
 USkeletalMeshComponent* ADuraCharacterBase::GetWeapon_Implementation()
