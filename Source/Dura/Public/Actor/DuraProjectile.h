@@ -34,6 +34,7 @@ protected:
 	
 	virtual void Destroyed() override;
 
+    UFUNCTION(BlueprintCallable)
     void OnHit();
 
 	UFUNCTION()

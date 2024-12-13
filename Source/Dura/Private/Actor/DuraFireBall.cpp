@@ -6,8 +6,7 @@
 void ADuraFireBall::BeginPlay()
 {
     Super::BeginPlay();
-
-
+    StartOutgoingTimeline();
 }
 
 void ADuraFireBall::OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent, AActor* OtherActor, 

@@ -97,6 +97,7 @@ TArray<ADuraFireBall*> UDuraFireBlast::SpawnFireBalls()
             ESpawnActorCollisionHandlingMethod::AlwaysSpawn
         );
 
+        FireBall->ReturnToActor = GetAvatarActorFromActorInfo();
         FireBall->DamageEffectParams= MakeDamageEffectParamsFromClassDefaults();
         FireBalls.Add(FireBall);
         
