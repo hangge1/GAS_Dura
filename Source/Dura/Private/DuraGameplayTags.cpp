@@ -403,4 +403,10 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
     DuraGameplayTags.Player_Block_InputReleased = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Player.Block.InputReleased"),
 		FString("Block Input Released callback for input"));
+
+    DuraGameplayTags.GameplayCue_FireBlast = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("GameplayCue.FireBlast"),
+		FString("GameplayCue FireBlast Tag"));
+
+        
 }

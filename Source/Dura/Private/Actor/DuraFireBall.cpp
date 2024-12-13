@@ -4,6 +4,9 @@
 #include "Actor/DuraFireBall.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/DuraAbilitySystemLibrary.h"
+#include "Components/AudioComponent.h"
+#include "GameplayCueManager.h"
+#include "DuraGameplayTags.h"
 
 void ADuraFireBall::BeginPlay()
 {
@@ -28,4 +31,30 @@ void ADuraFireBall::OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent, A
             UDuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
 		}
 	}
+}
+
+void ADuraFireBall::OnHit()
+{
+    /*UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+    UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());*/
+
+    if(GetOwner())
+    {
+        FGameplayCueParameters CueParams;
+        CueParams.Location = GetActorLocation();
+
+        UGameplayCueManager::ExecuteGameplayCue_NonReplicated(
+            GetOwner(),
+            FDuraGameplayTags::Get().GameplayCue_FireBlast,
+            CueParams
+        );
+    }
+
+    if( LoopingSoundComponent ) 
+    { 
+        LoopingSoundComponent->Stop();
+        LoopingSoundComponent->DestroyComponent();
+    } 
+
+    bHit = true;
 }
