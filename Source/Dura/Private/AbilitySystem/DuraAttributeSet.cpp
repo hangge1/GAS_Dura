@@ -321,7 +321,8 @@ void UDuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bCriticalHit = UDuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 		ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit);
 
-        if(UDuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
+        if(UDuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle) && 
+          Props.TargetCharacter != Props.SourceCharacter)
         {
             //Handle Debuff
             Debuff(Props);
