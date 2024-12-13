@@ -11,8 +11,7 @@ UCLASS()
 class DURA_API UDuraFireBolt : public UDuraProjectileSpell
 {
 	GENERATED_BODY()
-public:
-      
+public:   
     virtual FString GetDescription(int32 Level) override;
     virtual FString GetNextLevelDescription(int32 Level) override;
 

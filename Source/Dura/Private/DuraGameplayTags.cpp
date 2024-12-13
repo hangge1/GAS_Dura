@@ -270,7 +270,10 @@ void FDuraGameplayTags::InitializeNativeGameplayTags()
 		FString("ArcaneShards Ability Tag")
 	);
 
-
+    DuraGameplayTags.Abilities_Fire_Blast = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Fire.FireBlast"),
+		FString("FireBlast Ability Tag")
+	);
     
 
     /*
