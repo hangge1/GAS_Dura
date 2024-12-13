@@ -13,5 +13,9 @@ UCLASS()
 class DURA_API ULoadScreenWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+public:
+
+
+protected:
+
 };
