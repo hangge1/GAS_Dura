@@ -140,6 +140,46 @@ int32 UDuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* Worl
     return static_cast<int32>(XPReward);
 }
 
+void UDuraAbilitySystemLibrary::SetIsRadialDamageEffectParam(FDamageEffectParams& DamageEffectParams, bool bIsRadial, float InnerRadius, float OuterRadius, FVector Origin)
+{
+    DamageEffectParams.bIsRadialDamage = bIsRadial;
+    DamageEffectParams.RadialDamageOuterRadius = OuterRadius;
+    DamageEffectParams.RadialDamageInnerRadius = InnerRadius;
+    DamageEffectParams.RadialDamageOrigin = Origin;
+}
+
+void UDuraAbilitySystemLibrary::SetKnockbackDirection(FDamageEffectParams& DamageEffectParams, FVector KnockbackDirection, float Magnitude)
+{
+    KnockbackDirection.Normalize();
+    if(Magnitude == 0.f)
+    {
+        DamageEffectParams.KnockbackForce = KnockbackDirection * DamageEffectParams.KnockbackMagnitude;
+    }
+    else
+    {
+        DamageEffectParams.KnockbackForce = KnockbackDirection * Magnitude;
+    }
+}
+
+void UDuraAbilitySystemLibrary::SetDeathImpulseDirection(FDamageEffectParams& DamageEffectParams, 
+    FVector DeathImpulseDirection, float Magnitude)
+{
+    DeathImpulseDirection.Normalize();
+    if(Magnitude == 0.f)
+    {
+        DamageEffectParams.DeathImpulse = DeathImpulseDirection * DamageEffectParams.DeathImpulseMagnitude;
+    }
+    else
+    {
+        DamageEffectParams.DeathImpulse = DeathImpulseDirection * Magnitude;
+    }
+}
+
+void UDuraAbilitySystemLibrary::SetEffectParamTargetASC(FDamageEffectParams& DamageEffectParams, UAbilitySystemComponent* ASC)
+{
+    DamageEffectParams.TargetAbilitySystemComponent = ASC;
+}
+
 UCharacterClassInfo* UDuraAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
 {
 	ADuraGameModeBase* GameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
