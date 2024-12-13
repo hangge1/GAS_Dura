@@ -19,7 +19,6 @@ public:
     UPROPERTY(BlueprintReadOnly)
     TObjectPtr<AActor> ReturnToActor;
 
-
     UFUNCTION(BlueprintImplementableEvent)
     void StartOutgoingTimeline();
 protected:
