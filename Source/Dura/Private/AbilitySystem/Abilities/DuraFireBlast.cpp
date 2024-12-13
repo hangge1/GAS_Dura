@@ -72,3 +72,8 @@ FString UDuraFireBlast::GetNextLevelDescription(int32 Level)
             NumFireBalls,
             DamageValue);
 }
+
+TArray<ADuraFireBall*> UDuraFireBlast::SpawnFireBalls()
+{
+    return TArray<ADuraFireBall*>();
+}
