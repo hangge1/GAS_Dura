@@ -35,14 +35,12 @@ void ADuraFireBall::OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent, A
 
 void ADuraFireBall::OnHit()
 {
-    /*UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-    UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());*/
-
     if(GetOwner())
     {
         FGameplayCueParameters CueParams;
         CueParams.Location = GetActorLocation();
 
+        //节省带宽
         UGameplayCueManager::ExecuteGameplayCue_NonReplicated(
             GetOwner(),
             FDuraGameplayTags::Get().GameplayCue_FireBlast,
