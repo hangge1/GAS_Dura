@@ -2,6 +2,9 @@
 
 
 #include "AbilitySystem/Abilities/DuraFireBlast.h"
+#include "AbilitySystem\DuraAbilitySystemLibrary.h"
+#include "Actor/DuraFireBall.h"
+
 
 FString UDuraFireBlast::GetDescription(int32 Level)
 {
@@ -75,5 +78,30 @@ FString UDuraFireBlast::GetNextLevelDescription(int32 Level)
 
 TArray<ADuraFireBall*> UDuraFireBlast::SpawnFireBalls()
 {
-    return TArray<ADuraFireBall*>();
+    const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
+    const FVector Location = GetAvatarActorFromActorInfo()->GetActorLocation();
+    TArray<FRotator> Rotators = UDuraAbilitySystemLibrary::EvenlySpacedRotators(Forward, FVector::UpVector, 360.f, NumFireBalls);
+
+    TArray<ADuraFireBall*> FireBalls;
+    for (const FRotator& Rotator : Rotators)
+    {
+        FTransform SpawnTransform;
+        SpawnTransform.SetLocation(Location);
+        SpawnTransform.SetRotation(Rotator.Quaternion());
+        
+        ADuraFireBall* FireBall = GetWorld()->SpawnActorDeferred<ADuraFireBall>(
+            FireBallClass, 
+            SpawnTransform, 
+            GetOwningActorFromActorInfo(), 
+            CurrentActorInfo->PlayerController->GetPawn(),
+            ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+        );
+
+        FireBall->DamageEffectParams= MakeDamageEffectParamsFromClassDefaults();
+        FireBalls.Add(FireBall);
+        
+        FireBall->FinishSpawning(SpawnTransform);
+    }
+
+    return FireBalls;
 }
