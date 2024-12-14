@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MVVMViewModelBase.h"
+#include "Game/LoadScreenSaveGame.h"
 #include "MVVM_LoadSlot.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSetWidgetSwitcherIndex, int32, WidgetSwitcherIndex);
@@ -33,6 +34,9 @@ public:
     void SetSlotIndex(int32 InSlotIndex);
 
     int32 GetSlotIndex() const { return SlotIndex; }
+
+    UPROPERTY()
+    TEnumAsByte<ESaveSlotStatus> SlotStatus;
 private:
     
     /* Fields Notifies */

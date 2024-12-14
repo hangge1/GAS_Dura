@@ -27,10 +27,30 @@ void UMVVM_LoadScreen::InitializeLoadSlots()
     LoadSlots.Add(2, LoadSlots_2);
 }
 
+void UMVVM_LoadScreen::LoadData()
+{
+    ADuraGameModeBase* DuraGameModeBase = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+    check(DuraGameModeBase);
+
+    for (const TTuple<int32, UMVVM_LoadSlot*>& LoadSlot : LoadSlots)
+    {
+        ULoadScreenSaveGame* LoadScreenSaveGameObject 
+        = DuraGameModeBase->GetSaveSlotData(LoadSlot.Value->GetLoadSlotName(), LoadSlot.Key);
+
+        const FString PlayerName = LoadScreenSaveGameObject->PlayerName;
+        TEnumAsByte<ESaveSlotStatus> SlotStatus = LoadScreenSaveGameObject->SlotStatus;
+
+        LoadSlot.Value->SetPlayerName(PlayerName);
+        LoadSlot.Value->SlotStatus = SlotStatus;
+        LoadSlot.Value->InitializeSlot();
+    }
+}
+
 void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredName)
 {
     ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
     LoadSlots[Slot]->SetPlayerName(EnteredName);
+    LoadSlots[Slot]->SlotStatus = ESaveSlotStatus::Taken;
 
     DuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
     LoadSlots[Slot]->InitializeSlot();

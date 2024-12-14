@@ -10,6 +10,7 @@ class UCharacterClassInfo;
 class UAbilityInfo;
 class UMVVM_LoadSlot;
 class USaveGame;
+class ULoadScreenSaveGame;
 /**
  * 
  */
@@ -18,7 +19,6 @@ class DURA_API ADuraGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-
 public:
 	UPROPERTY(EditDefaultsOnly, Category= "Character Class Defaults")
 	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
@@ -27,6 +27,8 @@ public:
     TObjectPtr<UAbilityInfo> AbilityInfo;
 
     void SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
+
+    ULoadScreenSaveGame* GetSaveSlotData(const FString& SlotName, int32 SlotIndex) const;
 
     UPROPERTY(EditDefaultsOnly)
     TSubclassOf<USaveGame> LoadScreenSaveGameClass;

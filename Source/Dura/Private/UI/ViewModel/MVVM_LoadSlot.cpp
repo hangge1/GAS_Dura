@@ -5,8 +5,8 @@
 
 void UMVVM_LoadSlot::InitializeSlot()
 {
-    //TODO: Check slot status based on loaded data
-    SetWidgetSwitcherIndex.Broadcast(2);
+    const int32 WidgetSwitcherIndex = SlotStatus.GetIntValue();
+    SetWidgetSwitcherIndex.Broadcast(WidgetSwitcherIndex);
 }
 
 void UMVVM_LoadSlot::SetLoadSlotName(FString InLoadSlotName)

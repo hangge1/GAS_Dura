@@ -6,9 +6,14 @@
 #include "GameFramework/SaveGame.h"
 #include "LoadScreenSaveGame.generated.h"
 
-/**
- * 
- */
+UENUM(BlueprintType)
+enum class ESaveSlotStatus
+{
+    Vacant,
+    EnterName,
+    Taken
+};
+
 UCLASS()
 class DURA_API ULoadScreenSaveGame : public USaveGame
 {
@@ -24,5 +29,6 @@ public:
     UPROPERTY()
     FString PlayerName = FString("Default Name");
 
-
+    UPROPERTY()
+    TEnumAsByte<ESaveSlotStatus> SlotStatus = ESaveSlotStatus::Vacant;
 };

@@ -21,6 +21,8 @@ public:
 
     void InitializeLoadSlots();
 
+    void LoadData();
+
     UFUNCTION(BlueprintCallable)
     void NewSlotButtonPressed(int32 Slot, const FString& EnteredName);
 
