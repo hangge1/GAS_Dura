@@ -30,7 +30,7 @@ void UMVVM_LoadScreen::InitializeLoadSlots()
 void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredName)
 {
     ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
-    LoadSlots[Slot]->PlayerName = EnteredName;
+    LoadSlots[Slot]->SetPlayerName(EnteredName);
 
     DuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
     LoadSlots[Slot]->InitializeSlot();
