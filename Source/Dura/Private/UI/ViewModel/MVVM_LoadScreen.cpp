@@ -44,6 +44,7 @@ void UMVVM_LoadScreen::LoadData()
         const FString PlayerName = LoadScreenSaveGameObject->PlayerName;
         TEnumAsByte<ESaveSlotStatus> SlotStatus = LoadScreenSaveGameObject->SlotStatus;
 
+        LoadSlot.Value->SetMapName(LoadScreenSaveGameObject->MapName);
         LoadSlot.Value->SetPlayerName(PlayerName);
         LoadSlot.Value->SlotStatus = SlotStatus;
         LoadSlot.Value->InitializeSlot();

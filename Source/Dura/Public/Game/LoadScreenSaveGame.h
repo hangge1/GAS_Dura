@@ -31,4 +31,7 @@ public:
 
     UPROPERTY()
     TEnumAsByte<ESaveSlotStatus> SlotStatus = Vacant;
+
+    UPROPERTY()
+    FString MapName = FString("Default Map Name");
 };
