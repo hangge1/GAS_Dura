@@ -44,6 +44,12 @@ void ADuraGameModeBase::DeleteSlot(const FString& SlotName, int32 SlotIndex)
     }
 }
 
+void ADuraGameModeBase::TravelToMap(UMVVM_LoadSlot* LoadSlot)
+{
+    TSoftObjectPtr<UWorld> WorldSoftPtr = Maps.FindChecked(LoadSlot->GetMapName());
+    UGameplayStatics::OpenLevelBySoftObjectPtr(LoadSlot, WorldSoftPtr);
+}
+
 void ADuraGameModeBase::BeginPlay()
 {
     Super::BeginPlay();

@@ -32,6 +32,8 @@ public:
 
     static void DeleteSlot(const FString& SlotName, int32 SlotIndex);
 
+    void TravelToMap(UMVVM_LoadSlot* LoadSlot);
+
     UPROPERTY(EditDefaultsOnly)
     TSubclassOf<USaveGame> LoadScreenSaveGameClass;
 

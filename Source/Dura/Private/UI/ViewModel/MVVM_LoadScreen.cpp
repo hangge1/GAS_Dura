@@ -3,8 +3,8 @@
 
 #include "UI/ViewModel/MVVM_LoadScreen.h"
 #include "UI/ViewModel/MVVM_LoadSlot.h"
-#include "Game\DuraGameModeBase.h"
-#include "Kismet\GameplayStatics.h"
+#include "Game/DuraGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 
 UMVVM_LoadSlot* UMVVM_LoadScreen::GetLoadSlotViewModelByIndex(int32 Index)
@@ -53,7 +53,7 @@ void UMVVM_LoadScreen::LoadData()
 
 void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredName)
 {
-    ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+    ADuraGameModeBase* DuraGameMode = CastChecked<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
     LoadSlots[Slot]->SetPlayerName(EnteredName);
     LoadSlots[Slot]->SlotStatus = Taken;
     LoadSlots[Slot]->SetMapName(DuraGameMode->DefaultMapName);
@@ -89,4 +89,13 @@ void UMVVM_LoadScreen::DeleteButtonPressed()
     SelectedSlot->SlotStatus = Vacant;
     SelectedSlot->InitializeSlot();
     SelectedSlot->EnableSelectButton.Broadcast(true);
+}
+
+void UMVVM_LoadScreen::PlayButtonPressed()
+{
+    ADuraGameModeBase* DuraGameMode = CastChecked<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+    if(IsValid(SelectedSlot))
+    {
+        DuraGameMode->TravelToMap(SelectedSlot);
+    } 
 }
