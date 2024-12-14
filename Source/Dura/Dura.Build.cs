@@ -9,7 +9,7 @@ public class Dura : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", 
-			"EnhancedInput", "GameplayAbilities", "UMG" });
+			"EnhancedInput", "GameplayAbilities", "UMG", "FieldNotification" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "GameplayTasks", "NavigationSystem","Niagara","AIModule" });
 

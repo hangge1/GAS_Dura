@@ -54,7 +54,8 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredNa
 {
     ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
     LoadSlots[Slot]->SetPlayerName(EnteredName);
-    LoadSlots[Slot]->SlotStatus = ESaveSlotStatus::Taken;
+    LoadSlots[Slot]->SlotStatus = Taken;
+    LoadSlots[Slot]->SetMapName(DuraGameMode->DefaultMapName);
 
     DuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
     LoadSlots[Slot]->InitializeSlot();
@@ -84,7 +85,7 @@ void UMVVM_LoadScreen::DeleteButtonPressed()
     }
 
     ADuraGameModeBase::DeleteSlot(SelectedSlot->GetLoadSlotName(), SelectedSlot->GetSlotIndex());
-    SelectedSlot->SlotStatus = ESaveSlotStatus::Vacant;
+    SelectedSlot->SlotStatus = Vacant;
     SelectedSlot->InitializeSlot();
     SelectedSlot->EnableSelectButton.Broadcast(true);
 }

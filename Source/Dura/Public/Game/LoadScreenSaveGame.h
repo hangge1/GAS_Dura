@@ -7,7 +7,7 @@
 #include "LoadScreenSaveGame.generated.h"
 
 UENUM(BlueprintType)
-enum class ESaveSlotStatus
+enum ESaveSlotStatus
 {
     Vacant,
     EnterName,
@@ -30,5 +30,5 @@ public:
     FString PlayerName = FString("Default Name");
 
     UPROPERTY()
-    TEnumAsByte<ESaveSlotStatus> SlotStatus = ESaveSlotStatus::Vacant;
+    TEnumAsByte<ESaveSlotStatus> SlotStatus = Vacant;
 };

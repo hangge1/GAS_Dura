@@ -41,3 +41,10 @@ void ADuraGameModeBase::DeleteSlot(const FString& SlotName, int32 SlotIndex)
         UGameplayStatics::DeleteGameInSlot(SlotName, SlotIndex);
     }
 }
+
+void ADuraGameModeBase::BeginPlay()
+{
+    Super::BeginPlay();
+
+    Maps.Add(DefaultMapName, DefaultMap);
+}
