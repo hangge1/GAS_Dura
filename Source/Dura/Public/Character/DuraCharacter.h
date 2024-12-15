@@ -46,8 +46,9 @@ public:
     TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
 
     virtual void OnRep_Stunned() override;
-
     virtual void OnRep_Burned() override;
+
+    void LoadProgress();
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;

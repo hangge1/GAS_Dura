@@ -59,6 +59,18 @@ void ADuraPlayerState::SetLevel(int32 InLevel)
     OnLevelChangedDelegate.Broadcast(Level);
 }
 
+void ADuraPlayerState::SetAttributePoints(int32 InAttributePoints)
+{
+    AttributePoints = InAttributePoints;
+    OnAttributePointsChangedDelegate.Broadcast(AttributePoints);
+}
+
+void ADuraPlayerState::SetSpellPoints(int32 InSpellPoints)
+{
+    SpellPoints = InSpellPoints;
+    OnSpellPointsChangedDelegate.Broadcast(SpellPoints);
+}
+
 void ADuraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);

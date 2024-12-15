@@ -89,6 +89,7 @@ void ADuraCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
         SaveData->Resilience = UDuraAttributeSet::GetResilienceAttribute().GetNumericValue(GetAttributeSet());
         SaveData->Vigor = UDuraAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
 
+        SaveData->bFirstTimeLoadIn = false;
         DuraGameMode->SaveInGameProgressData(SaveData);
     }
 }
@@ -128,6 +129,7 @@ void ADuraCharacter::OnRep_Burned()
         BurnDebuffComponent->Deactivate();
     }
 }
+
 
 int32 ADuraCharacter::GetSpellPoints_Implementation() const
 {
@@ -204,7 +206,39 @@ void ADuraCharacter::PossessedBy(AController* NewController)
 
     //服务器端, 初始化ASC
 	InitAbilityActorInfo();
+    LoadProgress();
+
+
+    //TODO: Load in Abilities from disk
 	AddCharacterAbilities();
+}
+
+void ADuraCharacter::LoadProgress()
+{
+    ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));  
+    if(DuraGameMode)
+    {
+        ULoadScreenSaveGame* SaveData = DuraGameMode->RetrieveInGameSaveData();
+        if(!SaveData) return;
+
+        if(ADuraPlayerState* DuraPlayerState = Cast<ADuraPlayerState>(GetPlayerState()))
+        {
+            DuraPlayerState->SetLevel(SaveData->PlayerLevel);
+            DuraPlayerState->SetXP(SaveData->XP);
+            DuraPlayerState->SetAttributePoints(SaveData->AttributePoints);
+            DuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
+        }
+
+        if(SaveData->bFirstTimeLoadIn)
+        {
+            InitializeDefaultAttributes();
+            AddCharacterAbilities();
+        }
+        else
+        {
+            //TODO
+        }
+    }
 }
 
 void ADuraCharacter::OnRep_PlayerState()
@@ -253,7 +287,7 @@ void ADuraCharacter::InitAbilityActorInfo()
 		}
 	}
 
-	InitializeDefaultAttributes();
+	//InitializeDefaultAttributes();
 }
 
 void ADuraCharacter::MulticastLevelUpParticles_Implementation() const
