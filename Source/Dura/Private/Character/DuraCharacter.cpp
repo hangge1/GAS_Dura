@@ -20,6 +20,7 @@
 #include "Game/LoadScreenSaveGame.h"
 #include "AbilitySystem/DuraAttributeSet.h"
 #include <AbilitySystem/DuraAbilitySystemLibrary.h>
+#include <AbilitySystem\Data\AbilityInfo.h>
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -91,6 +92,29 @@ void ADuraCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
         SaveData->Vigor = UDuraAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
 
         SaveData->bFirstTimeLoadIn = false;
+
+        if(!HasAuthority()) return;
+
+        UDuraAbilitySystemComponent* DuraASC = Cast<UDuraAbilitySystemComponent>(AbilitiesSystemComponent);
+        FForEachAbility SaveAbilityDelegate;
+        SaveAbilityDelegate.BindLambda([this, DuraASC, &SaveData](const FGameplayAbilitySpec& AbilitySpec)
+            {              
+                FGameplayTag AbilityTag = DuraASC->GetAbilityTagFromSpec(AbilitySpec);
+                FDuraAbilityInfo AbilityInfo = UDuraAbilitySystemLibrary::GetAbilityInfo(this)->FindAbilityInfoForTag(AbilityTag);
+                
+                FSavedAbility SaveAbility;
+                SaveAbility.GameplayAbilityClass = AbilityInfo.Ability;
+                SaveAbility.AbilityLevel = AbilitySpec.Level;
+                SaveAbility.AbilitySlot = DuraASC->GetSlotFromAbilityTag(AbilityTag);
+                SaveAbility.AbilityStatus = DuraASC->GetStatusFromAbilityTag(AbilityTag);
+                SaveAbility.AbilityTag = AbilityTag;
+                SaveAbility.AbilityType = AbilityInfo.AbilityType;
+
+                SaveData->SavedAbilities.Add(SaveAbility);
+            }
+        );
+
+        DuraASC->ForEachAbility(SaveAbilityDelegate);
         DuraGameMode->SaveInGameProgressData(SaveData);
     }
 }
