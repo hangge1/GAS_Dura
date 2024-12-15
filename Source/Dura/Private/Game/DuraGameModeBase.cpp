@@ -3,8 +3,9 @@
 
 #include "Game/DuraGameModeBase.h"
 #include "UI/ViewModel/MVVM_LoadSlot.h"
-#include "Kismet\GameplayStatics.h"
-#include <Game\LoadScreenSaveGame.h>
+#include "Kismet/GameplayStatics.h"
+#include "Game/LoadScreenSaveGame.h"
+#include "GameFramework/PlayerStart.h"
 
 void ADuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 {
@@ -48,6 +49,30 @@ void ADuraGameModeBase::TravelToMap(UMVVM_LoadSlot* LoadSlot)
 {
     TSoftObjectPtr<UWorld> WorldSoftPtr = Maps.FindChecked(LoadSlot->GetMapName());
     UGameplayStatics::OpenLevelBySoftObjectPtr(LoadSlot, WorldSoftPtr);
+}
+
+AActor* ADuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
+{
+    TArray<AActor*> PlayerStarts;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), PlayerStarts);
+
+    if(PlayerStarts.Num() > 0)
+    {
+         AActor* SelectedActor = PlayerStarts[0];
+         for (AActor* Actor : PlayerStarts)
+         {
+            if(APlayerStart* ps = Cast<APlayerStart>(Actor))
+            {
+                if(ps->PlayerStartTag == FName("TheTag"))
+                {
+                    SelectedActor = ps;
+                    break;
+                }
+            }
+         }
+         return SelectedActor;
+    }
+    return nullptr;
 }
 
 void ADuraGameModeBase::BeginPlay()
