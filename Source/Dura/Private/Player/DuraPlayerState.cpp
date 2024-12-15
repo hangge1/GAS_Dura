@@ -32,7 +32,7 @@ void ADuraPlayerState::AddToXP(int32 InXP)
 void ADuraPlayerState::AddToLevel(int32 InLevel)
 {
     Level += InLevel;
-    OnLevelChangedDelegate.Broadcast(Level);
+    OnLevelChangedDelegate.Broadcast(Level, true);
 }
 
 void ADuraPlayerState::AddToAttributePoints(int32 InAttributePoints)
@@ -56,7 +56,7 @@ void ADuraPlayerState::SetXP(int32 InXP)
 void ADuraPlayerState::SetLevel(int32 InLevel)
 {
     Level = InLevel;
-    OnLevelChangedDelegate.Broadcast(Level);
+    OnLevelChangedDelegate.Broadcast(Level, false);
 }
 
 void ADuraPlayerState::SetAttributePoints(int32 InAttributePoints)
@@ -84,7 +84,7 @@ void ADuraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 void ADuraPlayerState::OnRep_Level(int32 OldLevel)
 {
-    OnLevelChangedDelegate.Broadcast(Level);
+    OnLevelChangedDelegate.Broadcast(Level, true);
 }
 
 void ADuraPlayerState::OnRep_XP(int32 OldXP)

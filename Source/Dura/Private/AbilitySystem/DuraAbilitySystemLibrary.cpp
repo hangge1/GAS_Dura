@@ -14,6 +14,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "DuraGameplayTags.h"
+#include "Game/LoadScreenSaveGame.h"
 
 
 bool UDuraAbilitySystemLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject,
@@ -98,6 +99,46 @@ void UDuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 	FGameplayEffectContextHandle VitalAttributesContextHandle = ASC->MakeEffectContext();
 	VitalAttributesContextHandle.AddSourceObject(AvatarActor);
 	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data);
+}
+
+void UDuraAbilitySystemLibrary::InitializeDefaultAttributesFromSaveData(const UObject* WorldContextObject, 
+    UAbilitySystemComponent* ASC, ULoadScreenSaveGame* SaveGame)
+{
+    if(!WorldContextObject || !ASC || !SaveGame)
+    {
+        return;
+    }
+
+    UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+    if(!CharacterClassInfo) return;
+
+    const FDuraGameplayTags& GameplayTags = FDuraGameplayTags::Get();
+    const AActor* SourceAvatarActor = ASC->GetAvatarActor();
+
+    FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+    EffectContextHandle.AddSourceObject(SourceAvatarActor);
+    
+    const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
+        CharacterClassInfo->PrimaryAttributesSetByCaller, 1.f, EffectContextHandle
+    );
+
+    //Set By Caller 
+    UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Primary_Strength, SaveGame->Strength);
+    UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Primary_Intelligence, SaveGame->Intelligence);
+    UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Primary_Resilience, SaveGame->Resilience);
+    UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Primary_Vigor, SaveGame->Vigor);
+
+    ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+
+    FGameplayEffectContextHandle SecondaryAttributesContextHandle = ASC->MakeEffectContext();
+	SecondaryAttributesContextHandle.AddSourceObject(SourceAvatarActor);
+	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->SecondaryAttributes_Infinite, 1.f, SecondaryAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*SecondaryAttributesSpecHandle.Data);
+
+	FGameplayEffectContextHandle VitalAttributesContextHandle = ASC->MakeEffectContext();
+	VitalAttributesContextHandle.AddSourceObject(SourceAvatarActor);
+	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->VitalAttributes, 1.f, VitalAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data);
 }
 

@@ -19,6 +19,7 @@
 #include "Game/DuraGameInstance.h"
 #include "Game/LoadScreenSaveGame.h"
 #include "AbilitySystem/DuraAttributeSet.h"
+#include <AbilitySystem/DuraAbilitySystemLibrary.h>
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -207,10 +208,6 @@ void ADuraCharacter::PossessedBy(AController* NewController)
     //服务器端, 初始化ASC
 	InitAbilityActorInfo();
     LoadProgress();
-
-
-    //TODO: Load in Abilities from disk
-	AddCharacterAbilities();
 }
 
 void ADuraCharacter::LoadProgress()
@@ -221,14 +218,6 @@ void ADuraCharacter::LoadProgress()
         ULoadScreenSaveGame* SaveData = DuraGameMode->RetrieveInGameSaveData();
         if(!SaveData) return;
 
-        if(ADuraPlayerState* DuraPlayerState = Cast<ADuraPlayerState>(GetPlayerState()))
-        {
-            DuraPlayerState->SetLevel(SaveData->PlayerLevel);
-            DuraPlayerState->SetXP(SaveData->XP);
-            DuraPlayerState->SetAttributePoints(SaveData->AttributePoints);
-            DuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
-        }
-
         if(SaveData->bFirstTimeLoadIn)
         {
             InitializeDefaultAttributes();
@@ -236,7 +225,18 @@ void ADuraCharacter::LoadProgress()
         }
         else
         {
-            //TODO
+            //TODO: Load in Abilities from disk
+
+            if(ADuraPlayerState* DuraPlayerState = Cast<ADuraPlayerState>(GetPlayerState()))
+            {
+                DuraPlayerState->SetLevel(SaveData->PlayerLevel);
+                DuraPlayerState->SetXP(SaveData->XP);
+                DuraPlayerState->SetAttributePoints(SaveData->AttributePoints);
+                DuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
+            }
+
+            UDuraAbilitySystemLibrary::InitializeDefaultAttributesFromSaveData(this, AbilitiesSystemComponent, SaveData);
+
         }
     }
 }

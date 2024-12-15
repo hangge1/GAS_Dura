@@ -32,6 +32,7 @@ struct FUIWidgetRow : public FTableRowBase
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLevelChangedSignature, float, NewValue, bool, bLevelUp);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 
 
@@ -67,7 +68,7 @@ public:
 	FOnAttributeChangedSignature OnXPPercentChangedDelegate;
 
     UPROPERTY(BlueprintAssignable, Category = "GAS|Level")
-    FOnPlayerStatChangedSignature OnPlayerLevelChangedDelegate;
+    FOnLevelChangedSignature OnPlayerLevelChangedDelegate;
 
     void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& Slot, const FGameplayTag& PrevSlot) const;
 protected:

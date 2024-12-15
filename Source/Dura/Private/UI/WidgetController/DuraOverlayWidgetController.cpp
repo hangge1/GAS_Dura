@@ -24,9 +24,9 @@ void UDuraOverlayWidgetController::BroadcastInitialValue()
 void UDuraOverlayWidgetController::BindCallbacksToDependencies()
 {
     GetDuraPS()->OnXPChangedDelegate.AddUObject(this, &UDuraOverlayWidgetController::OnXPChanged);
-    GetDuraPS()->OnLevelChangedDelegate.AddLambda([this](int32 NewLevel)
+    GetDuraPS()->OnLevelChangedDelegate.AddLambda([this](int32 NewLevel, bool bLevelUp)
     {
-        OnPlayerLevelChangedDelegate.Broadcast(NewLevel);
+        OnPlayerLevelChangedDelegate.Broadcast(NewLevel, bLevelUp);
     });
     
 
