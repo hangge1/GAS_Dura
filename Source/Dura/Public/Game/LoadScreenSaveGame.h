@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "GameplayTagContainer.h"
 #include "LoadScreenSaveGame.generated.h"
 
 class UGameplayAbility;
@@ -39,6 +40,11 @@ struct FSavedAbility
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     int32 AbilityLevel;
 };
+
+inline bool operator==(const FSavedAbility& Left, const FSavedAbility& Right)
+{
+    return Left.AbilityTag.MatchesTagExact(Right.AbilityTag);
+}
 
 UCLASS()
 class DURA_API ULoadScreenSaveGame : public USaveGame

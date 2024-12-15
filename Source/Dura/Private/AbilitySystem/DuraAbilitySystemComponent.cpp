@@ -9,8 +9,40 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "AbilitySystem/DuraAbilitySystemLibrary.h"
+#include "Game/LoadScreenSaveGame.h"
 
 
+
+void UDuraAbilitySystemComponent::AddCharacterAbilitiesFromSaveData(ULoadScreenSaveGame* SaveData)
+{
+    for (const FSavedAbility& Data : SaveData->SavedAbilities)
+    {
+        const TSubclassOf<UGameplayAbility> LoadedAbilityClass = Data.GameplayAbilityClass;
+
+        FGameplayAbilitySpec LoadedAbilitySpec = FGameplayAbilitySpec(LoadedAbilityClass, Data.AbilityLevel);
+        LoadedAbilitySpec.DynamicAbilityTags.AddTag(Data.AbilitySlot);
+        LoadedAbilitySpec.DynamicAbilityTags.AddTag(Data.AbilityStatus);
+
+        if(Data.AbilityType == FDuraGameplayTags::Get().Abilities_Type_Offensive)
+        {
+            GiveAbility(LoadedAbilitySpec);
+        }
+        else if(Data.AbilityType == FDuraGameplayTags::Get().Abilities_Type_Passive)
+        {
+            if(Data.AbilityStatus.MatchesTagExact(FDuraGameplayTags::Get().Abilities_Status_Equipped))
+            {
+                GiveAbilityAndActivateOnce(LoadedAbilitySpec);
+            }
+            else
+            {
+                GiveAbility(LoadedAbilitySpec);
+            }
+        }
+    }
+
+    bStartupAbilitiesGiven = true;
+    AbilitiesGivenDelegate.Broadcast();
+}
 
 void UDuraAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -39,6 +71,7 @@ void UDuraAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSub
     for (const TSubclassOf<UGameplayAbility> AbilityClass : PassiveAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+        AbilitySpec.DynamicAbilityTags.AddTag(FDuraGameplayTags::Get().Abilities_Status_Equipped);
 		GiveAbilityAndActivateOnce(AbilitySpec);
 	}
 }
@@ -311,6 +344,9 @@ void UDuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
                     TryActivateAbility(AbilitySpec->Handle);
                     MultiCastActivatePassiveEffect(AbilityTag, true);
                 }
+
+                AbilitySpec->DynamicAbilityTags.RemoveTag(GetStatusFromSpec(*AbilitySpec));
+                AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Equipped);
             }
             
             AssignSlotToAbility(*AbilitySpec, Slot);
