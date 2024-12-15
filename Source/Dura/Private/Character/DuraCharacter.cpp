@@ -18,6 +18,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Game/DuraGameInstance.h"
 #include "Game/LoadScreenSaveGame.h"
+#include "AbilitySystem/DuraAttributeSet.h"
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -70,11 +71,25 @@ void ADuraCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
     ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));  
     if(DuraGameMode)
     {
-        ULoadScreenSaveGame* LoadScreenSaveGame = DuraGameMode->RetrieveInGameSaveData();
-        if(!LoadScreenSaveGame) return;
+        ULoadScreenSaveGame* SaveData = DuraGameMode->RetrieveInGameSaveData();
+        if(!SaveData) return;
 
-        LoadScreenSaveGame->PlayerStartTag = CheckPointTag;
-        DuraGameMode->SaveInGameProgressData(LoadScreenSaveGame);
+        SaveData->PlayerStartTag = CheckPointTag;
+
+        if(ADuraPlayerState* DuraPlayerState = Cast<ADuraPlayerState>(GetPlayerState()))
+        {
+            SaveData->PlayerLevel = DuraPlayerState->GetPlayerLevel();
+            SaveData->XP = DuraPlayerState->GetXP();
+            SaveData->SpellPoints = DuraPlayerState->GetSpellPoints();
+            SaveData->AttributePoints = DuraPlayerState->GetAttributePoints();
+        }
+
+        SaveData->Strength = UDuraAttributeSet::GetStrengthAttribute().GetNumericValue(GetAttributeSet());
+        SaveData->Intelligence = UDuraAttributeSet::GetIntelligenceAttribute().GetNumericValue(GetAttributeSet());
+        SaveData->Resilience = UDuraAttributeSet::GetResilienceAttribute().GetNumericValue(GetAttributeSet());
+        SaveData->Vigor = UDuraAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
+
+        DuraGameMode->SaveInGameProgressData(SaveData);
     }
 }
 
