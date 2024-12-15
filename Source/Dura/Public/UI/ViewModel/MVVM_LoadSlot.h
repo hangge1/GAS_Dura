@@ -39,6 +39,9 @@ public:
     void SetSlotIndex(int32 InSlotIndex);
     int32 GetSlotIndex() const { return SlotIndex; }
 
+    void SetPlayerLevel(int32 InPlayerLevel);
+    int32 GetPlayerLevel() const { return PlayerLevel; }
+
     UPROPERTY()
     TEnumAsByte<ESaveSlotStatus> SlotStatus;
 
@@ -58,4 +61,7 @@ private:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     FString MapName;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
+    int32 PlayerLevel;
 };

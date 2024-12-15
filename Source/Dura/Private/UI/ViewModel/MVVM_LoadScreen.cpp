@@ -45,21 +45,23 @@ void UMVVM_LoadScreen::LoadData()
         const FString PlayerName = LoadScreenSaveGameObject->PlayerName;
         TEnumAsByte<ESaveSlotStatus> SlotStatus = LoadScreenSaveGameObject->SlotStatus;
 
+        LoadSlot.Value->SlotStatus = SlotStatus;
+        LoadSlot.Value->PlayerStartTag = LoadScreenSaveGameObject->PlayerStartTag;
         LoadSlot.Value->SetMapName(LoadScreenSaveGameObject->MapName);
         LoadSlot.Value->SetPlayerName(PlayerName);
-        LoadSlot.Value->SlotStatus = SlotStatus;
         LoadSlot.Value->InitializeSlot();
-        LoadSlot.Value->PlayerStartTag = LoadScreenSaveGameObject->PlayerStartTag;
+        LoadSlot.Value->SetPlayerLevel(LoadScreenSaveGameObject->PlayerLevel);
     }
 }
 
 void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredName)
 {
     ADuraGameModeBase* DuraGameMode = CastChecked<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
-    LoadSlots[Slot]->SetPlayerName(EnteredName);
     LoadSlots[Slot]->SlotStatus = Taken;
-    LoadSlots[Slot]->SetMapName(DuraGameMode->DefaultMapName);
     LoadSlots[Slot]->PlayerStartTag = DuraGameMode->DefaultPlayerStartTag;
+    LoadSlots[Slot]->SetPlayerName(EnteredName);
+    LoadSlots[Slot]->SetMapName(DuraGameMode->DefaultMapName);
+    LoadSlots[Slot]->SetPlayerLevel(1);
 
     DuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
     LoadSlots[Slot]->InitializeSlot();

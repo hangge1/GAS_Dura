@@ -29,3 +29,8 @@ void UMVVM_LoadSlot::SetSlotIndex(int32 InSlotIndex)
 {
     UE_MVVM_SET_PROPERTY_VALUE(SlotIndex, InSlotIndex);
 }
+
+void UMVVM_LoadSlot::SetPlayerLevel(int32 InPlayerLevel)
+{
+    UE_MVVM_SET_PROPERTY_VALUE(PlayerLevel, InPlayerLevel);
+}
