@@ -49,6 +49,7 @@ void UMVVM_LoadScreen::LoadData()
         LoadSlot.Value->SetPlayerName(PlayerName);
         LoadSlot.Value->SlotStatus = SlotStatus;
         LoadSlot.Value->InitializeSlot();
+        LoadSlot.Value->PlayerStartTag = LoadScreenSaveGameObject->PlayerStartTag;
     }
 }
 
@@ -58,6 +59,7 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredNa
     LoadSlots[Slot]->SetPlayerName(EnteredName);
     LoadSlots[Slot]->SlotStatus = Taken;
     LoadSlots[Slot]->SetMapName(DuraGameMode->DefaultMapName);
+    LoadSlots[Slot]->PlayerStartTag = DuraGameMode->DefaultPlayerStartTag;
 
     DuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
     LoadSlots[Slot]->InitializeSlot();
@@ -100,6 +102,9 @@ void UMVVM_LoadScreen::DeleteButtonPressed()
 void UMVVM_LoadScreen::PlayButtonPressed()
 {
     ADuraGameModeBase* DuraGameMode = CastChecked<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+    UDuraGameInstance* DuraGameInstance = DuraGameMode->GetGameInstance<UDuraGameInstance>();
+    DuraGameInstance->PlayerStartTag = SelectedSlot->PlayerStartTag;
+
     if(IsValid(SelectedSlot))
     {
         DuraGameMode->TravelToMap(SelectedSlot);
