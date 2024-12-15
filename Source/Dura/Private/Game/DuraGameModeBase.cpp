@@ -6,7 +6,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Game/LoadScreenSaveGame.h"
 #include "GameFramework/PlayerStart.h"
-#include <Game\DuraGameInstance.h>
+#include <Game/DuraGameInstance.h>
+#include <EngineUtils.h>
+#include <Interaction/SaveInterface.h>
+#include <Serialization\ObjectAndNameAsStringProxyArchive.h>
 
 void ADuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 {
@@ -67,6 +70,54 @@ void ADuraGameModeBase::SaveInGameProgressData(ULoadScreenSaveGame* SaveGame)
     DuraGameInstance->PlayerStartTag = SaveGame->PlayerStartTag;
 
     UGameplayStatics::SaveGameToSlot(SaveGame, InGameLoadSlotName, InGameLoadSlotIndex);
+}
+
+void ADuraGameModeBase::SaveWorldState(UWorld* World)
+{
+    FString WorldName = World->GetMapName();
+    WorldName.RemoveFromStart(World->StreamingLevelsPrefix);
+
+    UDuraGameInstance* DuraGameInstace = CastChecked<UDuraGameInstance>(GetGameInstance());
+    if(ULoadScreenSaveGame* SaveData = GetSaveSlotData(DuraGameInstace->LoadSlotName, DuraGameInstace->LoadSlotIndex))
+    {
+        if(!SaveData->HasMap(WorldName))
+        {
+            FSaveMap NewSaveMap;
+            NewSaveMap.MapAssetName = WorldName;
+            SaveData->SavedMaps.Add(NewSaveMap);
+        }
+
+        FSaveMap SavedMap = SaveData->GetSavedMapWithMapName(WorldName);
+        SavedMap.SavedActors.Empty(); // clear it out, we'll fill it in with actors
+
+        for (FActorIterator It(World); It; ++It)
+        {
+            AActor* Actor = *It;
+            if(!IsValid(Actor) || !Actor->Implements<USaveInterface>()) continue;
+
+            FSaveActor SavedActor;
+            SavedActor.ActorName = Actor->GetFName();
+            SavedActor.Transform = Actor->GetTransform();
+
+            FMemoryWriter MemoryWriter(SavedActor.Bytes);
+
+            FObjectAndNameAsStringProxyArchive Archive(MemoryWriter, true);
+            Archive.ArIsSaveGame = true;
+            Actor->Serialize(Archive);
+
+            SavedMap.SavedActors.AddUnique(SavedActor);
+        }
+
+        for (FSaveMap& MapToReplace : SaveData->SavedMaps)
+        {
+            if(MapToReplace.MapAssetName == WorldName)
+            {
+                MapToReplace = SavedMap;
+            }
+        }
+
+        UGameplayStatics::SaveGameToSlot(SaveData, DuraGameInstace->LoadSlotName, DuraGameInstace->LoadSlotIndex);
+    }
 }
 
 void ADuraGameModeBase::TravelToMap(UMVVM_LoadSlot* LoadSlot)
