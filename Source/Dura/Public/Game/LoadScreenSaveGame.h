@@ -46,6 +46,39 @@ inline bool operator==(const FSavedAbility& Left, const FSavedAbility& Right)
     return Left.AbilityTag.MatchesTagExact(Right.AbilityTag);
 }
 
+USTRUCT(BlueprintType)
+struct FSaveActor
+{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    FName ActorName = FName();
+
+    UPROPERTY()
+    FTransform Transform = FTransform();
+
+    // Serialized variables from the Actor - only those marked with SaveGame specifier
+    UPROPERTY()
+    TArray<uint8> Bytes;
+};
+
+inline bool operator==(const FSaveActor& Left, const FSaveActor& Right)
+{
+    return Left.ActorName == Right.ActorName;
+}
+
+USTRUCT(BlueprintType)
+struct FSaveMap
+{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    FString MapAssetName = FString();
+
+    UPROPERTY()
+    TArray<FSaveActor> SavedActors;
+};
+
 UCLASS()
 class DURA_API ULoadScreenSaveGame : public USaveGame
 {
@@ -103,4 +136,10 @@ public:
     /* Abilities */
     UPROPERTY()
     TArray<FSavedAbility> SavedAbilities;
+
+    UPROPERTY()
+    TArray<FSaveMap> SavedMaps;
+
+    FSaveMap GetSavedMapWithMapName(const FString& InMapName);
+    bool HasMap(const FString& InMapName);
 };
