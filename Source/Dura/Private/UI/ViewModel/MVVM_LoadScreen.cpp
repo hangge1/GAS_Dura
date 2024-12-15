@@ -5,6 +5,7 @@
 #include "UI/ViewModel/MVVM_LoadSlot.h"
 #include "Game/DuraGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
+#include <Game\DuraGameInstance.h>
 
 
 UMVVM_LoadSlot* UMVVM_LoadScreen::GetLoadSlotViewModelByIndex(int32 Index)
@@ -60,6 +61,11 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredNa
 
     DuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
     LoadSlots[Slot]->InitializeSlot();
+
+    UDuraGameInstance* DuraGameInstance = DuraGameMode->GetGameInstance<UDuraGameInstance>();
+    DuraGameInstance->LoadSlotName = LoadSlots[Slot]->GetLoadSlotName();
+    DuraGameInstance->LoadSlotIndex = LoadSlots[Slot]->GetSlotIndex();
+    DuraGameInstance->PlayerStartTag = DuraGameMode->DefaultPlayerStartTag;
 }
 
 void UMVVM_LoadScreen::NewGameButtonPressed(int32 Slot)

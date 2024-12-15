@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Game/LoadScreenSaveGame.h"
 #include "GameFramework/PlayerStart.h"
+#include <Game\DuraGameInstance.h>
 
 void ADuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 {
@@ -53,6 +54,9 @@ void ADuraGameModeBase::TravelToMap(UMVVM_LoadSlot* LoadSlot)
 
 AActor* ADuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 {
+    UDuraGameInstance* DuraGameInstance = GetGameInstance<UDuraGameInstance>();
+    check(DuraGameInstance);
+
     TArray<AActor*> PlayerStarts;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), PlayerStarts);
 
@@ -63,7 +67,7 @@ AActor* ADuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
          {
             if(APlayerStart* ps = Cast<APlayerStart>(Actor))
             {
-                if(ps->PlayerStartTag == FName("TheTag"))
+                if(ps->PlayerStartTag == DuraGameInstance->PlayerStartTag)
                 {
                     SelectedActor = ps;
                     break;
