@@ -14,6 +14,10 @@
 #include "Camera/CameraComponent.h"
 #include "DuraGameplayTags.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "Game/DuraGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "Game/DuraGameInstance.h"
+#include "Game/LoadScreenSaveGame.h"
 
 ADuraCharacter::ADuraCharacter()
 {
@@ -58,6 +62,19 @@ void ADuraCharacter::HideMagicCircle_Implementation()
 	{
         PlayerController->HideMagicCircle();
         PlayerController->bShowMouseCursor = true;
+    }
+}
+
+void ADuraCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
+{
+    ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));  
+    if(DuraGameMode)
+    {
+        ULoadScreenSaveGame* LoadScreenSaveGame = DuraGameMode->RetrieveInGameSaveData();
+        if(!LoadScreenSaveGame) return;
+
+        LoadScreenSaveGame->PlayerStartTag = CheckPointTag;
+        DuraGameMode->SaveInGameProgressData(LoadScreenSaveGame);
     }
 }
 

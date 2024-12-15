@@ -47,6 +47,28 @@ void ADuraGameModeBase::DeleteSlot(const FString& SlotName, int32 SlotIndex)
     }
 }
 
+ULoadScreenSaveGame* ADuraGameModeBase::RetrieveInGameSaveData()
+{
+    UDuraGameInstance* DuraGameInstance = GetGameInstance<UDuraGameInstance>();
+    check(DuraGameInstance);
+
+    const FString InGameLoadSlotName = DuraGameInstance->LoadSlotName;
+    const int32 InGameLoadSlotIndex = DuraGameInstance->LoadSlotIndex;
+
+    return GetSaveSlotData(InGameLoadSlotName, InGameLoadSlotIndex);
+
+}
+
+void ADuraGameModeBase::SaveInGameProgressData(ULoadScreenSaveGame* SaveGame)
+{
+    UDuraGameInstance* DuraGameInstance = GetGameInstance<UDuraGameInstance>();
+    const FString InGameLoadSlotName = DuraGameInstance->LoadSlotName;
+    const int32 InGameLoadSlotIndex = DuraGameInstance->LoadSlotIndex;
+    DuraGameInstance->PlayerStartTag = SaveGame->PlayerStartTag;
+
+    UGameplayStatics::SaveGameToSlot(SaveGame, InGameLoadSlotName, InGameLoadSlotIndex);
+}
+
 void ADuraGameModeBase::TravelToMap(UMVVM_LoadSlot* LoadSlot)
 {
     TSoftObjectPtr<UWorld> WorldSoftPtr = Maps.FindChecked(LoadSlot->GetMapName());

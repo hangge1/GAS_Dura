@@ -104,6 +104,8 @@ void UMVVM_LoadScreen::PlayButtonPressed()
     ADuraGameModeBase* DuraGameMode = CastChecked<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
     UDuraGameInstance* DuraGameInstance = DuraGameMode->GetGameInstance<UDuraGameInstance>();
     DuraGameInstance->PlayerStartTag = SelectedSlot->PlayerStartTag;
+    DuraGameInstance->LoadSlotName = SelectedSlot->GetLoadSlotName();
+    DuraGameInstance->LoadSlotIndex = SelectedSlot->GetSlotIndex();
 
     if(IsValid(SelectedSlot))
     {

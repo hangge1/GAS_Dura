@@ -38,6 +38,8 @@ public:
 
     virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial) override;
     virtual void HideMagicCircle_Implementation() override;
+
+    virtual void SaveProgress_Implementation(const FName& CheckPointTag) override;
     // EndPlayer Interface
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
