@@ -4,7 +4,7 @@
 #include "Player/DuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "Input/DuraEnhancedInputComponent.h"
-#include "Interaction/EnemyInterface.h"
+#include "Interaction/HighlightInterface.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/DuraAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
@@ -15,7 +15,8 @@
 #include "UI/UserWidget/DamageTextComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Actor/MagicCircle.h"
-#include <Dura\Dura.h>
+#include "Dura/Dura.h"
+#include "Interaction/EnemyInterface.h"
 
 ADuraPlayerController::ADuraPlayerController()
 {
@@ -133,8 +134,8 @@ void ADuraPlayerController::MouseTrace()
 {
     if(GetASC() && GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_CursorTrace))
     {
-        if (lastActor) lastActor->UnHighlightActor();
-		if (thisActor) thisActor->UnHighlightActor();
+        UnHighlightActor(lastActor);
+        UnHighlightActor(thisActor);
         lastActor = nullptr;
         thisActor = nullptr;
         return;
@@ -146,14 +147,37 @@ void ADuraPlayerController::MouseTrace()
 	if (!hitResult.bBlockingHit) return;
 
 	lastActor = thisActor;
-	thisActor = Cast<IEnemyInterface>(hitResult.GetActor());
+    if(IsValid(hitResult.GetActor()) && hitResult.GetActor()->Implements<UHighlightInterface>())
+    {
+	    thisActor = hitResult.GetActor();
+    }
+    else
+    {
+        thisActor = nullptr;
+    }
 
 	//Opt
 	if (lastActor != thisActor)
 	{
-		if (lastActor) lastActor->UnHighlightActor();
-		if (thisActor) thisActor->HighlightActor();
+        UnHighlightActor(lastActor);
+        HighlightActor(thisActor);
 	}
+}
+
+void ADuraPlayerController::HighlightActor(AActor* InActor)
+{
+    if(IsValid(InActor) && InActor->Implements<UHighlightInterface>())
+    {
+        IHighlightInterface::Execute_HighlightActor(InActor);
+    }
+}
+
+void ADuraPlayerController::UnHighlightActor(AActor* InActor)
+{
+    if(IsValid(InActor) && InActor->Implements<UHighlightInterface>())
+    {
+        IHighlightInterface::Execute_UnHighlightActor(InActor);
+    }
 }
 
 void ADuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
@@ -163,7 +187,8 @@ void ADuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 	if (InputTag.MatchesTagExact(FDuraGameplayTags::Get().InputTag_LMB))
 	{
-		bTargeting = thisActor ? true : false;
+        TargetingStatus = (IsValid(thisActor) && thisActor->Implements<UEnemyInterface>()) ? 
+            ETargetingStatus::TargetingEnemy : ETargetingStatus::TargetingNotEnemy;
 		bAutoRunning = false;
 	}
 
@@ -183,7 +208,7 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 
-	if (!bTargeting && !bShiftKeyDown)
+	if (TargetingStatus != ETargetingStatus::TargetingEnemy && !bShiftKeyDown)
 	{
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
@@ -212,7 +237,7 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
             }
 		}
 		FollowTime = 0.0f;
-		bTargeting = false;
+        TargetingStatus = ETargetingStatus::NotTargeting;
 	}
 
 }
@@ -228,7 +253,7 @@ void ADuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting || bShiftKeyDown)
+	if (TargetingStatus == ETargetingStatus::TargetingEnemy || bShiftKeyDown)
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}

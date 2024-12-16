@@ -36,7 +36,7 @@ ADuraEnemy::ADuraEnemy()
     BaseWalkSpeed = 250.f;
 }
 
-void ADuraEnemy::HighlightActor()
+void ADuraEnemy::HighlightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(true);
 	GetMesh()->SetCustomDepthStencilValue(HIGHLIGHT_COLOR_RED);
@@ -45,7 +45,7 @@ void ADuraEnemy::HighlightActor()
 	Weapon->SetCustomDepthStencilValue(HIGHLIGHT_COLOR_RED);
 }
 
-void ADuraEnemy::UnHighlightActor()
+void ADuraEnemy::UnHighlightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/DuraCharacterBase.h"
+#include "Interaction/HighlightInterface.h"
 #include "Interaction/EnemyInterface.h"
 #include "UI/WidgetController/DuraOverlayWidgetController.h"
 #include "DuraEnemy.generated.h"
@@ -15,7 +16,7 @@ class ADuraAIController;
  * 
  */
 UCLASS()
-class DURA_API ADuraEnemy : public ADuraCharacterBase, public IEnemyInterface
+class DURA_API ADuraEnemy : public ADuraCharacterBase, public IEnemyInterface, public IHighlightInterface
 {
 	GENERATED_BODY()
 	
@@ -24,8 +25,8 @@ public:
 	ADuraEnemy();
 
 	//** IEnemyInterface
-	void HighlightActor() override;
-	void UnHighlightActor() override;
+	virtual void HighlightActor_Implementation() override;
+	virtual void UnHighlightActor_Implementation() override;
 	//** end IEnemyInterface
 
 	//** ICombatInterface
