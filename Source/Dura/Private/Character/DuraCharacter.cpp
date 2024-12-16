@@ -233,6 +233,12 @@ void ADuraCharacter::PossessedBy(AController* NewController)
     //服务器端, 初始化ASC
 	InitAbilityActorInfo();
     LoadProgress();
+
+    ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));  
+    if(DuraGameMode)
+    {
+        DuraGameMode->LoadWorldState(GetWorld());
+    }
 }
 
 void ADuraCharacter::LoadProgress()

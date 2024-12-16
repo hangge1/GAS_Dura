@@ -37,6 +37,7 @@ public:
     void SaveInGameProgressData(ULoadScreenSaveGame* SaveGame);
 
     void SaveWorldState(UWorld* World);
+    void LoadWorldState(UWorld* World);
 
     void TravelToMap(UMVVM_LoadSlot* LoadSlot);
 
