@@ -7,6 +7,7 @@
 #include "Game/DuraGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 
+
 ACheckPoint::ACheckPoint(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
 {
@@ -22,6 +23,12 @@ ACheckPoint::ACheckPoint(const FObjectInitializer& ObjectInitializer)
 	Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
     Sphere->SetupAttachment(CheckPointMesh);
+
+    MoveToComponent = CreateDefaultSubobject<USceneComponent>("MoveToComponent");
+    MoveToComponent->SetupAttachment(GetRootComponent());
+
+    CheckPointMesh->SetCustomDepthStencilValue(CustomDepthStencilOverride);
+    CheckPointMesh->MarkRenderStateDirty();
 }
 
 void ACheckPoint::LoadActor_Implementation()
@@ -57,6 +64,21 @@ void ACheckPoint::BeginPlay()
     Super::BeginPlay();
 
     Sphere->OnComponentBeginOverlap.AddDynamic(this, &ACheckPoint::OnSphereOverlap);
+}
+
+void ACheckPoint::UnHighlightActor_Implementation()
+{
+    CheckPointMesh->SetRenderCustomDepth(false);
+}
+
+void ACheckPoint::HighlightActor_Implementation()
+{
+    CheckPointMesh->SetRenderCustomDepth(true);
+}
+
+void ACheckPoint::SetMoveToLocation_Implementation(FVector& OutDestination)
+{
+    OutDestination = MoveToComponent->GetComponentLocation();
 }
 
 void ACheckPoint::HandleGlowEffects()

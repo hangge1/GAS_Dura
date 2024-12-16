@@ -213,6 +213,15 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
+            if(IsValid(thisActor) && thisActor->Implements<UHighlightInterface>())
+            {
+                IHighlightInterface::Execute_SetMoveToLocation(thisActor, CachedDestination);
+            }
+            else if(GetASC() && !GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_InputPressed))
+            {
+                UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+            }
+
 			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
 			{
 				Spline->ClearSplinePoints();
@@ -229,12 +238,7 @@ void ADuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 						bAutoRunning = true;
 					}
 				}
-			}
-
-            if(GetASC() && !GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_InputPressed))
-            {
-                UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
-            }
+			}        
 		}
 		FollowTime = 0.0f;
         TargetingStatus = ETargetingStatus::NotTargeting;

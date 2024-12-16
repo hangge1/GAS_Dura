@@ -34,15 +34,17 @@ ADuraEnemy::ADuraEnemy()
 	HealthBar->SetupAttachment(GetRootComponent());
 
     BaseWalkSpeed = 250.f;
+
+    GetMesh()->SetCustomDepthStencilValue(HIGHLIGHT_COLOR_RED);
+    GetMesh()->MarkRenderStateDirty();  
+    Weapon->SetCustomDepthStencilValue(HIGHLIGHT_COLOR_RED);
+    Weapon->MarkRenderStateDirty();
 }
 
 void ADuraEnemy::HighlightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(true);
-	GetMesh()->SetCustomDepthStencilValue(HIGHLIGHT_COLOR_RED);
-
 	Weapon->SetRenderCustomDepth(true);
-	Weapon->SetCustomDepthStencilValue(HIGHLIGHT_COLOR_RED);
 }
 
 void ADuraEnemy::UnHighlightActor_Implementation()
@@ -162,6 +164,11 @@ void ADuraEnemy::PossessedBy(AController* NewController)
 int32 ADuraEnemy::GetPlayerLevel_Implementation() const
 {
 	return Level;
+}
+
+void ADuraEnemy::SetMoveToLocation_Implementation(FVector& OutDestination)
+{
+    // Do not change OutDestination
 }
 
 void ADuraEnemy::Die(const FVector& DeathImpulse)
