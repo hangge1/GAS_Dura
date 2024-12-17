@@ -11,6 +11,7 @@ class UAbilityInfo;
 class UMVVM_LoadSlot;
 class USaveGame;
 class ULoadScreenSaveGame;
+class ULootTiers;
 /**
  * 
  */
@@ -20,12 +21,6 @@ class DURA_API ADuraGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditDefaultsOnly, Category= "Character Class Defaults")
-	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
-
-    UPROPERTY(EditDefaultsOnly, Category= "Ability Info")
-    TObjectPtr<UAbilityInfo> AbilityInfo;
-
     void SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
 
     ULoadScreenSaveGame* GetSaveSlotData(const FString& SlotName, int32 SlotIndex) const;
@@ -43,6 +38,19 @@ public:
 
     virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
+    FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
+
+    void PlayerDied(ACharacter* DeadCharacter);
+
+    UPROPERTY(EditDefaultsOnly, Category= "Character Class Defaults")
+	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
+
+    UPROPERTY(EditDefaultsOnly, Category= "Ability Info")
+    TObjectPtr<UAbilityInfo> AbilityInfo;
+
+    UPROPERTY(EditDefaultsOnly, Category= "LootTiers")
+    TObjectPtr<ULootTiers> LootTiers;
+
     UPROPERTY(EditDefaultsOnly)
     TSubclassOf<USaveGame> LoadScreenSaveGameClass;
 
@@ -58,9 +66,6 @@ public:
     UPROPERTY(EditDefaultsOnly)
     TMap<FString, TSoftObjectPtr<UWorld>> Maps;
 
-    FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
-
-    void PlayerDied(ACharacter* DeadCharacter);
 protected:
     virtual void BeginPlay() override;
 };

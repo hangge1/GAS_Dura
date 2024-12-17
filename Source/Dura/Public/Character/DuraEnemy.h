@@ -75,4 +75,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<ADuraAIController> DuraAIController;
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void SpawnLoot();
 };

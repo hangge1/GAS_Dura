@@ -175,6 +175,6 @@ void ADuraEnemy::Die(const FVector& DeathImpulse)
 {
 	SetLifeSpan(LifeSpan);
     if(DuraAIController) DuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
-
+    SpawnLoot();
 	Super::Die(DeathImpulse);
 }

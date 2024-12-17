@@ -15,6 +15,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "DuraGameplayTags.h"
 #include "Game/LoadScreenSaveGame.h"
+#include "AbilitySystem/Data/LootTiers.h"
 
 
 bool UDuraAbilitySystemLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject,
@@ -233,6 +234,13 @@ UAbilityInfo* UDuraAbilitySystemLibrary::GetAbilityInfo(const UObject* WorldCont
     ADuraGameModeBase* GameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (GameMode == nullptr) return nullptr;
 	return GameMode->AbilityInfo;
+}
+
+ULootTiers* UDuraAbilitySystemLibrary::GetLeetTiers(const UObject* WorldContextObject)
+{
+    ADuraGameModeBase* GameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (GameMode == nullptr) return nullptr;
+	return GameMode->LootTiers;
 }
 
 bool UDuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
