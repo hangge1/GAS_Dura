@@ -59,6 +59,8 @@ public:
     TMap<FString, TSoftObjectPtr<UWorld>> Maps;
 
     FString GetMapNameFromMapAssetName(const FString& MapAssetName) const;
+
+    void PlayerDied(ACharacter* DeadCharacter);
 protected:
     virtual void BeginPlay() override;
 };

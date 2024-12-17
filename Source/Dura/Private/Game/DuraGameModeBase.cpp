@@ -11,6 +11,8 @@
 #include "Interaction/SaveInterface.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 #include "Dura/DuraLogChannels.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Character.h"
 
 void ADuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 {
@@ -22,7 +24,7 @@ void ADuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
     LoadScreenSaveGame->SlotStatus = LoadSlot->SlotStatus;
     LoadScreenSaveGame->MapName = LoadSlot->GetMapName();
     LoadScreenSaveGame->PlayerStartTag = LoadSlot->PlayerStartTag;
-
+    LoadScreenSaveGame->MapAssetName = LoadSlot->MapAssetName;
 
     UGameplayStatics::SaveGameToSlot(LoadScreenSaveGame, LoadSlot->GetLoadSlotName(), SlotIndex);
 }
@@ -185,6 +187,14 @@ FString ADuraGameModeBase::GetMapNameFromMapAssetName(const FString& MapAssetNam
         }
     }
     return FString();
+}
+
+void ADuraGameModeBase::PlayerDied(ACharacter* DeadCharacter)
+{
+    ULoadScreenSaveGame* SaveGame = RetrieveInGameSaveData();
+    if(!IsValid(SaveGame)) return;
+
+    UGameplayStatics::OpenLevel(DeadCharacter, FName(SaveGame->MapAssetName));
 }
 
 AActor* ADuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)

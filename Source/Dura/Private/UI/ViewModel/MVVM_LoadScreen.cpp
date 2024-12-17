@@ -74,6 +74,8 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredNa
     LoadSlots[Slot]->SetPlayerName(EnteredName);
     LoadSlots[Slot]->SetMapName(DuraGameMode->DefaultMapName);
     LoadSlots[Slot]->SetPlayerLevel(1);
+    LoadSlots[Slot]->MapAssetName = DuraGameMode->DefaultMap.ToSoftObjectPath().GetAssetName();
+    
 
     DuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
     LoadSlots[Slot]->InitializeSlot();
