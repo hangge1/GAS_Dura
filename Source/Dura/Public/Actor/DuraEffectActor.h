@@ -36,10 +36,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadWrite)
     FVector CalculatedLocation;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadWrite)
     FRotator CalculatedRotation;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup Movement")
@@ -48,14 +48,14 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup Movement")
     float RotationRate = 45.f;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup Movement")
-    bool bSinusoidalMovement = false;
-
     UFUNCTION(BlueprintCallable)
     void StartSinusoidalMovement();
 
     UFUNCTION(BlueprintCallable)
     void StartRotation();
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup Movement")
+    bool bSinusoidalMovement = false;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup Movement")
     float SineAmplitude = 1.f;
