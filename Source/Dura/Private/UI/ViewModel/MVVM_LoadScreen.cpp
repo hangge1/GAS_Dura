@@ -35,6 +35,12 @@ void UMVVM_LoadScreen::InitializeLoadSlots()
 void UMVVM_LoadScreen::LoadData()
 {
     ADuraGameModeBase* DuraGameModeBase = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+    if(!IsValid(DuraGameModeBase))
+    {
+        return;
+    }
+
+
     check(DuraGameModeBase);
 
     for (const TTuple<int32, UMVVM_LoadSlot*>& LoadSlot : LoadSlots)
@@ -56,7 +62,13 @@ void UMVVM_LoadScreen::LoadData()
 
 void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredName)
 {
-    ADuraGameModeBase* DuraGameMode = CastChecked<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+    ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+    if(!IsValid(DuraGameMode))
+    {
+        GEngine->AddOnScreenDebugMessage(1, 15.f, FColor::Magenta, TEXT("Please switch to Single Player"));
+        return;
+    }
+
     LoadSlots[Slot]->SlotStatus = Taken;
     LoadSlots[Slot]->PlayerStartTag = DuraGameMode->DefaultPlayerStartTag;
     LoadSlots[Slot]->SetPlayerName(EnteredName);
