@@ -73,7 +73,7 @@ void ADuraGameModeBase::SaveInGameProgressData(ULoadScreenSaveGame* SaveGame)
     UGameplayStatics::SaveGameToSlot(SaveGame, InGameLoadSlotName, InGameLoadSlotIndex);
 }
 
-void ADuraGameModeBase::SaveWorldState(UWorld* World)
+void ADuraGameModeBase::SaveWorldState(UWorld* World, const FString& DestinationMapAssetName)
 {
     FString WorldName = World->GetMapName();
     WorldName.RemoveFromStart(World->StreamingLevelsPrefix);
@@ -81,6 +81,12 @@ void ADuraGameModeBase::SaveWorldState(UWorld* World)
     UDuraGameInstance* DuraGameInstace = CastChecked<UDuraGameInstance>(GetGameInstance());
     if(ULoadScreenSaveGame* SaveData = GetSaveSlotData(DuraGameInstace->LoadSlotName, DuraGameInstace->LoadSlotIndex))
     {
+        if(DestinationMapAssetName != FString(""))
+        {
+            SaveData->MapAssetName = DestinationMapAssetName;
+            SaveData->MapName = GetMapNameFromMapAssetName(DestinationMapAssetName);
+        }
+
         if(!SaveData->HasMap(WorldName))
         {
             FSaveMap NewSaveMap;
@@ -167,6 +173,18 @@ void ADuraGameModeBase::TravelToMap(UMVVM_LoadSlot* LoadSlot)
 {
     TSoftObjectPtr<UWorld> WorldSoftPtr = Maps.FindChecked(LoadSlot->GetMapName());
     UGameplayStatics::OpenLevelBySoftObjectPtr(LoadSlot, WorldSoftPtr);
+}
+
+FString ADuraGameModeBase::GetMapNameFromMapAssetName(const FString& MapAssetName) const
+{
+    for (const TTuple<FString, TSoftObjectPtr<UWorld>>& Map : Maps)
+    {
+        if(Map.Value.ToSoftObjectPath().GetAssetName() == MapAssetName)
+        {
+            return Map.Key;
+        }
+    }
+    return FString();
 }
 
 AActor* ADuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)

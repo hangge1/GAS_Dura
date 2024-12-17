@@ -27,8 +27,11 @@ public:
     virtual void LoadActor_Implementation() override;
     /* End Save Interface */
 
-    UPROPERTY(BlueprintReadOnly, SaveGame)
+    UPROPERTY(BlueprintReadWrite, SaveGame)
     bool bReached = false;
+
+    UPROPERTY(BlueprintReadWrite)
+    bool bCallOverlapCallback = true;
 protected:
     UFUNCTION()
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -46,14 +49,14 @@ protected:
     UFUNCTION(BlueprintImplementableEvent)
     void CheckpointReached(UMaterialInstanceDynamic* MaterialInstanceDynamic);
 
+    UFUNCTION(BlueprintCallable)
     void HandleGlowEffects();
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, EditAnywhere)
     int32 CustomDepthStencilOverride = HIGHLIGHT_COLOR_TAN;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
     TObjectPtr<USceneComponent> MoveToComponent;
-private:
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
     TObjectPtr<UStaticMeshComponent> CheckPointMesh;
