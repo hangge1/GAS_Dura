@@ -8,6 +8,7 @@
 #include "AbilitySystem/DuraAttributeSet.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectTypes.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 
@@ -19,10 +20,57 @@ ADuraEffectActor::ADuraEffectActor()
 }
 
 
+void ADuraEffectActor::Tick(float DelTaTime)
+{
+    Super::Tick(DelTaTime);
+
+    RunningTime += DelTaTime;
+
+    const float SinPeriod = 2 * PI / SinePeriodConstant;
+    if(RunningTime > SinPeriod)
+    {
+        RunningTime = 0;
+    }
+
+    ItemMovement(DelTaTime);
+}
+
+void ADuraEffectActor::ItemMovement(float DeltaTime)
+{
+    if(bRotates)
+    {
+        const FRotator DeltaRotation(0.f, DeltaTime * RotationRate, 0.f);
+        CalculatedRotation = UKismetMathLibrary::ComposeRotators(CalculatedRotation, DeltaRotation);    
+    }
+
+    if(bSinusoidalMovement)
+    {
+        const float Sine = SineAmplitude * FMath::Sin(RunningTime * SinePeriodConstant);
+        CalculatedLocation = InitialLocation + FVector(0.f, 0.f, Sine);
+    }
+}
+
+
 void ADuraEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+    InitialLocation = GetActorLocation();
+    CalculatedLocation = InitialLocation;
+    CalculatedRotation = GetActorRotation();
+}
+
+void ADuraEffectActor::StartSinusoidalMovement()
+{
+    bSinusoidalMovement = true;
+    InitialLocation = GetActorLocation();
+    CalculatedLocation = InitialLocation;
+}
+
+void ADuraEffectActor::StartRotation()
+{
+    bRotates = true;
+    CalculatedRotation = GetActorRotation();
 }
 
 void ADuraEffectActor::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass)
@@ -122,5 +170,6 @@ void ADuraEffectActor::OnEndOverlap(AActor* TargetActor)
 		}
 	}
 }
+
 
 
