@@ -236,7 +236,7 @@ UAbilityInfo* UDuraAbilitySystemLibrary::GetAbilityInfo(const UObject* WorldCont
 	return GameMode->AbilityInfo;
 }
 
-ULootTiers* UDuraAbilitySystemLibrary::GetLeetTiers(const UObject* WorldContextObject)
+ULootTiers* UDuraAbilitySystemLibrary::GetLootTiers(const UObject* WorldContextObject)
 {
     ADuraGameModeBase* GameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (GameMode == nullptr) return nullptr;
