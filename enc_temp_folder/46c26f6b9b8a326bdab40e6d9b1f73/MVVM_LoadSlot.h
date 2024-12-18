@@ -77,6 +77,7 @@ private:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     int32 SlotStatus;
 
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     FString LoadSlotName;
 
@@ -95,15 +96,20 @@ private:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     FString EnterNameString = TEXT("Enter Name: ");
 
+
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     FString NewSlotString = TEXT("NEW SLOT");
 
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     FString SelectSlotString = TEXT("SELECT SLOT");
 
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     FString NewGameString = TEXT("NEW GAME");
 
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     bool SelectSlotButtonEnable = true;
 };

@@ -24,9 +24,7 @@ struct FLootItem
     bool bLootLevelOverride = true;
 };
 
-/**
- * 
- */
+
 UCLASS()
 class DURA_API ULootTiers : public UDataAsset
 {

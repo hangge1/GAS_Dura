@@ -87,6 +87,32 @@ void UMVVM_LoadScreen::EnablePlayAndDeleteButton(bool bEnabled)
     SetDeleteButtonEnable(bEnabled);
 }
 
+void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredName)
+{
+    ADuraGameModeBase* DuraGameMode = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+    if(!IsValid(DuraGameMode))
+    {
+        GEngine->AddOnScreenDebugMessage(1, 15.f, FColor::Magenta, TEXT("Please switch to Single Player"));
+        return;
+    }
+
+    LoadSlots[Slot]->SetSlotStatus(Taken);
+    LoadSlots[Slot]->PlayerStartTag = DuraGameMode->DefaultPlayerStartTag;
+    LoadSlots[Slot]->SetPlayerName(EnteredName);
+    LoadSlots[Slot]->SetMapName(DuraGameMode->DefaultMapName);
+    LoadSlots[Slot]->SetPlayerLevel(1);
+    LoadSlots[Slot]->MapAssetName = DuraGameMode->DefaultMap.ToSoftObjectPath().GetAssetName();
+    
+
+    DuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
+    LoadSlots[Slot]->InitializeSlot();
+
+    UDuraGameInstance* DuraGameInstance = DuraGameMode->GetGameInstance<UDuraGameInstance>();
+    DuraGameInstance->LoadSlotName = LoadSlots[Slot]->GetLoadSlotName();
+    DuraGameInstance->LoadSlotIndex = LoadSlots[Slot]->GetSlotIndex();
+    DuraGameInstance->PlayerStartTag = DuraGameMode->DefaultPlayerStartTag;
+}
+
 void UMVVM_LoadScreen::DeleteButtonPressed()
 {
     if(!IsValid(SelectedSlot))

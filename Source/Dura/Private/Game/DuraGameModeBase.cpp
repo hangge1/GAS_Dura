@@ -21,7 +21,7 @@ void ADuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
     USaveGame* SaveGame = UGameplayStatics::CreateSaveGameObject(LoadScreenSaveGameClass);
     ULoadScreenSaveGame* LoadScreenSaveGame = Cast<ULoadScreenSaveGame>(SaveGame);
     LoadScreenSaveGame->PlayerName = LoadSlot->GetPlayerName();
-    LoadScreenSaveGame->SlotStatus = LoadSlot->SlotStatus;
+    LoadScreenSaveGame->SlotStatus = static_cast<ESaveSlotStatus>(LoadSlot->GetSlotStatus());
     LoadScreenSaveGame->MapName = LoadSlot->GetMapName();
     LoadScreenSaveGame->PlayerStartTag = LoadSlot->PlayerStartTag;
     LoadScreenSaveGame->MapAssetName = LoadSlot->MapAssetName;

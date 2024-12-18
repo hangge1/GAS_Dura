@@ -36,11 +36,13 @@ public:
     void EnablePlayAndDeleteButton(bool bEnabled);
 
     UFUNCTION(BlueprintCallable)
-    void PlayButtonPressed();
-    
+    void NewSlotButtonPressed(int32 Slot, const FString& EnteredName);
+
     UFUNCTION(BlueprintCallable)
     void DeleteButtonPressed();
 
+    UFUNCTION(BlueprintCallable)
+    void PlayButtonPressed();
 
     void SetPlayButtonName(FString InPlayButtonName);
     FString GetPlayButtonName() const { return PlayButtonName; }
@@ -77,18 +79,23 @@ private:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     FString PlayButtonName = TEXT("PLAY");
 
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     FString DeleteButtonName = TEXT("DELETE");
 
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     FString QuitButtonName = TEXT("QUIT");
 
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     bool PlayButtonEnable = false;
 
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     bool DeleteButtonEnable = false;
 
+    /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
     bool QuitButtonEnable = true;
 };
