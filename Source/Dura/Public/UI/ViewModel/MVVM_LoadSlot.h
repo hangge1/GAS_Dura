@@ -7,8 +7,6 @@
 #include "Game/LoadScreenSaveGame.h"
 #include "MVVM_LoadSlot.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEnableSelectButton, bool, bEnable);
-
 DECLARE_MULTICAST_DELEGATE_OneParam(FSelectSlotButtonClick, UMVVM_LoadSlot* /* Who Slot Clicked */);
 /**
  * 
@@ -18,12 +16,13 @@ class DURA_API UMVVM_LoadSlot : public UMVVMViewModelBase
 {
 	GENERATED_BODY()
 public:
-    UPROPERTY(BlueprintAssignable)
-    FEnableSelectButton EnableSelectButton;
+    UPROPERTY()
+    FName PlayerStartTag;
+
+    UPROPERTY()
+    FString MapAssetName;
 
     FSelectSlotButtonClick SelectSlotButtonClick;
-
-    void InitializeSlot();
 
     UFUNCTION(BlueprintCallable)
     void NewGameButtonPressed();
@@ -34,6 +33,10 @@ public:
     UFUNCTION(BlueprintCallable)
     void NewSlotButtonPressed(const FString& EnteredPlayerName);
 
+    void InitSlotStatus();
+
+
+    //Setter and Getter
     void SetLoadSlotName(FString InLoadSlotName);
     FString GetLoadSlotName() const { return LoadSlotName; }
 
@@ -66,12 +69,7 @@ public:
 
     void SetSelectSlotButtonEnable(bool InSelectSlotButtonEnable);
     bool GetSelectSlotButtonEnable() const { return SelectSlotButtonEnable; }
-
-    UPROPERTY()
-    FName PlayerStartTag;
-
-    UPROPERTY()
-    FString MapAssetName;
+    //End Setter and Getter
 private:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))

@@ -23,7 +23,8 @@ class DURA_API ADuraGameModeBase : public AGameModeBase
 public:
     void SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex);
 
-    ULoadScreenSaveGame* GetSaveSlotData(const FString& SlotName, int32 SlotIndex) const;
+    //存在则加载，否则就创建新的
+    ULoadScreenSaveGame* GetOrCreateSaveSlotData(const FString& SlotName, int32 SlotIndex) const;
 
     static void DeleteSlot(const FString& SlotName, int32 SlotIndex);
 

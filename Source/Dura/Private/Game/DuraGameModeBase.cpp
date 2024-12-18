@@ -29,7 +29,7 @@ void ADuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
     UGameplayStatics::SaveGameToSlot(LoadScreenSaveGame, LoadSlot->GetLoadSlotName(), SlotIndex);
 }
 
-ULoadScreenSaveGame* ADuraGameModeBase::GetSaveSlotData(const FString& SlotName, int32 SlotIndex) const
+ULoadScreenSaveGame* ADuraGameModeBase::GetOrCreateSaveSlotData(const FString& SlotName, int32 SlotIndex) const
 {
     USaveGame* SaveGameObject = nullptr;
     if(UGameplayStatics::DoesSaveGameExist(SlotName, SlotIndex))
@@ -61,7 +61,7 @@ ULoadScreenSaveGame* ADuraGameModeBase::RetrieveInGameSaveData()
     const FString InGameLoadSlotName = DuraGameInstance->LoadSlotName;
     const int32 InGameLoadSlotIndex = DuraGameInstance->LoadSlotIndex;
 
-    return GetSaveSlotData(InGameLoadSlotName, InGameLoadSlotIndex);
+    return GetOrCreateSaveSlotData(InGameLoadSlotName, InGameLoadSlotIndex);
 
 }
 
@@ -81,7 +81,7 @@ void ADuraGameModeBase::SaveWorldState(UWorld* World, const FString& Destination
     WorldName.RemoveFromStart(World->StreamingLevelsPrefix);
 
     UDuraGameInstance* DuraGameInstace = CastChecked<UDuraGameInstance>(GetGameInstance());
-    if(ULoadScreenSaveGame* SaveData = GetSaveSlotData(DuraGameInstace->LoadSlotName, DuraGameInstace->LoadSlotIndex))
+    if(ULoadScreenSaveGame* SaveData = GetOrCreateSaveSlotData(DuraGameInstace->LoadSlotName, DuraGameInstace->LoadSlotIndex))
     {
         if(DestinationMapAssetName != FString(""))
         {

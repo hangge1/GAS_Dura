@@ -13,47 +13,37 @@ UMVVM_LoadSlot* UMVVM_LoadScreen::GetLoadSlotViewModelByIndex(int32 Index)
     return LoadSlots.FindChecked(Index);
 }
 
-void UMVVM_LoadScreen::InitializeLoadSlots()
-{
-    LoadSlots_0 = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
-    LoadSlots_1 = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
-    LoadSlots_2 = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
+void UMVVM_LoadScreen::CreateAndInitLoadSlots()
+{ 
+    for (int32 i = 0; i < DefaultSlotNumber; i++)
+    {
+        UMVVM_LoadSlot* NewSlot = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
 
-    LoadSlots_0->SetLoadSlotName(TEXT("LoadSlot_0"));
-    LoadSlots_1->SetLoadSlotName(TEXT("LoadSlot_1"));
-    LoadSlots_2->SetLoadSlotName(TEXT("LoadSlot_2"));
+        NewSlot->SetLoadSlotName(FString::Printf(TEXT("LoadSlot_%d"), i)); //LoadSlot_0、LoadSlot_1、LoadSlot_2
+        NewSlot->SetSlotIndex(i);
+        NewSlot->SelectSlotButtonClick.AddUObject(this, &UMVVM_LoadScreen::SelectSlotButtonPressed);
 
-    LoadSlots_0->SetSlotIndex(0);
-    LoadSlots_1->SetSlotIndex(1);
-    LoadSlots_2->SetSlotIndex(2);
-
-    LoadSlots.Add(0, LoadSlots_0);
-    LoadSlots.Add(1, LoadSlots_1);
-    LoadSlots.Add(2, LoadSlots_2);
-
-    auto SelectSlotButtonClickLambda = [this](UMVVM_LoadSlot* LoadSlot){
-        //1 DisAble LoadSlot's SELECT SLOT BUTTON
-        //2 Enable Other's LoadSlot's SELECT SLOT BUTTON
-        for (TTuple<int32, UMVVM_LoadSlot*> Tuple : LoadSlots)
-        {
-            UMVVM_LoadSlot* Slot = Tuple.Value;
-            Slot->SetSelectSlotButtonEnable(Slot != LoadSlot);
-        }
-
-        //3 Enable Play And DELETE BUTTON
-        SetPlayButtonEnable(true);
-        SetDeleteButtonEnable(true);
-
-        //4 Set SelectedSlot
-        SelectedSlot = LoadSlot;
-    };
-
-    LoadSlots_0->SelectSlotButtonClick.AddLambda(SelectSlotButtonClickLambda);
-    LoadSlots_1->SelectSlotButtonClick.AddLambda(SelectSlotButtonClickLambda);
-    LoadSlots_2->SelectSlotButtonClick.AddLambda(SelectSlotButtonClickLambda);
+        LoadSlots.Add(i, NewSlot);
+    }
 }
 
-void UMVVM_LoadScreen::LoadData()
+void UMVVM_LoadScreen::SelectSlotButtonPressed(UMVVM_LoadSlot* LoadSlot)
+{
+    check(LoadSlot);
+
+    for (TTuple<int32, UMVVM_LoadSlot*> Tuple : LoadSlots)
+    {
+        UMVVM_LoadSlot* Slot = Tuple.Value;
+        Slot->SetSelectSlotButtonEnable(Slot != LoadSlot);
+    }
+
+    SetPlayButtonEnable(true);
+    SetDeleteButtonEnable(true);
+
+    CurrentSelectedSlot = LoadSlot;
+}
+
+void UMVVM_LoadScreen::LoadSavedSlotDatas()
 {
     ADuraGameModeBase* DuraGameModeBase = Cast<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
     if(!IsValid(DuraGameModeBase))
@@ -61,23 +51,17 @@ void UMVVM_LoadScreen::LoadData()
         return;
     }
 
-
-    check(DuraGameModeBase);
-
     for (const TTuple<int32, UMVVM_LoadSlot*>& LoadSlot : LoadSlots)
     {
-        ULoadScreenSaveGame* LoadScreenSaveGameObject 
-        = DuraGameModeBase->GetSaveSlotData(LoadSlot.Value->GetLoadSlotName(), LoadSlot.Key);
+        ULoadScreenSaveGame* SaveGame = 
+        DuraGameModeBase->GetOrCreateSaveSlotData(LoadSlot.Value->GetLoadSlotName(), LoadSlot.Key);
+        check(SaveGame);
 
-        const FString PlayerName = LoadScreenSaveGameObject->PlayerName;
-        TEnumAsByte<ESaveSlotStatus> SlotStatus = LoadScreenSaveGameObject->SlotStatus;
-
-        LoadSlot.Value->SetSlotStatus(SlotStatus);
-        LoadSlot.Value->PlayerStartTag = LoadScreenSaveGameObject->PlayerStartTag;
-        LoadSlot.Value->SetMapName(LoadScreenSaveGameObject->MapName);
-        LoadSlot.Value->SetPlayerName(PlayerName);
-        LoadSlot.Value->InitializeSlot();
-        LoadSlot.Value->SetPlayerLevel(LoadScreenSaveGameObject->PlayerLevel);
+        LoadSlot.Value->PlayerStartTag = SaveGame->PlayerStartTag;
+        LoadSlot.Value->SetSlotStatus(SaveGame->SlotStatus);
+        LoadSlot.Value->SetMapName(SaveGame->MapName);
+        LoadSlot.Value->SetPlayerName(SaveGame->PlayerName);
+        LoadSlot.Value->SetPlayerLevel(SaveGame->PlayerLevel);
     }
 }
 
@@ -89,15 +73,15 @@ void UMVVM_LoadScreen::EnablePlayAndDeleteButton(bool bEnabled)
 
 void UMVVM_LoadScreen::DeleteButtonPressed()
 {
-    if(!IsValid(SelectedSlot))
+    if(!IsValid(CurrentSelectedSlot))
     {
         return;
     }
+    
+    ADuraGameModeBase::DeleteSlot(CurrentSelectedSlot->GetLoadSlotName(), CurrentSelectedSlot->GetSlotIndex());
 
-    ADuraGameModeBase::DeleteSlot(SelectedSlot->GetLoadSlotName(), SelectedSlot->GetSlotIndex());
-    SelectedSlot->SetSlotStatus(Vacant);
-    SelectedSlot->InitializeSlot();
-    SelectedSlot->SetSelectSlotButtonEnable(true);
+    CurrentSelectedSlot->SetSlotStatus(Vacant);
+    CurrentSelectedSlot->SetSelectSlotButtonEnable(true);
 
     EnablePlayAndDeleteButton(true);
 }
@@ -106,13 +90,13 @@ void UMVVM_LoadScreen::PlayButtonPressed()
 {
     ADuraGameModeBase* DuraGameMode = CastChecked<ADuraGameModeBase>(UGameplayStatics::GetGameMode(this));
     UDuraGameInstance* DuraGameInstance = DuraGameMode->GetGameInstance<UDuraGameInstance>();
-    DuraGameInstance->PlayerStartTag = SelectedSlot->PlayerStartTag;
-    DuraGameInstance->LoadSlotName = SelectedSlot->GetLoadSlotName();
-    DuraGameInstance->LoadSlotIndex = SelectedSlot->GetSlotIndex();
+    DuraGameInstance->PlayerStartTag = CurrentSelectedSlot->PlayerStartTag;
+    DuraGameInstance->LoadSlotName = CurrentSelectedSlot->GetLoadSlotName();
+    DuraGameInstance->LoadSlotIndex = CurrentSelectedSlot->GetSlotIndex();
 
-    if(IsValid(SelectedSlot))
+    if(IsValid(CurrentSelectedSlot))
     {
-        DuraGameMode->TravelToMap(SelectedSlot);
+        DuraGameMode->TravelToMap(CurrentSelectedSlot);
     } 
 }
 
@@ -145,4 +129,6 @@ void UMVVM_LoadScreen::SetQuitButtonEnable(bool InQuitButtonEnable)
 {
     UE_MVVM_SET_PROPERTY_VALUE(QuitButtonEnable, InQuitButtonEnable);
 }
+
+
 

@@ -7,7 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Game/DuraGameInstance.h"
 
-void UMVVM_LoadSlot::InitializeSlot()
+void UMVVM_LoadSlot::InitSlotStatus()
 {
     const int32 WidgetSwitcherIndex = SlotStatus;
     SetSlotStatus(static_cast<ESaveSlotStatus>(WidgetSwitcherIndex));
@@ -32,16 +32,16 @@ void UMVVM_LoadSlot::NewSlotButtonPressed(const FString& EnteredPlayerName)
         return;
     }
 
-    SetSlotStatus(Taken);
     PlayerStartTag = DuraGameMode->DefaultPlayerStartTag;
+    MapAssetName = DuraGameMode->DefaultMap.ToSoftObjectPath().GetAssetName();
+    SetSlotStatus(Taken);
     SetPlayerName(EnteredPlayerName);
     SetMapName(DuraGameMode->DefaultMapName);
     SetPlayerLevel(1);
-    MapAssetName = DuraGameMode->DefaultMap.ToSoftObjectPath().GetAssetName();
     
 
     DuraGameMode->SaveSlotData(this, SlotIndex);
-    InitializeSlot();
+    //InitSlotStatus();
 
     UDuraGameInstance* DuraGameInstance = DuraGameMode->GetGameInstance<UDuraGameInstance>();
     DuraGameInstance->LoadSlotName = GetLoadSlotName();

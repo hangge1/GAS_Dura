@@ -6,8 +6,6 @@
 #include "MVVMViewModelBase.h"
 #include "MVVM_LoadScreen.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSlotSelected);
-
 class UMVVM_LoadSlot;
 /**
  * 
@@ -18,19 +16,11 @@ class DURA_API UMVVM_LoadScreen : public UMVVMViewModelBase
 	GENERATED_BODY()
 
 public:
-    
-    UPROPERTY(BlueprintAssignable)
-    FSlotSelected SlotSelected;
-
     UPROPERTY(EditDefaultsOnly)
     TSubclassOf<UMVVM_LoadSlot> LoadSlotViewModelClass;
 
     UFUNCTION(BlueprintPure)
     UMVVM_LoadSlot* GetLoadSlotViewModelByIndex(int32 Index);
-
-    void InitializeLoadSlots();
-
-    void LoadData();
 
     UFUNCTION(BlueprintCallable)
     void EnablePlayAndDeleteButton(bool bEnabled);
@@ -41,7 +31,12 @@ public:
     UFUNCTION(BlueprintCallable)
     void DeleteButtonPressed();
 
+    void CreateAndInitLoadSlots();
 
+    void LoadSavedSlotDatas();
+
+
+    // Setter and Getter
     void SetPlayButtonName(FString InPlayButtonName);
     FString GetPlayButtonName() const { return PlayButtonName; }
 
@@ -59,19 +54,21 @@ public:
 
     void SetQuitButtonEnable(bool InQuitButtonEnable);
     bool GetQuitButtonEnable() const { return QuitButtonEnable; }
+    // End Setter and Getter
+
+protected:
+    void SelectSlotButtonPressed(UMVVM_LoadSlot* LoadSlot);
+
 private:
+
+    UPROPERTY()
+    int32 DefaultSlotNumber = 3;
+
     UPROPERTY()
     TMap<int32, UMVVM_LoadSlot*> LoadSlots;
 
     UPROPERTY()
-    TObjectPtr<UMVVM_LoadSlot> LoadSlots_0;
-    UPROPERTY()
-    TObjectPtr<UMVVM_LoadSlot> LoadSlots_1;
-    UPROPERTY()
-    TObjectPtr<UMVVM_LoadSlot> LoadSlots_2;
-
-    UPROPERTY()
-    UMVVM_LoadSlot* SelectedSlot;
+    UMVVM_LoadSlot* CurrentSelectedSlot;
 
     /* Fields Notifies */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta=(AllowPrivateAccess="true"))
