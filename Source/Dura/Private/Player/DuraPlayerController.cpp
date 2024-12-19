@@ -114,6 +114,12 @@ void ADuraPlayerController::Move(const FInputActionValue& InputValue)
     if(GetASC() && GetASC()->HasMatchingGameplayTag(FDuraGameplayTags::Get().Player_Block_InputPressed))
         return;
 
+    if(bAutoRunning)
+    {
+        bAutoRunning = false;
+        TargetingStatus = ETargetingStatus::NotTargeting;
+    }
+
 	FVector2d AxisValue = InputValue.Get<FVector2d>();
 
 	FRotator CtlRotation = GetControlRotation();
