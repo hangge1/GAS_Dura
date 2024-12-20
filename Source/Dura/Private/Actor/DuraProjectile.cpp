@@ -41,6 +41,7 @@ void ADuraProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SetLifeSpan(LifeSpan);
+    
     SetReplicateMovement(true);
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ADuraProjectile::OnSphereOverlap);
 	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
@@ -62,6 +63,7 @@ void ADuraProjectile::Destroyed()
 
 void ADuraProjectile::OnHit()
 {
+    bHit = true;
     UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
     UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
     if( LoopingSoundComponent ) 
@@ -69,7 +71,6 @@ void ADuraProjectile::OnHit()
         LoopingSoundComponent->Stop();
         LoopingSoundComponent->DestroyComponent();
     }
-    bHit = true;
 }
 
 void ADuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent, 
@@ -81,7 +82,7 @@ void ADuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlamppedComponent,
         return;
     }
 
-	if (!bHit) OnHit();
+	if (!bHit) OnHit(); //本地先执行，然后设置bHit = true
 	
 	if (HasAuthority())
 	{
