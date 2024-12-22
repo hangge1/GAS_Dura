@@ -81,6 +81,9 @@ void UDuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 
 void UDuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float damage, bool bBlockedHit, bool bCriticalHit) const
 {
+    if(!Props.SourceCharacter || !Props.TargetCharacter)
+        return;
+
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
 		if (ADuraPlayerController* PC = Cast<ADuraPlayerController>(Props.SourceCharacter->Controller))

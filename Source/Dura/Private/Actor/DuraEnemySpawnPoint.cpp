@@ -9,9 +9,14 @@ void ADuraEnemySpawnPoint::SpawnEnemy()
     FActorSpawnParameters SpawnParams;
     SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-    ADuraEnemy* Enemy = GetWorld()->SpawnActorDeferred<ADuraEnemy>(EnemyClass, GetActorTransform());
-    Enemy->SetLevel(EnemyLevel);
-    Enemy->SetCharacterClass(CharacterClass);
-    Enemy->FinishSpawning(GetActorTransform());
-    Enemy->SpawnDefaultController();
+    if(!IsValid(EnemyClass))return;
+
+    if(ADuraEnemy* Enemy = GetWorld()->SpawnActorDeferred<ADuraEnemy>(EnemyClass, GetActorTransform()))
+    {
+        Enemy->SetLevel(EnemyLevel);
+        Enemy->SetCharacterClass(CharacterClass);
+        Enemy->FinishSpawning(GetActorTransform());
+        Enemy->SpawnDefaultController();
+    }
+
 }
